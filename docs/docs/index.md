@@ -92,6 +92,8 @@ if __name__ == "__main__":
     whatsapp.disconnect()
 ```
 
+Warning: The first time you will start the library, it will compile or download binaries for your machine, so it could take long depending on your internet connexion.
+
 ### Explanation
 
 1. **Event Callback Function:**

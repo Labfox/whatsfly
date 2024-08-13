@@ -29,7 +29,7 @@ jobs:
           git config --global user.email "action@github.com"
           git config --global user.name "Github Actions"
           git add *
-          git commit -am "New build for GITHUB_SHA"
+          git commit -am "New build for $GITHUB_SHA"
           git fetch
           git push
   build-windows:
@@ -57,7 +57,7 @@ jobs:
           git config --global user.email "action@github.com"
           git config --global user.name "Github Actions"
           git add *
-          git commit -am "New build for GITHUB_SHA"
+          git commit -am "New build for $GITHUB_SHA"
           git fetch
           git push
   build-osx:
@@ -84,7 +84,7 @@ jobs:
           git config --global user.email "action@github.com"
           git config --global user.name "Github Actions"
           git add *
-          git commit -am "New build for GITHUB_SHA"
+          git commit -am "New build for $GITHUB_SHA"
           git fetch
           git rebase
           git push -f
