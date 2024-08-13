@@ -53,9 +53,9 @@ class BuildGoModule(install):
 
 setup(
     name="whatsfly",
-    version="0.1.0",
+    version="0.1.1",
     license="MIT",
-    author="Doy Bachtiar, Lab Fox, Ivo Bellin Salarin",
+    author="Doy Bachtiar, LabFox, Ivo Bellin Salarin",
     author_email="adityabachtiar996@gmail.com, labfoxdev@gmail.com, ivo@nilleb.com",
     url="https://github.com/cloned-doy/whatsfly",
     keywords="whatsfly",
