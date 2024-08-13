@@ -74,13 +74,14 @@ def build():
 
 def ensureUsableBinaries():
     try:
+        import whatsfly.whatsmeow
         return
     except OSError:
         print("Binary unexisent, trying to build")
 
     try:
         build()
-
+        import whatsfly.whatsmeow
         return
     except FileNotFoundError:
         print("Go unusable")
