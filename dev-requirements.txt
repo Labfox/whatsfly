@@ -4,8 +4,12 @@ aiosqlite==0.20.0
     # via -r dev-requirements.in
 black==24.8.0
     # via -r dev-requirements.in
+certifi==2024.7.4
+    # via requests
 cfgv==3.4.0
     # via pre-commit
+charset-normalizer==3.3.2
+    # via requests
 click==8.1.7
     # via black
 distlib==0.3.8
@@ -15,7 +19,9 @@ filelock==3.15.4
 identify==2.6.0
     # via pre-commit
 idna==3.7
-    # via yarl
+    # via
+    #   requests
+    #   yarl
 iniconfig==2.0.0
     # via pytest
 isort==5.13.2
@@ -57,23 +63,27 @@ pyyaml==6.0.2
     # via
     #   pre-commit
     #   vcrpy
-ruff==0.5.6
+requests==2.32.3
+    # via -r dev-requirements.in
+ruff==0.5.7
     # via -r dev-requirements.in
 setuptools==72.1.0
     # via -r dev-requirements.in
-types-pyyaml==6.0.12.20240724
+types-pyyaml==6.0.12.20240808
     # via -r dev-requirements.in
 typing-extensions==4.12.2
     # via
     #   aiosqlite
     #   mypy
+urllib3==2.2.2
+    # via requests
 vcrpy==6.0.1
     # via
     #   -r dev-requirements.in
     #   pytest-vcr
 virtualenv==20.26.3
     # via pre-commit
-watchdog==4.0.1
+watchdog==4.0.2
     # via -r dev-requirements.in
 wrapt==1.16.0
     # via vcrpy

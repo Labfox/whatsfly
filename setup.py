@@ -2,9 +2,9 @@
 from setuptools import setup, find_packages
 from codecs import open
 from setuptools.command.install import install
-import os
 import subprocess
 import platform
+import os
 
 
 class BuildGoModule(install):

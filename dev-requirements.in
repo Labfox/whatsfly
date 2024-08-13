@@ -11,3 +11,4 @@ types-PyYAML
 pytest-asyncio
 aiosqlite
 setuptools
+requests

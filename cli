@@ -38,7 +38,7 @@ elif [ "$1" == "format" ]; then
     black .
 elif [ "$1" == "lint" ]; then
     source .venv/bin/activate
-    ruff check .
+    ruff check . --fix
     ruff format .
     mypy .
 else
