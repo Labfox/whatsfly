@@ -26,5 +26,7 @@ jobs:
     
     - name: Commit changes
       run: |
+          git config --global user.email "labfoxdev@gmail.com"
+          git config --global user.name "Github Actions"
           git commit -am "New build"
           git push
