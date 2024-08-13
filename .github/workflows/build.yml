@@ -6,8 +6,6 @@ name: Go
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
 
 jobs:
 
@@ -28,10 +26,10 @@ jobs:
     
     - name: Commit changes
       run: |
-          git config --global user.email "labfoxdev@gmail.com"
+          git config --global user.email "action@github.com"
           git config --global user.name "Github Actions"
           git add *
-          git commit -am "New build"
+          git commit -am "New build for GITHUB_SHA"
           git fetch
           git push
   build-windows:
@@ -56,10 +54,10 @@ jobs:
         
     - name: Commit changes
       run: |
-          git config --global user.email "labfoxdev@gmail.com"
+          git config --global user.email "action@github.com"
           git config --global user.name "Github Actions"
           git add *
-          git commit -am "New build"
+          git commit -am "New build for GITHUB_SHA"
           git fetch
           git push
   build-osx:
@@ -83,10 +81,10 @@ jobs:
           cp ./whatsfly/dependencies/whatsmeow/static/whatsmeow-darwin-arm64.dylib ./whatsfly/dependencies/whatsmeow/static/by-version/whatsmeow-darwin-arm64-$GITHUB_SHA.dylib    
     - name: Commit changes
       run: |
-          git config --global user.email "labfoxdev@gmail.com"
+          git config --global user.email "action@github.com"
           git config --global user.name "Github Actions"
           git add *
-          git commit -am "New build"
+          git commit -am "New build for GITHUB_SHA"
           git fetch
           git rebase
           git push -f
