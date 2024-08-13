@@ -12,3 +12,7 @@ build:
 
 mkdocs:
   configuration: docs/mkdocs.yml
+
+python:
+  install:
+  - requirements: requirements.txt
