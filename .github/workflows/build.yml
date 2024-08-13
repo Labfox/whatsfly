@@ -32,9 +32,11 @@ jobs:
           git config --global user.name "Github Actions"
           git add *
           git commit -am "New build"
+          git fetch
           git push
   build-windows:
     runs-on: windows-latest
+    if: false
     steps:
     - uses: actions/checkout@v4
 
@@ -58,6 +60,7 @@ jobs:
           git config --global user.name "Github Actions"
           git add *
           git commit -am "New build"
+          git fetch
           git push
   build-osx:
     runs-on: macos-latest
@@ -81,6 +84,7 @@ jobs:
       run: |
           git config --global user.email "labfoxdev@gmail.com"
           git config --global user.name "Github Actions"
-          git commit -am "New build"
           git add *
+          git commit -am "New build"
+          git fetch
           git push
