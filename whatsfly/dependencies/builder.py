@@ -102,14 +102,14 @@ def ensureUsableBinaries():
             raise RuntimeError(
                 f"Server responded with {rq.status_code}, impossible to find the binaries, giving up"
             )
-        open(f"{root_dir}/dependencies/{get_dll_filename()}", "wb").write(rq.content)
+        open(f"{root_dir.replace("dependencies", "")}/dependencies/{get_dll_filename()}", "wb").write(rq.content)
 
         rq = requests.get(url, stream=True)
         if rq.status_code != 200:
             raise RuntimeError(
                 f"Server responded with {rq.status_code}, impossible to find the binaries, giving up"
             )
-        open(f"{root_dir}/dependencies/{get_dll_filename(h=True)}", "wb").write(
+        open(f"{root_dir.replace("dependencies", "")}/dependencies/{get_dll_filename(h=True)}", "wb").write(
             rq.content
         )
     except Exception:
