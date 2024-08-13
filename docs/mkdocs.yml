@@ -1,13 +1,6 @@
 site_name: Whatsfly Docs
 theme: readthedocs
 plugins:
-- mkdocstrings:
-    handlers:
-      python:
-        options:
-          show_submodules: true
-          docstring_style: sphinx
 - search
 nav:
   - Home: index.md
-  - "Api Reference": apiReference.md
