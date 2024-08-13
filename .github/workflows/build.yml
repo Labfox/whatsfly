@@ -11,7 +11,7 @@ on:
 
 jobs:
 
-  build-ubuntu-amd64:
+  build-ubuntu:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -23,6 +23,47 @@ jobs:
 
     - name: Build
       run: GOOS=linux GOARCH=amd64 CGO_ENABLED=1 go build -v -buildmode=c-shared -ldflags=-s -o ./whatsfly/dependencies/whatsmeow/static/whatsmeow-linux-amd64.so ./whatsfly/dependencies/main.go
+    
+    - name: Commit changes
+      run: |
+          git config --global user.email "labfoxdev@gmail.com"
+          git config --global user.name "Github Actions"
+          git commit -am "New build"
+          git push
+  build-windows:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.21'
+
+    - name: Build
+      run: |
+          GOOS=windows GOARCH=amd64 CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc go build -v -buildmode=c-shared -o ./whatsfly/dependencies/whatsmeow/static/whatsmeow-windows-64.so ./whatsfly/dependencies/main.go
+        
+    - name: Commit changes
+      run: |
+          git config --global user.email "labfoxdev@gmail.com"
+          git config --global user.name "Github Actions"
+          git commit -am "New build"
+          git push
+  build-osx:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.21'
+
+    - name: Build
+      run: |
+          GOOS=darwin GOARCH=amd64 go build -v -buildmode=c-shared -o ./whatsfly/dependencies/whatsmeow/static/whatsmeow-darwin-arm64.so ./whatsfly/dependencies/main.go
+          GOOS=darwin GOARCH=arm64 go build -v -buildmode=c-shared -o ./whatsfly/dependencies/whatsmeow/static/whatsmeow-darwin-arm64.so ./whatsfly/dependencies/main.go
     
     - name: Commit changes
       run: |
