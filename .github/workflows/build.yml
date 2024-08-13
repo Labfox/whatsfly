@@ -30,6 +30,7 @@ jobs:
       run: |
           git config --global user.email "labfoxdev@gmail.com"
           git config --global user.name "Github Actions"
+          git add *
           git commit -am "New build"
           git push
   build-windows:
@@ -55,6 +56,7 @@ jobs:
       run: |
           git config --global user.email "labfoxdev@gmail.com"
           git config --global user.name "Github Actions"
+          git add *
           git commit -am "New build"
           git push
   build-osx:
@@ -68,6 +70,8 @@ jobs:
         go-version: '1.21'
 
     - name: Build
+      env:
+        CGO_ENABLED: 1
       run: |
           GOOS=darwin GOARCH=amd64 go build -v -buildmode=c-shared -o ./whatsfly/dependencies/whatsmeow/static/whatsmeow-darwin-amd64.dylib ./whatsfly/dependencies/main.go
           GOOS=darwin GOARCH=arm64 go build -v -buildmode=c-shared -o ./whatsfly/dependencies/whatsmeow/static/whatsmeow-darwin-arm64.dylib ./whatsfly/dependencies/main.go
@@ -78,4 +82,5 @@ jobs:
           git config --global user.email "labfoxdev@gmail.com"
           git config --global user.name "Github Actions"
           git commit -am "New build"
+          git add *
           git push
