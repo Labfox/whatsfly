@@ -12,3 +12,5 @@ pytest-asyncio
 aiosqlite
 setuptools
 requests
+mkdocstrings
+mkdocs
