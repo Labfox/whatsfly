@@ -1,2 +1,2 @@
-include whatsfly/dependencies/whatsmeow/*.so
-include whatsfly/dependencies/whatsmeow/*.dll
+exclude whatsfly/dependencies/whatsmeow/static/*
+include whatsfly/dependencies/*.*
