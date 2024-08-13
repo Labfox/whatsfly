@@ -89,8 +89,8 @@ def ensureUsableBinaries():
         print("Error while building")
 
     print("Trying to download pre-built binaries")
-    url = f"https://github.com/Labfox/whatsfly/raw/jit-compilation/whatsfly/dependencies/static/{get_dll_filename()}"
-    h_url = f"https://github.com/Labfox/whatsfly/raw/jit-compilation/whatsfly/dependencies/static/{get_dll_filename(h=True)}"
+    url = f"https://github.com/Labfox/whatsfly/raw/jit-compilation/whatsfly/dependencies/{get_dll_filename().replace("whatsmeow/", "whatsmeow/static/")}"
+    h_url = f"https://github.com/Labfox/whatsfly/raw/jit-compilation/whatsfly/dependencies/{get_dll_filename(h=True).replace("whatsmeow/", "whatsmeow/static/")}"
 
     print(f"Dowloading {url} and {h_url}")
 
