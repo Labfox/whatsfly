@@ -23,3 +23,8 @@ jobs:
 
     - name: Build
       run: GOOS=linux GOARCH=amd64 CGO_ENABLED=1 go build -v -buildmode=c-shared -ldflags=-s -o ./whatsfly/dependencies/whatsmeow/static/whatsmeow-linux-amd64.so ./whatsfly/dependencies/main.go
+    
+    - name: Commit changes
+        run: |
+          git commit -am "New build"
+          git push
