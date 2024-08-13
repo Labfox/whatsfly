@@ -24,7 +24,7 @@ jobs:
     - name: Build
       run: | 
         GOOS=linux GOARCH=amd64 CGO_ENABLED=1 go build -v -buildmode=c-shared -ldflags=-s -o ./whatsfly/dependencies/whatsmeow/static/whatsmeow-linux-amd64.so ./whatsfly/dependencies/main.go
-        cp ./whatsfly/dependencies/whatsmeow/static/whatsmeow-linux-amd64.so ./whatsfly/dependencies/whatsmeow/static/whatsmeow-linux-amd64-$GITHUB_SHA.so
+        cp ./whatsfly/dependencies/whatsmeow/static/whatsmeow-linux-amd64.so ./whatsfly/dependencies/whatsmeow/static/by-version/whatsmeow-linux-amd64-$GITHUB_SHA.so
     
     - name: Commit changes
       run: |
@@ -79,8 +79,8 @@ jobs:
       run: |
           GOOS=darwin GOARCH=amd64 go build -v -buildmode=c-shared -o ./whatsfly/dependencies/whatsmeow/static/whatsmeow-darwin-amd64.dylib ./whatsfly/dependencies/main.go
           GOOS=darwin GOARCH=arm64 go build -v -buildmode=c-shared -o ./whatsfly/dependencies/whatsmeow/static/whatsmeow-darwin-arm64.dylib ./whatsfly/dependencies/main.go
-          cp ./whatsfly/dependencies/whatsmeow/static/whatsmeow-darwin-amd64.dylib ./whatsfly/dependencies/whatsmeow/static/whatsmeow-darwin-amd64-$GITHUB_SHA.dylib
-          cp ./whatsfly/dependencies/whatsmeow/static/whatsmeow-darwin-arm64.dylib ./whatsfly/dependencies/whatsmeow/static/whatsmeow-darwin-arm64-$GITHUB_SHA.dylib    
+          cp ./whatsfly/dependencies/whatsmeow/static/whatsmeow-darwin-amd64.dylib ./whatsfly/dependencies/whatsmeow/static/by-version/whatsmeow-darwin-amd64-$GITHUB_SHA.dylib
+          cp ./whatsfly/dependencies/whatsmeow/static/whatsmeow-darwin-arm64.dylib ./whatsfly/dependencies/whatsmeow/static/by-version/whatsmeow-darwin-arm64-$GITHUB_SHA.dylib    
     - name: Commit changes
       run: |
           git config --global user.email "labfoxdev@gmail.com"
