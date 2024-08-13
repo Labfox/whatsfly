@@ -76,6 +76,7 @@ jobs:
     - name: Get first modifications
       run: |
           git fetch
+          git rebase --continue
     - name: Build
       env:
         CGO_ENABLED: 1
@@ -90,4 +91,6 @@ jobs:
           git config --global user.name "Github Actions"
           git add *
           git commit -am "New build"
-          git push
+          git fetch
+          git rebase --continue
+          git push -f
