@@ -45,10 +45,15 @@ class BuildGoModule(install):
             f"building Go module with command: {' '.join(go_build_cmd)} in directory {os.getcwd()}/whatsfly/dependencies"
         )
         # Run the Go build command
-        status_code = subprocess.check_call(go_build_cmd, cwd="whatsfly/dependencies")
+        try:
+            status_code = subprocess.check_call(go_build_cmd, cwd="whatsfly/dependencies")
+        except:
+            print("Wheel build failed, will retry on runtime")
+            return
+
         print(f"Go build command exited with status code: {status_code}")
         if status_code != 0:
-            raise RuntimeError("Go build failed - this package cannot be installed")
+            print("Wheel build failed, will retry on runtime")
 
 
 setup(
