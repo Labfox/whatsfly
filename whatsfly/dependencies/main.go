@@ -124,7 +124,7 @@ func (w *WhatsAppClient) Connect() {
 			select {
 			case <-time.After(60 * time.Second):
 				w.Disconnect(client)
-				fmt.Println("Timeout; disconnect")
+				w.eventQueue.Enqueue("{\"eventType\":\"disconnect\", \"reason\": \"timeout\"}")
 				return
 			case evt, ok := <-qrChan:
 				if !ok {
@@ -144,20 +144,17 @@ func (w *WhatsAppClient) Connect() {
 					    fmt.Println("QR code:", evt.Code)
 					}
 				} else {
-					fmt.Println("Login event:", evt.Event)
 				}
 			}
 		}
 	} else {
 		err := client.Connect()
-		fmt.Println("User already logged in")
 		if err != nil {
 			panic(err)
 		}
 	}
 
 	w.wpClient = client
-	fmt.Println("WpClient set to client")
 }
 
 func (w *WhatsAppClient) addEventToQueue(msg string) {
@@ -205,7 +202,6 @@ func (w *WhatsAppClient) handler(rawEvt interface{}) {
 	case *events.StreamReplaced:
 		os.Exit(0)
 	case *events.Message:
-		// fmt.Println("3. Event type: Message")
 
 		var info string
 
@@ -462,7 +458,6 @@ func (w *WhatsAppClient) SendMessage(number string, message string, is_group boo
 
 	// Check if the client is connected
 	if !w.wpClient.IsConnected() {
-		fmt.Println("Reconnect")
 		err := w.wpClient.Connect()
 		if err != nil {
 			return 1

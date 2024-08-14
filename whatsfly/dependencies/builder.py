@@ -1,3 +1,5 @@
+import logging
+
 import requests
 from setuptools.command.install import install
 import subprocess
@@ -59,13 +61,15 @@ def build():
         f"whatsmeow/whatsmeow-{current_os}-{go_arch}.{dll_extension}",
         "main.go",
     ]
-    print(
+    logging.debug(
         f"building Go module with command: {' '.join(go_build_cmd)} in directory {os.getcwd()}/whatsfly/dependencies"
     )
 
+    root_dir = os.path.abspath(os.path.dirname(__file__))
+
     # Run the Go build command
-    status_code = subprocess.check_call(go_build_cmd, cwd="whatsfly/dependencies")
-    print(f"Go build command exited with status code: {status_code}")
+    status_code = subprocess.check_call(go_build_cmd, cwd=f"whatsfly/dependencies")
+    logging.debug(f"Go build command exited with status code: {status_code}")
     if status_code == 127:
         raise RuntimeError("Go build impossible")
     if status_code != 0:
@@ -77,22 +81,22 @@ def ensureUsableBinaries():
         import whatsfly.whatsmeow
         return
     except OSError:
-        print("Binary unexisent, trying to build")
+        logging.info("Binary unexisent, trying to build")
 
     try:
         build()
         import whatsfly.whatsmeow
         return
     except FileNotFoundError:
-        print("Go unusable")
+        logging.info("Go unusable")
     except RuntimeError:
-        print("Error while building")
+        logging.warning("Unexpected error while building")
 
-    print("Trying to download pre-built binaries")
+    logging.info("Trying to download pre-built binaries")
     url = f"https://github.com/Labfox/whatsfly/raw/main/whatsfly/dependencies/{get_dll_filename().replace("whatsmeow/", "whatsmeow/static/")}"
     h_url = f"https://github.com/Labfox/whatsfly/raw/main/whatsfly/dependencies/{get_dll_filename(h=True).replace("whatsmeow/", "whatsmeow/static/")}"
 
-    print(f"Dowloading {url} and {h_url}")
+    logging.debug(f"Dowloading {url} and {h_url}")
 
     root_dir = os.path.abspath(os.path.dirname(__file__))
 
@@ -126,4 +130,4 @@ class BuildGoModule(install):
         try:
             build()
         except RuntimeError:
-            print("Build unsuccessful, will retry on runtime")
+            logging.warning("Build unsuccessful, will retry on runtime")
