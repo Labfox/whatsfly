@@ -44,8 +44,8 @@ WhatsFly offers a streamlined and efficient way to integrate WhatsApp into your 
 | Send contact cards | ⏳ |
 | Send location | ⏳ |
 | Message replies | ⏳ |
-| Join groups by invite | ⏳ |
-| Get invite for group | ⏳ |
+| Join groups by invite | ✅ |
+| Get invite for group | ✅ |
 | Modify group info (subject, description) | ⏳ |
 | Modify group settings (send messages, edit info) | ⏳ |
 | Add group participants | ⏳ |

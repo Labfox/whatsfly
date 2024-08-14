@@ -10,6 +10,8 @@ from .whatsmeow import (
     send_video_wrapper,
     send_audio_wrapper,
     send_document_wrapper,
+    get_group_invite_link_wrapper,
+    join_group_with_invite_link_wrapper
 )
 import ctypes
 import json
@@ -149,7 +151,7 @@ class WhatsApp:
         :param video_path: The path to the video to send
         :param caption: The caption for the video
         :param group: Send the message to a group ?
-        return: Function success or not
+        :return: Function success or not
         """
         ret = send_video_wrapper(
             self.c_WhatsAppClientId,
@@ -175,7 +177,7 @@ class WhatsApp:
         :param document_path: The path to the document to send
         :param caption: The caption for the document
         :param group: Send the message to a group ?
-        return: Function success or not
+        :return: Function success or not
         """
         return send_document_wrapper(
             self.c_WhatsAppClientId,
@@ -184,6 +186,32 @@ class WhatsApp:
             caption.encode(),
             group,
         )
+
+    def getGroupInviteLink(
+            self, group: str, reset: bool = False
+    ):
+        """
+        Get invite link for group, sends it to message queue
+        :param group: Group id
+        :param reset: If true, resets the old link before generating the new one
+        :return: Successfull
+        """
+        return get_group_invite_link_wrapper(
+            self.c_WhatsAppClientId,
+            group.encode(),
+            reset,
+        )
+
+    def joinGroupWithInviteLink(self, code: str):
+        """
+        Joins a group with an invite link
+        :param code: The link
+        """
+        return join_group_with_invite_link_wrapper(
+            self.c_WhatsAppClientId,
+            code.encode(),
+        )
+
 
     # -- unimplemented
 
@@ -225,11 +253,6 @@ class WhatsApp:
 
     def unsubscribe_new_messages(self, observer):
         raise NotImplementedError
-
-    def is_connected(self) -> bool:
-        raise NotImplementedError
-        # return self.wapi_functions.isConnected()
-        return True
 
 
 if __name__ == "__main__":

@@ -36,37 +36,7 @@ chat.send_image(phone="6283139750000", image_path="path/to/image.jpg" caption="H
 
 ## Features
 
-| Feature  | Status |
-| ------------- |:------:|
-| Multi Device  |   ✅    |
-| Send messages  |   ✅    |
-| Receive messages  |   ✅    |
-| Receive media (images/audio/video/documents)  |   ✅    |
-| Receive location |   ✅    | 
-| Send image  |   ✅    |
-| Send media (video)  |   ✅    |
-| Send media (documents)  | ✅  |
-| Send media (audio)  | broken |
-| Send stickers | soon!  |
-| Send contact cards | soon!  |
-| Send location | soon!  |
-| Message replies | soon!  |
-| Join groups by invite  | soon!  |
-| Get invite for group  | soon!  |
-| Modify group info (subject, description)  | soon!  |
-| Modify group settings (send messages, edit info)  | soon!  |
-| Add group participants  | soon!  |
-| Kick group participants  | soon!  |
-| Promote/demote group participants | soon!  |
-| Mention users | soon!  |
-| Mute/unmute chats | soon!  |
-| Block/unblock contacts | soon!  |
-| Get contact info | soon!  |
-| Get profile pictures | soon!  |
-| Set user status message | soon!  |
-| React to messages | soon!  |
-
-Something missing? Make an issue and let us know!
+First page on the docs
 
 ## Supported machines
 

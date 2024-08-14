@@ -692,6 +692,40 @@ func (w *WhatsAppClient) SendDocument(number string, documentPath string, captio
 	return 0
 }
 
+func (w *WhatsAppClient) GetGroupInviteLink(group string, reset bool) int {
+    numberObj := getJid(group, true)
+
+	if !w.wpClient.IsConnected() {
+		err := w.wpClient.Connect()
+		if err != nil {
+			return 1
+		}
+	}
+
+	link, err := w.wpClient.GetGroupInviteLink(numberObj, reset)
+	w.addEventToQueue("{\"eventType\":\"groupInviteLink\",\"group\": \""+group+"\" \"link\":" + link + "}")
+	if err != nil {
+		return 1
+	}
+	return 0
+}
+
+func (w *WhatsAppClient) JoinGroupWithInviteLink(link string) int {
+	if !w.wpClient.IsConnected() {
+		err := w.wpClient.Connect()
+		if err != nil {
+			return 1
+		}
+	}
+
+	_, err := w.wpClient.JoinGroupWithLink(link)
+	if err != nil {
+		return 1
+	}
+	return 0
+}
+
+
 //export NewWhatsAppClientWrapper
 func NewWhatsAppClientWrapper(c_phone_number *C.char, c_media_path *C.char, fn_disconnect_callback C.ptr_to_pyfunc, fn_event_callback C.ptr_to_pyfunc_str) C.int {
 	phone_number := C.GoString(c_phone_number)
@@ -779,6 +813,28 @@ func SendDocumentWrapper(id C.int, c_phone_number *C.char, c_document_path *C.ch
 	w := handles[int(id)]
 	return C.int(w.SendDocument(phone_number, document_path, caption, is_group))
 }
+
+//export GetGroupInviteLinkWrapper
+func GetGroupInviteLinkWrapper(id C.int, c_jid *C.char, c_reset C.bool) C.int {
+	jid := C.GoString(c_jid)
+	reset := bool(c_reset)
+
+	w := handles[int(id)]
+
+	return C.int(w.GetGroupInviteLink(jid, reset))
+}
+
+//export JoinGroupWithInviteLinkWrapper
+func JoinGroupWithInviteLinkWrapper(id C.int, c_link *C.char) C.int {
+	link := C.GoString(c_link)
+
+	w := handles[int(id)]
+
+	return C.int(w.JoinGroupWithInviteLink(link))
+}
+
+
+
 
 func main() {
 }

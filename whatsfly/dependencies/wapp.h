@@ -29,6 +29,8 @@ extern "C" {
   extern int SendVideoWrapper(int id, char* c_number, char* c_video_path, char* c_caption, bool is_group);
   extern int SendAudioWrapper(int id, char* c_number, char* c_audio_path, bool is_group);
   extern int SendDocumentWrapper(int id, char* c_number, char* c_video_path, char* c_caption, bool is_group);
+  extern int GetGroupInviteLinkWrapper(int id, char* c_jid, bool reset);
+  extern int JoinGroupWithInviteLinkWrapper(int id, char* c_link);
   
 #ifdef __cplusplus
 }

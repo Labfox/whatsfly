@@ -91,3 +91,16 @@ send_document_wrapper.argstype = [
     ctypes.c_char_p,
     ctypes.c_bool,
 ]
+
+get_group_invite_link_wrapper = lib.GetGroupInviteLinkWrapper
+get_group_invite_link_wrapper.argstype = [
+    ctypes.c_int,
+    ctypes.c_char_p,
+    ctypes.c_bool,
+]
+
+join_group_with_invite_link_wrapper = lib.JoinGroupWithInviteLinkWrapper
+join_group_with_invite_link_wrapper.argstype = [
+    ctypes.c_int,
+    ctypes.c_char_p
+]
