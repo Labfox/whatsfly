@@ -87,6 +87,8 @@ extern int SendImageWrapper(int id, char* c_phone_number, char* c_image_path, ch
 extern int SendVideoWrapper(int id, char* c_phone_number, char* c_video_path, char* c_caption, _Bool c_is_group);
 extern int SendAudioWrapper(int id, char* c_phone_number, char* c_audio_path, _Bool c_is_group);
 extern int SendDocumentWrapper(int id, char* c_phone_number, char* c_document_path, char* c_caption, _Bool c_is_group);
+extern int GetGroupInviteLinkWrapper(int id, char* c_jid, _Bool c_reset);
+extern int JoinGroupWithInviteLinkWrapper(int id, char* c_link);
 
 #ifdef __cplusplus
 }
