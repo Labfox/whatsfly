@@ -43,8 +43,6 @@ pyyaml-env-tag==0.1
     # via mkdocs
 requests==2.32.3
     # via -r requirements.in
-setuptools==72.2.0
-    # via -r requirements.in
 six==1.16.0
     # via python-dateutil
 types-pyyaml==6.0.12.20240808
