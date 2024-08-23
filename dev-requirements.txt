@@ -96,7 +96,7 @@ pyyaml-env-tag==0.1
     # via mkdocs
 requests==2.32.3
     # via -r dev-requirements.in
-ruff==0.6.1
+ruff==0.6.2
     # via -r dev-requirements.in
 six==1.16.0
     # via python-dateutil
