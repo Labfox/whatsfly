@@ -89,6 +89,11 @@ extern int SendAudioWrapper(int id, char* c_phone_number, char* c_audio_path, _B
 extern int SendDocumentWrapper(int id, char* c_phone_number, char* c_document_path, char* c_caption, _Bool c_is_group);
 extern int GetGroupInviteLinkWrapper(int id, char* c_jid, _Bool c_reset);
 extern int JoinGroupWithInviteLinkWrapper(int id, char* c_link);
+extern int SetGroupAnnounceWrapper(int id, char* c_jid, _Bool c_announce);
+extern int SetGroupLockedWrapper(int id, char* c_jid, _Bool c_locked);
+extern int SetGroupNameWrapper(int id, char* c_jid, char* c_name);
+extern int SetGroupTopicWrapper(int id, char* c_jid, char* c_topic);
+extern int Version();
 
 #ifdef __cplusplus
 }
