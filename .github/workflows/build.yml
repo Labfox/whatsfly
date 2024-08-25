@@ -23,7 +23,7 @@ jobs:
 
     - name: Build
       run: | 
-        cd whatsfly/dependencies
+        cd whatsfly/dependencies/whatsmeow
         GOOS=linux GOARCH=amd64 CGO_ENABLED=1 go build -v -buildmode=c-shared -ldflags=-s -o ./whatsfly/dependencies/whatsmeow/static/whatsmeow-linux-amd64.so ./whatsfly/dependencies/main.go
     
     - name: Commit changes
@@ -77,7 +77,7 @@ jobs:
       env:
         CGO_ENABLED: 1
       run: |
-          cd whatsfly/dependencies
+          cd whatsfly/dependencies/whatsmeow
           GOOS=darwin GOARCH=amd64 go build -v -buildmode=c-shared -o ./whatsfly/dependencies/whatsmeow/static/whatsmeow-darwin-amd64.dylib ./whatsfly/dependencies/main.go
           GOOS=darwin GOARCH=arm64 go build -v -buildmode=c-shared -o ./whatsfly/dependencies/whatsmeow/static/whatsmeow-darwin-arm64.dylib ./whatsfly/dependencies/main.go
     - name: Commit changes

@@ -10,6 +10,6 @@ updates:
     schedule:
       interval: "daily"
   - package-ecosystem: gomod
-    directory: /whatsfly/dependencies
+    directory: /whatsfly/dependencies/whatsmeow
     schedule:
       interval: "daily"
