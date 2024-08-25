@@ -23,8 +23,8 @@ jobs:
 
     - name: Build
       run: | 
-        cd whatsfly/dependencies/whatsmeow
-        GOOS=linux GOARCH=amd64 CGO_ENABLED=1 go build -v -buildmode=c-shared -ldflags=-s -o ./whatsfly/dependencies/whatsmeow/static/whatsmeow-linux-amd64.so ./whatsfly/dependencies/main.go
+        cd whatsfly/dependencies
+        GOOS=linux GOARCH=amd64 CGO_ENABLED=1 go build -v -buildmode=c-shared -ldflags=-s -o ./whatsmeow/static/whatsmeow-linux-amd64.so ./main.go
     
     - name: Commit changes
       run: |
@@ -78,8 +78,8 @@ jobs:
         CGO_ENABLED: 1
       run: |
           cd whatsfly/dependencies/whatsmeow
-          GOOS=darwin GOARCH=amd64 go build -v -buildmode=c-shared -o ./whatsfly/dependencies/whatsmeow/static/whatsmeow-darwin-amd64.dylib ./whatsfly/dependencies/main.go
-          GOOS=darwin GOARCH=arm64 go build -v -buildmode=c-shared -o ./whatsfly/dependencies/whatsmeow/static/whatsmeow-darwin-arm64.dylib ./whatsfly/dependencies/main.go
+          GOOS=darwin GOARCH=amd64 go build -v -buildmode=c-shared -o ./whatsmeow/static/whatsmeow-darwin-amd64.dylib ./main.go
+          GOOS=darwin GOARCH=arm64 go build -v -buildmode=c-shared -o ./whatsmeow/static/whatsmeow-darwin-arm64.dylib ./main.go
     - name: Commit changes
       run: |
           git config --global user.email "action@github.com"
