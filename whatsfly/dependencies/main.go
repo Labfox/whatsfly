@@ -933,7 +933,7 @@ func SetGroupTopicWrapper(id C.int, c_jid *C.char, c_topic *C.char) C.int {
 
 //export Version
 func Version() C.int {
-	return C.int("012")
+	return C.int(012)
 }
 
 
