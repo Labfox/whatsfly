@@ -93,6 +93,7 @@ extern int SetGroupAnnounceWrapper(int id, char* c_jid, _Bool c_announce);
 extern int SetGroupLockedWrapper(int id, char* c_jid, _Bool c_locked);
 extern int SetGroupNameWrapper(int id, char* c_jid, char* c_name);
 extern int SetGroupTopicWrapper(int id, char* c_jid, char* c_topic);
+extern int Version();
 
 #ifdef __cplusplus
 }
