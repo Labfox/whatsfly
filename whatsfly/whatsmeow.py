@@ -104,3 +104,31 @@ join_group_with_invite_link_wrapper.argstype = [
     ctypes.c_int,
     ctypes.c_char_p
 ]
+
+set_group_announce_wrapper = lib.SetGroupAnnounceWrapper
+set_group_announce_wrapper.argstype = [
+    ctypes.c_int,
+    ctypes.c_char_p,
+    ctypes.c_bool
+]
+
+set_group_locked_wrapper = lib.SetGroupLockedWrapper
+set_group_locked_wrapper.argstype = [
+    ctypes.c_int,
+    ctypes.c_char_p,
+    ctypes.c_bool
+]
+
+set_group_name_wrapper = lib.SetGroupNameWrapper
+set_group_name_wrapper.argstype = [
+    ctypes.c_int,
+    ctypes.c_char_p,
+    ctypes.c_char_p
+]
+
+set_group_topic_wrapper = lib.SetGroupTopicWrapper
+set_group_topic_wrapper.argstype = [
+    ctypes.c_int,
+    ctypes.c_char_p,
+    ctypes.c_char_p
+]

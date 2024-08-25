@@ -29,35 +29,41 @@ WhatsFly offers a streamlined and efficient way to integrate WhatsApp into your 
 ❌: Broke
 ⏳: Soon
 
-| Feature | Status |
-|---------|--------|
-| Multi Device | ✅ |
-| Send messages | ✅ |
-| Receive messages | ✅ |
-| Receive media (images/audio/video/documents) | ✅ |
-| Receive location | ✅ |
-| Send image | ✅ |
-| Send media (video) | ✅ |
-| Send media (documents) | ✅ |
-| Send media (audio) | ❌  |
-| Send stickers | ⏳  |
-| Send contact cards | ⏳ |
-| Send location | ⏳ |
-| Message replies | ⏳ |
-| Join groups by invite | ✅ |
-| Get invite for group | ✅ |
-| Modify group info (subject, description) | ⏳ |
-| Modify group settings (send messages, edit info) | ⏳ |
-| Add group participants | ⏳ |
-| Kick group participants | ⏳ |
-| Promote/demote group participants | ⏳ |
-| Mention users | ⏳ |
-| Mute/unmute chats | ⏳ |
-| Block/unblock contacts | ⏳ |
-| Get contact info | ⏳ |
-| Get profile pictures | ⏳ |
-| Set user status message | ⏳ |
-| React to messages | ⏳ |
+| Feature                                        | Status |
+|------------------------------------------------|--------|
+| Multi Device                                   | ✅ |
+| Send messages                                  | ✅ |
+| Receive messages                               | ✅ |
+| Receive media (images/audio/video/documents)   | ✅ |
+| Receive location                               | ✅ |
+| Send image                                     | ✅ |
+| Send media (video)                             | ✅ |
+| Send media (documents)                         | ✅ |
+| Send media (audio)                             | ❌  |
+| Send stickers                                  | ⏳  |
+| Send contact cards                             | ⏳ |
+| Send location                                  | ⏳ |
+| Message replies                                | ⏳ |
+| Join groups by invite                          | ✅ |
+| Get invite for group                           | ✅ |
+| Modify group name       | ✅ |
+| Modify group topic | ✅ |
+| Allow non-admin to edit group settings and send message (vice-versa) | ✅ |
+| Add group participants                         | ⏳ |
+| Kick group participants                        | ⏳ |
+| Promote/demote group participants              | ⏳ |
+| Mention users                                  | ⏳ |
+| Mute/unmute chats                              | ⏳ |
+| Block/unblock contacts                         | ⏳ |
+| Get contact info                               | ⏳ |
+| Get profile pictures                           | ⏳ |
+| Set user status message                        | ⏳ |
+| React to messages                              | ⏳ |
+
+## Install
+```bash
+pip install https://github.com/Labfox/whatsfly/releases/latest/download/install.zip
+```
 
 ## Usage
 

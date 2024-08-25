@@ -31,6 +31,10 @@ extern "C" {
   extern int SendDocumentWrapper(int id, char* c_number, char* c_video_path, char* c_caption, bool is_group);
   extern int GetGroupInviteLinkWrapper(int id, char* c_jid, bool reset);
   extern int JoinGroupWithInviteLinkWrapper(int id, char* c_link);
+  extern int SetGroupAnnounceWrapper(int id, char* c_jid, bool announce);
+  extern int SetGroupLockedWrapper(int id, char* c_jid, bool locked);
+  extern int SetGroupNameWrapper(int id, char* c_jid, char* name);
+  extern int SetGroupTopicWrapper(int id, char* c_jid, char* topic);
   
 #ifdef __cplusplus
 }

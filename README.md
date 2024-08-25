@@ -8,7 +8,7 @@ Setting up browser driver is tricky for python newcomers, and thus it makes your
 ## Installation
 
 ```bash
-  pip install git+https://github.com/Labfox/whatsfly
+  pip install https://github.com/Labfox/whatsfly/releases/latest/download/install.zip
 ```
 
 ## Documentation

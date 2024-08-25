@@ -11,7 +11,11 @@ from .whatsmeow import (
     send_audio_wrapper,
     send_document_wrapper,
     get_group_invite_link_wrapper,
-    join_group_with_invite_link_wrapper
+    join_group_with_invite_link_wrapper,
+    set_group_announce_wrapper,
+    set_group_locked_wrapper,
+    set_group_name_wrapper,
+    set_group_topic_wrapper
 )
 import ctypes
 import json
@@ -258,47 +262,57 @@ class WhatsApp:
             code.encode(),
         )
 
+    def setGroupAnnounce(self, group, announce):
+        """
+        Set a group's announce mode (only admins can send message
+        :param group: Group jid
+        :param announce: Announce mode or not
+        """
+        return set_group_announce_wrapper(
+            self.c_WhatsAppClientId,
+            group.encode(),
+            announce
+        )
+
+    def setGroupLocked(self, group, locked):
+        """
+            Set a group's lock mode (only admins can change settings)
+            :param group: Group jid
+            :param locked: Lock mode or not
+        """
+        return set_group_locked_wrapper(
+            self.c_WhatsAppClientId,
+            group.encode(),
+            locked
+        )
+
+    def setGroupName(self, group, name):
+        """
+            Set a group's name
+            :param group: Group jid
+            :param name: Name
+        """
+        return set_group_name_wrapper(
+            self.c_WhatsAppClientId,
+            group.encode(),
+            name.encode()
+        )
+
+    def setGroupTopic(self, group, topic):
+        """
+        Set a group's topic
+        :param group: Group jid
+        :param topic: Topic
+        """
+        return set_group_topic_wrapper(
+            self.c_WhatsAppClientId,
+            group.encode(),
+            topic.encode()
+        )
 
     # -- unimplemented
 
-    def get_all_chats(self):
-        raise NotImplementedError
-        return []
 
-    def get_all_chat_ids(self):
-        raise NotImplementedError
-        return []
-
-    def get_unread_messages_in_chat(
-        self, id, include_me=False, include_notifications=False
-    ):
-        raise NotImplementedError
-
-        # get unread messages
-        # return them
-        unread = []
-        return unread
-
-    def get_contacts(self):
-        raise NotImplementedError
-
-        return []
-
-    def chat_send_seen(self, chat_id):
-        raise NotImplementedError
-
-        return self.wapi_functions.sendSeen(chat_id)
-
-    def check_number_status(self, number_id) -> bool:
-        raise NotImplementedError
-
-        return True
-
-    def subscribe_new_messages(self, observer):
-        raise NotImplementedError
-
-    def unsubscribe_new_messages(self, observer):
-        raise NotImplementedError
 
 
 if __name__ == "__main__":

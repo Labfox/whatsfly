@@ -721,6 +721,74 @@ func (w *WhatsAppClient) JoinGroupWithInviteLink(link string) int {
 	return 0
 }
 
+func (w *WhatsAppClient) SetGroupAnnounce(group string, announce bool) int {
+    numberObj := getJid(group, true)
+
+	if !w.wpClient.IsConnected() {
+		err := w.wpClient.Connect()
+		if err != nil {
+			return 1
+		}
+	}
+
+	err := w.wpClient.SetGroupAnnounce(numberObj, announce)
+	if err != nil {
+		return 1
+	}
+	return 0
+}
+
+func (w *WhatsAppClient) SetGroupLocked(group string, locked bool) int {
+    numberObj := getJid(group, true)
+
+	if !w.wpClient.IsConnected() {
+		err := w.wpClient.Connect()
+		if err != nil {
+			return 1
+		}
+	}
+
+	err := w.wpClient.SetGroupLocked(numberObj, locked)
+	if err != nil {
+		return 1
+	}
+	return 0
+}
+
+func (w *WhatsAppClient) SetGroupName(group string, name string) int {
+    numberObj := getJid(group, true)
+
+	if !w.wpClient.IsConnected() {
+		err := w.wpClient.Connect()
+		if err != nil {
+			return 1
+		}
+	}
+
+	err := w.wpClient.SetGroupName(numberObj, name)
+	if err != nil {
+		return 1
+	}
+	return 0
+}
+
+func (w *WhatsAppClient) SetGroupTopic(group string, topic string) int {
+    numberObj := getJid(group, true)
+
+	if !w.wpClient.IsConnected() {
+		err := w.wpClient.Connect()
+		if err != nil {
+			return 1
+		}
+	}
+
+	err := w.wpClient.SetGroupTopic(numberObj, "", "", topic)
+	if err != nil {
+		return 1
+	}
+	return 0
+}
+
 
 //export NewWhatsAppClientWrapper
 func NewWhatsAppClientWrapper(c_phone_number *C.char, c_media_path *C.char, fn_disconnect_callback C.ptr_to_pyfunc, fn_event_callback C.ptr_to_pyfunc_str) C.int {
@@ -829,6 +897,45 @@ func JoinGroupWithInviteLinkWrapper(id C.int, c_link *C.char) C.int {
 	return C.int(w.JoinGroupWithInviteLink(link))
 }
 
+//export SetGroupAnnounceWrapper
+func SetGroupAnnounceWrapper(id C.int, c_jid *C.char, c_announce C.bool) C.int {
+	jid := C.GoString(c_jid)
+	announce := bool(c_announce)
+
+	w := handles[int(id)]
+
+	return C.int(w.SetGroupAnnounce(jid, announce))
+}
+
+//export SetGroupLockedWrapper
+func SetGroupLockedWrapper(id C.int, c_jid *C.char, c_locked C.bool) C.int {
+	jid := C.GoString(c_jid)
+	locked := bool(c_locked)
+
+	w := handles[int(id)]
+
+	return C.int(w.SetGroupLocked(jid, locked))
+}
+
+//export SetGroupNameWrapper
+func SetGroupNameWrapper(id C.int, c_jid *C.char, c_name *C.char) C.int {
+	jid := C.GoString(c_jid)
+	name := C.GoString(c_name)
+
+	w := handles[int(id)]
+
+	return C.int(w.SetGroupName(jid, name))
+}
+
+//export SetGroupTopicWrapper
+func SetGroupTopicWrapper(id C.int, c_jid *C.char, c_topic *C.char) C.int {
+	jid := C.GoString(c_jid)
+	topic := C.GoString(c_topic)
+
+	w := handles[int(id)]
+
+	return C.int(w.SetGroupTopic(jid, topic))
+}
 
 
 
