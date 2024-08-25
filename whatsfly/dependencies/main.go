@@ -798,12 +798,6 @@ func NewWhatsAppClientWrapper(c_phone_number *C.char, c_media_path *C.char, fn_d
 	w := NewWhatsAppClient(phone_number, media_path, fn_disconnect_callback, fn_event_callback)
 	handles = append(handles, w)
 
-
-   	// try fix run on google colab issue
-	//C.free(unsafe.Pointer(c_phone_number))
-	//C.free(unsafe.Pointer(c_media_path))
-
-
 	return C.int(len(handles) - 1)
 }
 
@@ -937,6 +931,10 @@ func SetGroupTopicWrapper(id C.int, c_jid *C.char, c_topic *C.char) C.int {
 	return C.int(w.SetGroupTopic(jid, topic))
 }
 
+//export Version
+func Version() C.int {
+	return C.int("012")
+}
 
 
 func main() {

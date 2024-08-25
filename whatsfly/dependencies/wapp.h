@@ -35,6 +35,7 @@ extern "C" {
   extern int SetGroupLockedWrapper(int id, char* c_jid, bool locked);
   extern int SetGroupNameWrapper(int id, char* c_jid, char* name);
   extern int SetGroupTopicWrapper(int id, char* c_jid, char* topic);
+  extern int Version();
   
 #ifdef __cplusplus
 }
