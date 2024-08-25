@@ -65,9 +65,8 @@ setup(
     url="https://github.com/cloned-doy/whatsfly",
     keywords="whatsfly",
     description="WhatsApp on the fly.",
-    long_description=open("README.md", encoding="utf-8").read(),
-    long_description_content_type="text/markdown",
     packages=find_packages(),
+    install_reqs = ["types-PyYAML", "setuptools", "requests", "qrcode"],
     include_package_data=True,
     cmdclass={
         "install": BuildGoModule,
