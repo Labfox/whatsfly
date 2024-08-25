@@ -13,7 +13,6 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/mdp/qrterminal/v3"
 	"go.mau.fi/whatsmeow"
 	waProto "go.mau.fi/whatsmeow/binary/proto"
 	"go.mau.fi/whatsmeow/store"
@@ -137,11 +136,8 @@ func (w *WhatsAppClient) Connect() {
 							panic(err)
 						}
 						w.eventQueue.Enqueue("{\"eventType\":\"linkCode\", \"code\": \"" + linkingCode + "\"}")
-						fmt.Println("Linking code:", linkingCode)
 					}else {
                         w.eventQueue.Enqueue("{\"eventType\":\"qrCode\", \"code\": \"" + evt.Code + "\"}")
-					    qrterminal.GenerateHalfBlock(evt.Code, qrterminal.L, os.Stdout)
-					    fmt.Println("QR code:", evt.Code)
 					}
 				} else {
 				}

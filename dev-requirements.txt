@@ -22,7 +22,7 @@ ghp-import==2.1.0
     # via mkdocs
 identify==2.6.0
     # via pre-commit
-idna==3.7
+idna==3.8
     # via
     #   requests
     #   yarl
@@ -32,7 +32,7 @@ isort==5.13.2
     # via -r dev-requirements.in
 jinja2==3.1.4
     # via mkdocs
-markdown==3.6
+markdown==3.7
     # via mkdocs
 markupsafe==2.1.5
     # via
@@ -43,12 +43,14 @@ mergedeep==1.3.4
     #   mkdocs
     #   mkdocs-get-deps
 mkdocs==1.6.0
-    # via -r dev-requirements.in
+    # via
+    #   -r dev-requirements.in
+    #   -r requirements.in
 mkdocs-get-deps==0.2.0
     # via mkdocs
 multidict==6.0.5
     # via yarl
-mypy==1.11.1
+mypy==1.11.2
     # via -r dev-requirements.in
 mypy-extensions==1.0.0
     # via
@@ -74,6 +76,8 @@ pluggy==1.5.0
     # via pytest
 pre-commit==3.8.0
     # via -r dev-requirements.in
+pypng==0.20220715.0
+    # via qrcode
 pytest==8.3.2
     # via
     #   -r dev-requirements.in
@@ -94,18 +98,31 @@ pyyaml==6.0.2
     #   vcrpy
 pyyaml-env-tag==0.1
     # via mkdocs
+qrcode==7.4.2
+    # via
+    #   -r dev-requirements.in
+    #   -r requirements.in
 requests==2.32.3
-    # via -r dev-requirements.in
+    # via
+    #   -r dev-requirements.in
+    #   -r requirements.in
 ruff==0.6.2
     # via -r dev-requirements.in
+setuptools==73.0.1
+    # via
+    #   -r dev-requirements.in
+    #   -r requirements.in
 six==1.16.0
     # via python-dateutil
 types-pyyaml==6.0.12.20240808
-    # via -r dev-requirements.in
+    # via
+    #   -r dev-requirements.in
+    #   -r requirements.in
 typing-extensions==4.12.2
     # via
     #   aiosqlite
     #   mypy
+    #   qrcode
 urllib3==2.2.2
     # via requests
 vcrpy==6.0.1

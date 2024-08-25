@@ -2,3 +2,4 @@ types-PyYAML
 setuptools
 requests
 mkdocs
+qrcode

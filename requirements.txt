@@ -8,11 +8,11 @@ click==8.1.7
     # via mkdocs
 ghp-import==2.1.0
     # via mkdocs
-idna==3.7
+idna==3.8
     # via requests
 jinja2==3.1.4
     # via mkdocs
-markdown==3.6
+markdown==3.7
     # via mkdocs
 markupsafe==2.1.5
     # via
@@ -32,6 +32,8 @@ pathspec==0.12.1
     # via mkdocs
 platformdirs==4.2.2
     # via mkdocs-get-deps
+pypng==0.20220715.0
+    # via qrcode
 python-dateutil==2.9.0.post0
     # via ghp-import
 pyyaml==6.0.2
@@ -41,12 +43,18 @@ pyyaml==6.0.2
     #   pyyaml-env-tag
 pyyaml-env-tag==0.1
     # via mkdocs
+qrcode==7.4.2
+    # via -r requirements.in
 requests==2.32.3
+    # via -r requirements.in
+setuptools==73.0.1
     # via -r requirements.in
 six==1.16.0
     # via python-dateutil
 types-pyyaml==6.0.12.20240808
     # via -r requirements.in
+typing-extensions==4.12.2
+    # via qrcode
 urllib3==2.2.2
     # via requests
 watchdog==4.0.2

@@ -15,6 +15,24 @@ from .whatsmeow import (
 )
 import ctypes
 import json
+import threading
+import warnings
+import functools
+import qrcode
+
+def deprecated(func):
+    """This is a decorator which can be used to mark functions
+    as deprecated. It will result in a warning being emitted
+    when the function is used."""
+    @functools.wraps(func)
+    def new_func(*args, **kwargs):
+        warnings.simplefilter('always', DeprecationWarning)  # turn off filter
+        warnings.warn("Call to deprecated function {}.".format(func.__name__),
+                      category=DeprecationWarning,
+                      stacklevel=2)
+        warnings.simplefilter('default', DeprecationWarning)  # reset filter
+        return func(*args, **kwargs)
+    return new_func
 
 
 class WhatsApp:
@@ -30,6 +48,7 @@ class WhatsApp:
         browser: str = "safari",
         on_event=None,
         on_disconnect=None,
+        print_qr_code=True
     ):
         """
         Import the compiled whatsmeow golang package, and setup basic client and database.
@@ -49,6 +68,9 @@ class WhatsApp:
         self.browser = browser
         self.wapi_functions = browser
         self.connected = None
+        self._messageThreadRunner = threading.Thread(target=self._messageThread)
+        self._userEventHandlers = [on_event]
+        self.print_qr_code = print_qr_code
 
         if media_path:
             if not os.path.exists(media_path):
@@ -58,23 +80,12 @@ class WhatsApp:
                 if not os.path.exists(full_media_path):
                     os.makedirs(full_media_path)
 
-        def on_event_json(s):
-            try:
-                s = s.decode()
-            except:
-                pass
-            try:
-                s = json.loads(s)
-            except:
-                pass
-
-            on_event(s)
 
         CMPFUNC_NONE_STR = ctypes.CFUNCTYPE(None, ctypes.c_char_p)
         CMPFUNC_NONE = ctypes.CFUNCTYPE(None)
 
         self.C_ON_EVENT = (
-            CMPFUNC_NONE_STR(on_event_json)
+            CMPFUNC_NONE_STR(self._handleMessage)
             if callable(on_event)
             else ctypes.cast(None, CMPFUNC_NONE_STR)
         )
@@ -91,6 +102,8 @@ class WhatsApp:
             self.C_ON_EVENT,
         )
 
+        self._messageThreadRunner.start()
+
     def connect(self):
         """
         Connects the whatsapp client to whatsapp servers. This method SHOULD be called before any other.
@@ -103,11 +116,44 @@ class WhatsApp:
         """
         disconnect_wrapper(self.c_WhatsAppClientId)
 
+    @deprecated
     def runMessageThread(self):
         """
         Checks for queued events and call on_event on new events.
         """
-        message_thread_wrapper(self.c_WhatsAppClientId)
+        print("This method does nothing anymore, it has been automatised")
+
+    def _messageThread(self):
+        """
+        New method for runMessageThread
+        """
+        while True:
+            message_thread_wrapper(self.c_WhatsAppClientId)
+
+    def _handleMessage(self, message):
+        try:
+            message = message.decode()
+        except:
+            pass
+        try:
+            message = json.loads(message)
+        except:
+            pass
+
+        match message["eventType"]:
+            case "linkCode":
+                if self.print_qr_code:
+                    print(message["code"])
+            case "qrCode":
+                if self.print_qr_code:
+                    print(message["code"])
+                    qr = qrcode.QRCode()
+                    qr.add_data(message["code"])
+                    qr.print_ascii()
+
+
+        for handler in self._userEventHandlers:
+            handler(message)
 
     def sendMessage(self, phone: str, message: str, group: bool = False):
         """

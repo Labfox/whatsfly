@@ -13,3 +13,4 @@ aiosqlite
 setuptools
 requests
 mkdocs
+qrcode
