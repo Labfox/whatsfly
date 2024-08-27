@@ -21,6 +21,9 @@ typedef struct { const char *p; ptrdiff_t n; } _GoString_;
 
 #line 3 "main.go"
  #include "wapp.h"
+ #include <string.h>
+ #include <stdlib.h>
+ #include <stdint.h>
 
 #line 1 "cgo-generated-wrapper"
 
@@ -82,17 +85,19 @@ extern int NewWhatsAppClientWrapper(char* c_phone_number, char* c_media_path, pt
 extern void ConnectWrapper(int id);
 extern void DisconnectWrapper(int id);
 extern void MessageThreadWrapper(int id);
+extern int SendMessageProtobufWrapper(int id, char* c_phone_number, char* c_message, _Bool c_is_group);
 extern int SendMessageWrapper(int id, char* c_phone_number, char* c_message, _Bool c_is_group);
 extern int SendImageWrapper(int id, char* c_phone_number, char* c_image_path, char* c_caption, _Bool c_is_group);
 extern int SendVideoWrapper(int id, char* c_phone_number, char* c_video_path, char* c_caption, _Bool c_is_group);
 extern int SendAudioWrapper(int id, char* c_phone_number, char* c_audio_path, _Bool c_is_group);
 extern int SendDocumentWrapper(int id, char* c_phone_number, char* c_document_path, char* c_caption, _Bool c_is_group);
-extern int GetGroupInviteLinkWrapper(int id, char* c_jid, _Bool c_reset);
+extern int GetGroupInviteLinkWrapper(int id, char* c_jid, _Bool c_reset, char* c_return_id);
 extern int JoinGroupWithInviteLinkWrapper(int id, char* c_link);
 extern int SetGroupAnnounceWrapper(int id, char* c_jid, _Bool c_announce);
 extern int SetGroupLockedWrapper(int id, char* c_jid, _Bool c_locked);
 extern int SetGroupNameWrapper(int id, char* c_jid, char* c_name);
 extern int SetGroupTopicWrapper(int id, char* c_jid, char* c_topic);
+extern int GetGroupInfoWrapper(int id, char* c_jid, char* c_return_id);
 extern int Version();
 
 #ifdef __cplusplus
