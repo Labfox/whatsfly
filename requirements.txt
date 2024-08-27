@@ -47,8 +47,6 @@ qrcode==7.4.2
     # via -r requirements.in
 requests==2.32.3
     # via -r requirements.in
-setuptools==73.0.1
-    # via -r requirements.in
 six==1.16.0
     # via python-dateutil
 types-pyyaml==6.0.12.20240808
@@ -57,5 +55,5 @@ typing-extensions==4.12.2
     # via qrcode
 urllib3==2.2.2
     # via requests
-watchdog==4.0.2
+watchdog==5.0.0
     # via mkdocs
