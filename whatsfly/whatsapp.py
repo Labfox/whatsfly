@@ -1,11 +1,14 @@
 # most of the API refs are not mine, thanks to https://github.com/mukulhase/WebWhatsapp-Wrapper
 import os
+import time
+import uuid
+
 from .whatsmeow import (
     new_whatsapp_client_wrapper,
     connect_wrapper,
     disconnect_wrapper,
     message_thread_wrapper,
-    send_message_wrapper,
+    send_message_protobuf_wrapper,
     send_image_wrapper,
     send_video_wrapper,
     send_audio_wrapper,
@@ -15,8 +18,10 @@ from .whatsmeow import (
     set_group_announce_wrapper,
     set_group_locked_wrapper,
     set_group_name_wrapper,
-    set_group_topic_wrapper
+    set_group_topic_wrapper,
+    get_group_info_wrapper
 )
+from .proto.waE2E import WAWebProtobufsE2E_pb2
 import ctypes
 import json
 import threading
@@ -74,6 +79,7 @@ class WhatsApp:
         self.connected = None
         self._messageThreadRunner = threading.Thread(target=self._messageThread)
         self._userEventHandlers = [on_event]
+        self._methodReturns = {}
         self.print_qr_code = print_qr_code
 
         if media_path:
@@ -138,10 +144,12 @@ class WhatsApp:
         try:
             message = message.decode()
         except:
+            print(message)
             pass
         try:
             message = json.loads(message)
         except:
+            print(message)
             pass
 
         match message["eventType"]:
@@ -154,12 +162,15 @@ class WhatsApp:
                     qr = qrcode.QRCode()
                     qr.add_data(message["code"])
                     qr.print_ascii()
+            case "methodReturn":
+                self._methodReturns[message["callid"]] = message
+                return
 
 
         for handler in self._userEventHandlers:
             handler(message)
 
-    def sendMessage(self, phone: str, message: str, group: bool = False):
+    def sendMessage(self, phone: str, message, group: bool = False):
         """
         Sends a text message
         :param phone: The phone number or group number to send the message.
@@ -167,10 +178,15 @@ class WhatsApp:
         :param group: Send the message to a group ?
         :return: Function success or not
         """
-        ret = send_message_wrapper(
-            self.c_WhatsAppClientId, phone.encode(), message.encode(), group
+        if type(message) == str:
+            message1 = WAWebProtobufsE2E_pb2.Message()
+            message1.conversation = message
+            message = message1
+
+        ret = send_message_protobuf_wrapper(
+            self.c_WhatsAppClientId, phone.encode(), message.SerializeToString(), group
         )
-        return ret == 1
+        return ret == 0
 
     def sendImage(
         self, phone: str, image_path: str, caption: str = "", group: bool = False
@@ -246,11 +262,21 @@ class WhatsApp:
         :param reset: If true, resets the old link before generating the new one
         :return: Successfull
         """
-        return get_group_invite_link_wrapper(
+        return_uuid = uuid.uuid1()
+
+        error = get_group_invite_link_wrapper(
             self.c_WhatsAppClientId,
             group.encode(),
             reset,
+            str(return_uuid).encode()
         )
+
+        while not str(return_uuid) in self._methodReturns:
+            time.sleep(0.001)
+
+        response = self._methodReturns[str(return_uuid)]["return"]
+
+        return response
 
     def joinGroupWithInviteLink(self, code: str):
         """
@@ -309,6 +335,30 @@ class WhatsApp:
             group.encode(),
             topic.encode()
         )
+
+    def getGroupInfo(
+            self, group: str, reset: bool = False
+    ):
+        """
+        Get invite link for group, sends it to message queue
+        :param group: Group id
+        :param reset: If true, resets the old link before generating the new one
+        :return: Successfull
+        """
+        return_uuid = uuid.uuid1()
+
+        error = get_group_info_wrapper(
+            self.c_WhatsAppClientId,
+            group.encode(),
+            str(return_uuid).encode()
+        )
+
+        while not str(return_uuid) in self._methodReturns:
+            time.sleep(0.001)
+
+        response = self._methodReturns[str(return_uuid)]["return"]
+
+        return response
 
     # -- unimplemented
 

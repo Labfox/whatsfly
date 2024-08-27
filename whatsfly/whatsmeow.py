@@ -57,6 +57,14 @@ send_message_wrapper.argstype = [
     ctypes.c_bool,
 ]
 
+send_message_protobuf_wrapper = lib.SendMessageProtobufWrapper
+send_message_protobuf_wrapper.argstype = [
+    ctypes.c_int,
+    ctypes.c_char_p,
+    ctypes.c_char_p,
+    ctypes.c_bool,
+]
+
 send_image_wrapper = lib.SendImageWrapper
 send_image_wrapper.argstype = [
     ctypes.c_int,
@@ -97,6 +105,7 @@ get_group_invite_link_wrapper.argstype = [
     ctypes.c_int,
     ctypes.c_char_p,
     ctypes.c_bool,
+    ctypes.c_char_p,
 ]
 
 join_group_with_invite_link_wrapper = lib.JoinGroupWithInviteLinkWrapper
@@ -128,6 +137,13 @@ set_group_name_wrapper.argstype = [
 
 set_group_topic_wrapper = lib.SetGroupTopicWrapper
 set_group_topic_wrapper.argstype = [
+    ctypes.c_int,
+    ctypes.c_char_p,
+    ctypes.c_char_p
+]
+
+get_group_info_wrapper = lib.GetGroupInfoWrapper
+get_group_info_wrapper.argstype = [
     ctypes.c_int,
     ctypes.c_char_p,
     ctypes.c_char_p

@@ -3,3 +3,4 @@ setuptools
 requests
 mkdocs
 qrcode
+protobuf

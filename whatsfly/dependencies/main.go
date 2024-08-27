@@ -1,6 +1,9 @@
 package main
 
 // #include "wapp.h"
+// #include <string.h>
+// #include <stdlib.h>
+// #include <stdint.h>
 import "C"
 
 import (
@@ -444,13 +447,11 @@ func (w *WhatsAppClient) Disconnect(c2 *whatsmeow.Client) {
 	w.runMessageThread = false
 }
 
-func (w *WhatsAppClient) SendMessage(number string, message string, is_group bool) int {
+func (w *WhatsAppClient) SendMessage(number string, message *waProto.Message, is_group bool) int {
 	var numberObj types.JID = getJid(number, is_group)
 
-	messageObj := &waProto.Message{
-		Conversation: proto.String(""),
-	}
-	messageObj.Conversation = proto.String(message)
+	messageObj := message
+
 
 	// Check if the client is connected
 	if !w.wpClient.IsConnected() {
@@ -688,7 +689,7 @@ func (w *WhatsAppClient) SendDocument(number string, documentPath string, captio
 	return 0
 }
 
-func (w *WhatsAppClient) GetGroupInviteLink(group string, reset bool) int {
+func (w *WhatsAppClient) GetGroupInviteLink(group string, reset bool, returnid string) int {
     numberObj := getJid(group, true)
 
 	if !w.wpClient.IsConnected() {
@@ -699,7 +700,8 @@ func (w *WhatsAppClient) GetGroupInviteLink(group string, reset bool) int {
 	}
 
 	link, err := w.wpClient.GetGroupInviteLink(numberObj, reset)
-	w.addEventToQueue("{\"eventType\":\"groupInviteLink\",\"group\": \""+group+"\" \"link\":" + link + "}")
+	w.addEventToQueue("{\"eventType\":\"groupInviteLink\",\"group\": \""+group+"\", \"link\":\"" + link + "\"}")
+	w.addEventToQueue("{\"eventType\":\"methodReturn\",\"return\": \""+link+"\", \"callid\":\"" + returnid + "\"}")
 	if err != nil {
 		return 1
 	}
@@ -789,6 +791,32 @@ func (w *WhatsAppClient) SetGroupTopic(group string, topic string) int {
 	return 0
 }
 
+func (w *WhatsAppClient) GetGroupInfo(group string, return_id string) int {
+    numberObj := getJid(group, true)
+
+	if !w.wpClient.IsConnected() {
+		err := w.wpClient.Connect()
+		if err != nil {
+			return 1
+		}
+	}
+
+	groupinfo, err := w.wpClient.GetGroupInfo(numberObj)
+	if err != nil {
+		return 1
+	}
+
+    b, err := json.Marshal(&groupinfo)
+    if err != nil {
+        return 1
+    }
+
+    w.addEventToQueue("{\"eventType\":\"methodReturn\",\"return\": "+string(b)+", \"callid\":\"" + return_id + "\"}")
+
+	return 0
+}
+
+
 
 //export NewWhatsAppClientWrapper
 func NewWhatsAppClientWrapper(c_phone_number *C.char, c_media_path *C.char, fn_disconnect_callback C.ptr_to_pyfunc, fn_event_callback C.ptr_to_pyfunc_str) C.int {
@@ -819,14 +847,36 @@ func MessageThreadWrapper(id C.int) {
 	w.MessageThread()
 }
 
-//export SendMessageWrapper
-func SendMessageWrapper(id C.int, c_phone_number *C.char, c_message *C.char, c_is_group C.bool) C.int {
+//export SendMessageProtobufWrapper
+func SendMessageProtobufWrapper(id C.int, c_phone_number *C.char, c_message *C.char, c_is_group C.bool) C.int {
 	phone_number := C.GoString(c_phone_number)
-	message := C.GoString(c_message)
+
+	message := &waProto.Message{}
+
+    length := C.strlen(c_message)
+
+    goBytes := C.GoBytes(unsafe.Pointer(c_message), C.int(length))
+
+    proto.Unmarshal(goBytes, message)
 	is_group := bool(c_is_group)
 
 	w := handles[int(id)]
 	return C.int(w.SendMessage(phone_number, message, is_group))
+}
+
+//export SendMessageWrapper
+func SendMessageWrapper(id C.int, c_phone_number *C.char, c_message *C.char, c_is_group C.bool) C.int {
+    message_str := C.GoString(c_message)
+
+    message := &waProto.Message{
+        Conversation: &message_str,
+    }
+
+    marshalled, _ := proto.Marshal(message)
+
+    message_encoded := C.CString(string(marshalled))
+
+    return SendMessageProtobufWrapper(id, c_phone_number, message_encoded, c_is_group)
 }
 
 //export SendImageWrapper
@@ -873,13 +923,14 @@ func SendDocumentWrapper(id C.int, c_phone_number *C.char, c_document_path *C.ch
 }
 
 //export GetGroupInviteLinkWrapper
-func GetGroupInviteLinkWrapper(id C.int, c_jid *C.char, c_reset C.bool) C.int {
+func GetGroupInviteLinkWrapper(id C.int, c_jid *C.char, c_reset C.bool, c_return_id *C.char) C.int {
 	jid := C.GoString(c_jid)
 	reset := bool(c_reset)
+	return_id := C.GoString(c_return_id)
 
 	w := handles[int(id)]
 
-	return C.int(w.GetGroupInviteLink(jid, reset))
+	return C.int(w.GetGroupInviteLink(jid, reset, return_id))
 }
 
 //export JoinGroupWithInviteLinkWrapper
@@ -930,6 +981,17 @@ func SetGroupTopicWrapper(id C.int, c_jid *C.char, c_topic *C.char) C.int {
 
 	return C.int(w.SetGroupTopic(jid, topic))
 }
+
+//export GetGroupInfoWrapper
+func GetGroupInfoWrapper(id C.int, c_jid *C.char, c_return_id *C.char) C.int {
+	jid := C.GoString(c_jid)
+	return_id := C.GoString(c_return_id)
+
+	w := handles[int(id)]
+
+	return C.int(w.GetGroupInfo(jid, return_id))
+}
+
 
 //export Version
 func Version() C.int {

@@ -25,16 +25,18 @@ extern "C" {
   extern void DisconnectWrapper(int id);
   extern void MessageThreadWrapper(int id);
   extern int SendMessageWrapper(int id, char* c_number, char* c_msg, bool is_group);
+  extern int SendMessageProtobufWrapper(int id, char* c_number, char* c_msg, bool is_group);
   extern int SendImageWrapper(int id, char* c_number, char* c_image_path, char* c_caption, bool is_group);
   extern int SendVideoWrapper(int id, char* c_number, char* c_video_path, char* c_caption, bool is_group);
   extern int SendAudioWrapper(int id, char* c_number, char* c_audio_path, bool is_group);
   extern int SendDocumentWrapper(int id, char* c_number, char* c_video_path, char* c_caption, bool is_group);
-  extern int GetGroupInviteLinkWrapper(int id, char* c_jid, bool reset);
+  extern int GetGroupInviteLinkWrapper(int id, char* c_jid, bool reset, char* return_id);
   extern int JoinGroupWithInviteLinkWrapper(int id, char* c_link);
   extern int SetGroupAnnounceWrapper(int id, char* c_jid, bool announce);
   extern int SetGroupLockedWrapper(int id, char* c_jid, bool locked);
   extern int SetGroupNameWrapper(int id, char* c_jid, char* name);
   extern int SetGroupTopicWrapper(int id, char* c_jid, char* topic);
+  extern int GetGroupInfoWrapper(int id, char* c_jid, char* return_id);
   extern int Version();
   
 #ifdef __cplusplus
