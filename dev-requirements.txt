@@ -74,10 +74,8 @@ pluggy==1.5.0
     # via pytest
 pre-commit==3.8.0
     # via -r dev-requirements.in
-protobuf==5.27.3
-    # via
-    #   -r dev-requirements.in
-    #   -r requirements.in
+protobuf==5.27.4
+    # via -r dev-requirements.in
 pypng==0.20220715.0
     # via qrcode
 pytest==8.3.2

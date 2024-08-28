@@ -32,7 +32,7 @@ pathspec==0.12.1
     # via mkdocs
 platformdirs==4.2.2
     # via mkdocs-get-deps
-protobuf==5.27.3
+protobuf==5.27.4
     # via -r requirements.in
 pypng==0.20220715.0
     # via qrcode
