@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 Every event not mentioned here is considered unstable and can be removed at any moment.
 
 

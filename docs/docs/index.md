@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Introduction
 
 Welcome to the WhatsFly documentation!
