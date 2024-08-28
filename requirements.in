@@ -4,3 +4,6 @@ requests
 mkdocs
 qrcode
 protobuf
+mkdocs-material
+mkdocstrings
+mkdocstrings-python

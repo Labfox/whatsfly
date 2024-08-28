@@ -9,7 +9,7 @@ WhatsFly is a powerful and easy-to-use library that enables you to interact with
 WhatsFly allows you to leverage the full capabilities of WhatsApp directly from your Python code. With WhatsFly, you can:
 
 - Send and receive text messages
-- Handle nd send media files (images, videos, audio)
+- Handle and send media files (images, videos, audio)
 - Receive notifications
 - And much more
 
@@ -28,6 +28,7 @@ WhatsFly offers a streamlined and efficient way to integrate WhatsApp into your 
 ✅: Works
 ❌: Broke
 ⏳: Soon
+🔧: Can work with some tinkering
 
 | Feature                                        | Status |
 |------------------------------------------------|--------|
@@ -43,16 +44,17 @@ WhatsFly offers a streamlined and efficient way to integrate WhatsApp into your 
 | Send stickers                                  | ⏳  |
 | Send contact cards                             | ⏳ |
 | Send location                                  | ⏳ |
-| Message replies                                | ⏳ |
+| Message replies                                | 🔧 |
 | Join groups by invite                          | ✅ |
 | Get invite for group                           | ✅ |
 | Modify group name       | ✅ |
 | Modify group topic | ✅ |
 | Allow non-admin to edit group settings and send message (vice-versa) | ✅ |
+| Get Group info | ✅ |
 | Add group participants                         | ⏳ |
 | Kick group participants                        | ⏳ |
 | Promote/demote group participants              | ⏳ |
-| Mention users                                  | ⏳ |
+| Mention users                                  | 🔧 |
 | Mute/unmute chats                              | ⏳ |
 | Block/unblock contacts                         | ⏳ |
 | Get contact info                               | ⏳ |
@@ -61,7 +63,9 @@ WhatsFly offers a streamlined and efficient way to integrate WhatsApp into your 
 | React to messages                              | ⏳ |
 
 ## Install
+If git is found in the path, the binaries will be built dynamically
 ```bash
+pip install types-PyYAML setuptools requests qrcode protobuf
 pip install https://github.com/Labfox/whatsfly/releases/latest/download/install.zip
 ```
 
@@ -87,11 +91,11 @@ if __name__ == "__main__":
     phone = "6283139750000" # Make sure to attach country code + phone number
     message = "Hello World!"
 
-    whatsapp = WhatsApp(event_callback=my_event_callback)
+    whatsapp = WhatsApp(on_event=my_event_callback)
 
     whatsapp.connect()
 
-    message_sent = whatsapp.sendMessage(phone=phone, message=message)
+    message_sent = whatsapp.sendMessage(phone, message)
     
     time.sleep(5 * 60)  # Listen for messages for 5 minutes
 

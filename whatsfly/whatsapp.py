@@ -1,7 +1,7 @@
-# most of the API refs are not mine, thanks to https://github.com/mukulhase/WebWhatsapp-Wrapper
 import os
 import time
 import uuid
+from builtins import function
 
 from .whatsmeow import (
     new_whatsapp_client_wrapper,
@@ -55,9 +55,9 @@ class WhatsApp:
         media_path: str = "",
         machine: str = "mac",
         browser: str = "safari",
-        on_event=None,
-        on_disconnect=None,
-        print_qr_code=True
+        on_event: function =None,
+        on_disconnect: function=None,
+        print_qr_code: bool=True
     ):
         """
         Import the compiled whatsmeow golang package, and setup basic client and database.
@@ -70,6 +70,7 @@ class WhatsApp:
         :param browser: Browser login info (showed on the whatsapp app)
         :param on_event: Function to call on event
         :param on_disconnect: Function to call on disconnect
+        :param print_qr_code: Setting to true will print the qr code to terminal on connection
         """
 
         self.user_name = None
@@ -129,7 +130,7 @@ class WhatsApp:
     @deprecated
     def runMessageThread(self):
         """
-        Checks for queued events and call on_event on new events.
+        Legacy method that used to run the message thread, does nothing anymore
         """
         print("This method does nothing anymore, it has been automatised")
 
@@ -174,9 +175,8 @@ class WhatsApp:
         """
         Sends a text message
         :param phone: The phone number or group number to send the message.
-        :param message: The message to send
-        :param group: Send the message to a group ?
-        :return: Function success or not
+        :param message: The message to send. It can be a string with the message, or a protobuf message
+        :param group: Is the message sent to a group ?
         """
         if type(message) == str:
             message1 = WAWebProtobufsE2E_pb2.Message()
@@ -192,12 +192,11 @@ class WhatsApp:
         self, phone: str, image_path: str, caption: str = "", group: bool = False
     ):
         """
-        Sends a image message
+        Sends an image message
         :param phone: The phone number or group number to send the message.
         :param image_path: The path to the image to send
         :param caption: The caption for the image
-        :param group: Send the message to a group ?
-        :return: Function success or not
+        :param group: Is the message sent to a group ?
         """
         ret = send_image_wrapper(
             self.c_WhatsAppClientId,
@@ -216,8 +215,7 @@ class WhatsApp:
         :param phone: The phone number or group number to send the message.
         :param video_path: The path to the video to send
         :param caption: The caption for the video
-        :param group: Send the message to a group ?
-        :return: Function success or not
+        :param group: Is the message sent to a group ?
         """
         ret = send_video_wrapper(
             self.c_WhatsAppClientId,
@@ -242,8 +240,7 @@ class WhatsApp:
         :param phone: The phone number or group number to send the message.
         :param document_path: The path to the document to send
         :param caption: The caption for the document
-        :param group: Send the message to a group ?
-        :return: Function success or not
+        :param group: Is the message sent to a group ?
         """
         return send_document_wrapper(
             self.c_WhatsAppClientId,
@@ -255,12 +252,13 @@ class WhatsApp:
 
     def getGroupInviteLink(
             self, group: str, reset: bool = False
-    ):
+    ) -> str:
         """
-        Get invite link for group, sends it to message queue
+        Get invite link for group.
+        Also sends an event to queue for legacy clients
         :param group: Group id
         :param reset: If true, resets the old link before generating the new one
-        :return: Successfull
+        :return: Invite link
         """
         return_uuid = uuid.uuid1()
 
@@ -288,11 +286,11 @@ class WhatsApp:
             code.encode(),
         )
 
-    def setGroupAnnounce(self, group, announce):
+    def setGroupAnnounce(self, group: str, announce: bool = True):
         """
-        Set a group's announce mode (only admins can send message
-        :param group: Group jid
-        :param announce: Announce mode or not
+        Set a group's announce mode (only admins can send message)
+        :param group: Group id
+        :param announce: Enable or not the announcement mode
         """
         return set_group_announce_wrapper(
             self.c_WhatsAppClientId,
@@ -300,11 +298,11 @@ class WhatsApp:
             announce
         )
 
-    def setGroupLocked(self, group, locked):
+    def setGroupLocked(self, group: str, locked: bool = True):
         """
             Set a group's lock mode (only admins can change settings)
-            :param group: Group jid
-            :param locked: Lock mode or not
+            :param group: Group id
+            :param locked: Enable or not the lock mode
         """
         return set_group_locked_wrapper(
             self.c_WhatsAppClientId,
@@ -312,10 +310,10 @@ class WhatsApp:
             locked
         )
 
-    def setGroupName(self, group, name):
+    def setGroupName(self, group:str, name:str):
         """
             Set a group's name
-            :param group: Group jid
+            :param group: Group id
             :param name: Name
         """
         return set_group_name_wrapper(
@@ -324,10 +322,10 @@ class WhatsApp:
             name.encode()
         )
 
-    def setGroupTopic(self, group, topic):
+    def setGroupTopic(self, group:str, topic:str):
         """
         Set a group's topic
-        :param group: Group jid
+        :param group: Group id
         :param topic: Topic
         """
         return set_group_topic_wrapper(
@@ -337,13 +335,12 @@ class WhatsApp:
         )
 
     def getGroupInfo(
-            self, group: str, reset: bool = False
-    ):
+            self, group: str
+    ) -> dict:
         """
-        Get invite link for group, sends it to message queue
+        Get info for a link
         :param group: Group id
-        :param reset: If true, resets the old link before generating the new one
-        :return: Successfull
+        :return: Group information
         """
         return_uuid = uuid.uuid1()
 
@@ -360,7 +357,6 @@ class WhatsApp:
 
         return response
 
-    # -- unimplemented
 
 
 
