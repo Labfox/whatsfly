@@ -39,6 +39,7 @@ jobs:
       - name: Install dependencies
         run: |
             pip install -r requirements.txt
+            ln -s /home/runner/work/whatsfly/whatsfly /opt/hostedtoolcache/Python/3.12.5/x64/lib/python3.12/site-packages
       - name: Build mkdocs
         run: |
             cd docs
