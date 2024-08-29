@@ -1067,8 +1067,8 @@
         <span class="n">media_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="n">machine</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;mac&quot;</span><span class="p">,</span>
         <span class="n">browser</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;safari&quot;</span><span class="p">,</span>
-        <span class="n">on_event</span><span class="p">:</span> <span class="n">function</span> <span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">on_disconnect</span><span class="p">:</span> <span class="n">function</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">on_event</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">dict</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">on_disconnect</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="kc">None</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">print_qr_code</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">True</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1470,7 +1470,7 @@ Put the database in current file whereever this class instances are imported. da
           <tr class="doc-section-item">
             <td><code>on_event</code></td>
             <td>
-                  <code><span title="builtins.function">function</span></code>
+                  <code><span title="typing.Callable">Callable</span>[[dict], None]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -1484,7 +1484,7 @@ Put the database in current file whereever this class instances are imported. da
           <tr class="doc-section-item">
             <td><code>on_disconnect</code></td>
             <td>
-                  <code><span title="builtins.function">function</span></code>
+                  <code><span title="typing.Callable">Callable</span>[[None], None]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -1584,8 +1584,8 @@ Put the database in current file whereever this class instances are imported. da
     <span class="n">media_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
     <span class="n">machine</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;mac&quot;</span><span class="p">,</span>
     <span class="n">browser</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;safari&quot;</span><span class="p">,</span>
-    <span class="n">on_event</span><span class="p">:</span> <span class="n">function</span> <span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">on_disconnect</span><span class="p">:</span> <span class="n">function</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">on_event</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">dict</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">on_disconnect</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="kc">None</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">print_qr_code</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
