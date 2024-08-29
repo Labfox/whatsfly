@@ -7,7 +7,7 @@ Setting up browser driver is tricky for python newcomers, and thus it makes your
 
 ## Documentation
 
-https://whatsfly.readthedocs.io/en/latest
+https://whatsfly.labfox.fr
 
 ## Supported machines
 
