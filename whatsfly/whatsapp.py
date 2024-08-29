@@ -1,7 +1,7 @@
 import os
 import time
 import uuid
-from builtins import function
+from typing import Callable
 
 from .whatsmeow import (
     new_whatsapp_client_wrapper,
@@ -55,8 +55,8 @@ class WhatsApp:
         media_path: str = "",
         machine: str = "mac",
         browser: str = "safari",
-        on_event: function =None,
-        on_disconnect: function=None,
+        on_event: Callable[[dict], None] =None,
+        on_disconnect: Callable[[None], None]=None,
         print_qr_code: bool=True
     ):
         """

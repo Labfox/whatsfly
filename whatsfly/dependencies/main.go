@@ -283,6 +283,7 @@ func (w *WhatsAppClient) handler(rawEvt interface{}) {
                         fmt.Printf("Failed to save media: %v", err)
                     } else {
                         info += ",\"filepath\":\"" + path + "\""
+                        w.addEventToQueue("{\"eventType\": \"MediaDownloaded\", \"path\": \""+path+"\", \"associatedMessageInfo\": "+info+"}}")
                     }
                 }
 

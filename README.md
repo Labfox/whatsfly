@@ -5,19 +5,13 @@ WhatsApp web wrapper in Python. No selenium nor gecko web driver needed.
 
 Setting up browser driver is tricky for python newcomers, and thus it makes your code so 'laggy' while using lots of ram.
 
-## Installation
-
-```bash
-  pip install https://github.com/Labfox/whatsfly/releases/latest/download/install.zip
-```
-
 ## Documentation
 
 https://whatsfly.readthedocs.io/en/latest
 
 ## Supported machines
 
-The library theorically support every machine with go and cgo, but if the builds fails on your machine, there are pre-built binaries auto-downloaded for the following architectures:
+The library theoretically support every machine with go and cgo, but if the builds fails on your machine, there are pre-built binaries auto-downloaded for the following architectures:
 
 | Architecture  | Status |
 | ------------- | ------------- |
@@ -25,7 +19,7 @@ The library theorically support every machine with go and cgo, but if the builds
 | Linux ARM64  | GH Worlflow error |
 | Linux 686  | GH Worlflow error  |
 | Linux 386  | GH Worlflow error   |
-| Windows amd64  | ✅  |
+| Windows amd64  | GH Worlflow error  |
 | Windows 32 bit  | GH Worlflow error  |
 | OSX arm64  | ✅ |
 | OSX amd64  | ✅ |

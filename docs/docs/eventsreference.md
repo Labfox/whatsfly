@@ -17,3 +17,4 @@ Every event not mentioned here is considered unstable and can be removed at any 
 | KeepAliveTimeout     | Connection timeout                           | errorCount (```int```), lastSuccess (unix timestamp)                        |
 | KeepAliveRestored    | The library is not longer in timeout         | None                                                                        |
 | isLoggedIn           | The log-in status has changed                | loggedIn (```bool```)                                                       |
+| MediaDownloaded      | Fires when a media is downloaded             | path(```str```), associatedMessageInfo(```dict```)                          |
