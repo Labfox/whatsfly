@@ -58,12 +58,12 @@ class BuildGoModule(install):
 
 setup(
     name="whatsfly",
-    version="0.1.2",
+    version="0.1.3",
     license="MIT",
     author="Doy Bachtiar, Otamay, David Arnold, LabFox, Ivo Bellin Salarin",
     author_email="adityabachtiar996@gmail.com, mauricio@ulisse.io,  labfoxdev@gmail.com, ivo@nilleb.com",
-    url="https://github.com/cloned-doy/whatsfly",
-    keywords="whatsfly",
+    url="https://whatsfly.labfox.fr",
+    keywords="whatsfly whatsapp python",
     description="WhatsApp on the fly.",
     packages=find_packages(),
     install_reqs = ["types-PyYAML", "setuptools", "requests", "qrcode"],
