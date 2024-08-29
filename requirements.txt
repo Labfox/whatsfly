@@ -72,7 +72,7 @@ platformdirs==4.2.2
     # via
     #   mkdocs-get-deps
     #   mkdocstrings
-protobuf==5.27.4
+protobuf==5.28.0
     # via -r requirements.in
 pygments==2.18.0
     # via mkdocs-material
@@ -100,8 +100,6 @@ requests==2.32.3
     # via
     #   -r requirements.in
     #   mkdocs-material
-setuptools==74.0.0
-    # via -r requirements.in
 six==1.16.0
     # via python-dateutil
 types-pyyaml==6.0.12.20240808
