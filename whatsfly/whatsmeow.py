@@ -1,6 +1,5 @@
 """
 importing c shared whatsmeow library based on your machine.
-broken code will be fixed soon.
 """
 
 from sys import platform
