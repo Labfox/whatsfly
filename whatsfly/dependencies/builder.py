@@ -99,9 +99,16 @@ def ensureUsableBinaries():
     url = f"https://github.com/Labfox/whatsfly/raw/main/whatsfly/dependencies/{get_dll_filename().replace("whatsmeow/", "whatsmeow/static/")}"
     h_url = f"https://github.com/Labfox/whatsfly/raw/main/whatsfly/dependencies/{get_dll_filename(h=True).replace("whatsmeow/", "whatsmeow/static/")}"
 
+
     download_file(
-        get_dll_filename().replace("whatsfly/", ""),
-        root_dir.replace("dependencies", "")+"/dependencies/whatsmeow/"+get_dll_filename().replace("whatsfly/", "") )
+        get_dll_filename().replace("whatsfly/", "").replace("whatsmeow/", ""),
+        root_dir.replace("dependencies", "")+"/dependencies/whatsmeow/"+get_dll_filename().replace("whatsfly/", "").replace("whatsmeow/", "") )
+
+    download_file(
+        get_dll_filename(h=True).replace("whatsfly/", "").replace("whatsmeow/", ""),
+        root_dir.replace("dependencies", "") + "/dependencies/whatsmeow/" + get_dll_filename(h=True).replace("whatsfly/",
+                                                                                                       "").replace(
+            "whatsmeow/", ""))
 
 
 class BuildGoModule(install):
