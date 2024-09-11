@@ -26,15 +26,18 @@ jobs:
       run: | 
         cd whatsfly/dependencies
         GOOS=linux GOARCH=amd64 CGO_ENABLED=1 go build -v -buildmode=c-shared -ldflags=-s -o ./whatsmeow/static/whatsmeow-linux-amd64.so ./main.go
-    
-    - name: Commit changes
-      run: |
-          git config --global user.email "action@github.com"
-          git config --global user.name "Github Actions"
-          git add *
-          git commit -am "New build for $GITHUB_SHA on Linux"
-          gut pull
-          git push
+
+    - uses: vimtor/action-zip@v1.2
+      name: Zip builds
+      with:
+        files: ./whatsmeow/static/whatsmeow-linux-amd64.so ./whatsmeow/static/whatsmeow-linux-amd64.h
+        dest: whatsmeow-linux-amd64.zip
+
+    - name: Upload Linux binaries
+      uses: actions/upload-artifact@v4
+      with:
+        name: whatsmeow-linux-amd64.so.zip
+        path: .
   build-windows:
     runs-on: windows-latest
     if: false
@@ -83,12 +86,12 @@ jobs:
     - uses: vimtor/action-zip@v1.2
       name: Zip builds
       with:
-        files: ./whatsmeow/static/whatsmeow-darwin-amd64.dylib ./whatsmeow/static/whatsmeow-darwin-amd64.so
+        files: ./whatsmeow/static/whatsmeow-darwin-amd64.dylib ./whatsmeow/static/whatsmeow-darwin-amd64.h
         dest: whatsmeow-darwin-amd64.zip
     - uses: vimtor/action-zip@v1.2
       name: Zip builds
       with:
-        files: ./whatsmeow/static/whatsmeow-darwin-arm64.dylib ./whatsmeow/static/whatsmeow-darwin-arm64.so
+        files: ./whatsmeow/static/whatsmeow-darwin-arm64.dylib ./whatsmeow/static/whatsmeow-darwin-arm64.h
         dest: whatsmeow-darwin-arm64.zip
     - name: Upload macos binaries
       uses: actions/upload-artifact@v4
