@@ -87,7 +87,7 @@ pygments==2.18.0
     # via rich
 pypng==0.20220715.0
     # via qrcode
-pytest==8.3.2
+pytest==8.3.3
     # via
     #   -r dev-requirements.in
     #   pytest-asyncio
