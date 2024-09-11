@@ -301,7 +301,8 @@ func (w *WhatsAppClient) handler(rawEvt interface{}) {
 		json_str := "{\"eventType\":\"Message\",\"info\":" + info + ",\"message\":" + message_info + "}"
 
 		w.addEventToQueue(json_str)
-
+        data, _ := json.Marshal(evt)
+        w.addEventToQueue("{\"eventType\": \"MessageJson\", \"message\": "+string(data)+"}")
 
 
 	case *events.Receipt:
