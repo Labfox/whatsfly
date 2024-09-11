@@ -5,6 +5,7 @@ from setuptools.command.install import install
 import subprocess
 import platform
 import os
+from .github_actions_download import download_file
 
 
 def get_dll_filename(h=False):
@@ -77,6 +78,8 @@ def build():
 
 
 def ensureUsableBinaries():
+    root_dir = os.path.abspath(os.path.dirname(__file__))
+
     try:
         import whatsfly.whatsmeow
         return
@@ -96,28 +99,9 @@ def ensureUsableBinaries():
     url = f"https://github.com/Labfox/whatsfly/raw/main/whatsfly/dependencies/{get_dll_filename().replace("whatsmeow/", "whatsmeow/static/")}"
     h_url = f"https://github.com/Labfox/whatsfly/raw/main/whatsfly/dependencies/{get_dll_filename(h=True).replace("whatsmeow/", "whatsmeow/static/")}"
 
-    logging.debug(f"Dowloading {url} and {h_url}")
-
-    root_dir = os.path.abspath(os.path.dirname(__file__))
-
-    try:
-        rq = requests.get(url, stream=True)
-        if rq.status_code != 200:
-            raise RuntimeError(
-                f"Server responded with {rq.status_code}, impossible to find the binaries, giving up"
-            )
-        open(f"{root_dir.replace("dependencies", "")}/dependencies/{get_dll_filename()}", "wb").write(rq.content)
-
-        rq = requests.get(url, stream=True)
-        if rq.status_code != 200:
-            raise RuntimeError(
-                f"Server responded with {rq.status_code}, impossible to find the binaries, giving up"
-            )
-        open(f"{root_dir.replace("dependencies", "")}/dependencies/{get_dll_filename(h=True)}", "wb").write(
-            rq.content
-        )
-    except Exception:
-        raise RuntimeError("Impossible to find the binaries, giving up")
+    download_file(
+        get_dll_filename().replace("whatsfly/", ""),
+        root_dir.replace("dependencies", "")+"/dependencies/whatsmeow/"+get_dll_filename().replace("whatsfly/", "") )
 
 
 class BuildGoModule(install):

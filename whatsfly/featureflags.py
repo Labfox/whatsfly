@@ -127,3 +127,6 @@ class Version():
         if feature.name in self._features:
             return self._features[feature.name].check_feature(feature)
         return False
+
+def return_version():
+    pass
