@@ -147,3 +147,11 @@ get_group_info_wrapper.argstype = [
     ctypes.c_char_p,
     ctypes.c_char_p
 ]
+
+upload_file_wrapper = lib.UploadFileWrapper
+upload_file_wrapper.argstype = [
+    ctypes.c_int,
+    ctypes.c_char_p,
+    ctypes.c_char_p,
+    ctypes.c_char_p
+]

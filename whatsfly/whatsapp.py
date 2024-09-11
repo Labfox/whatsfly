@@ -44,6 +44,7 @@ def deprecated(func):
     return new_func
 
 
+
 class WhatsApp:
     """
     The main whatsapp handler
@@ -142,16 +143,7 @@ class WhatsApp:
             message_thread_wrapper(self.c_WhatsAppClientId)
 
     def _handleMessage(self, message):
-        try:
-            message = message.decode()
-        except:
-            print(message)
-            pass
-        try:
-            message = json.loads(message)
-        except:
-            print(message)
-            pass
+        message = json.loads(message.decode())
 
         match message["eventType"]:
             case "linkCode":

@@ -37,6 +37,7 @@ extern "C" {
   extern int SetGroupNameWrapper(int id, char* c_jid, char* name);
   extern int SetGroupTopicWrapper(int id, char* c_jid, char* topic);
   extern int GetGroupInfoWrapper(int id, char* c_jid, char* return_id);
+  extern int UploadFileWrapper(int id, char* c_path, char* c_kind, char* c_return_id);
   extern int Version();
   
 #ifdef __cplusplus

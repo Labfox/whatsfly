@@ -18,6 +18,7 @@ import (
 
 	"go.mau.fi/whatsmeow"
 	waProto "go.mau.fi/whatsmeow/binary/proto"
+	waE2E "go.mau.fi/whatsmeow/proto/waE2E"
 	"go.mau.fi/whatsmeow/store"
 	"go.mau.fi/whatsmeow/store/sqlstore"
 	"go.mau.fi/whatsmeow/types"
@@ -139,8 +140,8 @@ func (w *WhatsAppClient) Connect() {
 							panic(err)
 						}
 						w.eventQueue.Enqueue("{\"eventType\":\"linkCode\", \"code\": \"" + linkingCode + "\"}")
-					}else {
-                        w.eventQueue.Enqueue("{\"eventType\":\"qrCode\", \"code\": \"" + evt.Code + "\"}")
+					} else {
+						w.eventQueue.Enqueue("{\"eventType\":\"qrCode\", \"code\": \"" + evt.Code + "\"}")
 					}
 				} else {
 				}
@@ -204,7 +205,6 @@ func (w *WhatsAppClient) handler(rawEvt interface{}) {
 
 		var info string
 
-
 		info += "{\"id\":\"" + evt.Info.ID + "\""
 		info += ",\"messageSource\":\"" + evt.Info.MessageSource.SourceString() + "\""
 		if evt.Info.Type != "" {
@@ -220,7 +220,6 @@ func (w *WhatsAppClient) handler(rawEvt interface{}) {
 			info += ",\"mediaType\": \"" + evt.Info.MediaType + "\""
 		}
 		info += ",\"flags\":["
-
 
 		var flags []string
 		if evt.IsEphemeral {
@@ -241,69 +240,62 @@ func (w *WhatsAppClient) handler(rawEvt interface{}) {
 		info += strings.Join(flags, ",")
 		info += "]"
 
-        if evt.Message.ImageMessage != nil || evt.Message.AudioMessage != nil || evt.Message.VideoMessage != nil || evt.Message.DocumentMessage != nil || evt.Message.StickerMessage != nil {
-            if len(w.mediaPath) > 0 {
-                var mimetype string
-                var media_path_subdir string
-                var data []byte
-                var err error
-                switch {
-                case evt.Message.ImageMessage != nil:
-                    mimetype = evt.Message.ImageMessage.GetMimetype()
-                    data, err = w.wpClient.Download(evt.Message.ImageMessage)
-                    media_path_subdir = "images"
-                case evt.Message.AudioMessage != nil:
-                    mimetype = evt.Message.AudioMessage.GetMimetype()
-                    data, err = w.wpClient.Download(evt.Message.AudioMessage)
-                    media_path_subdir = "audios"
-                case evt.Message.VideoMessage != nil:
-                    mimetype = evt.Message.VideoMessage.GetMimetype()
-                    data, err = w.wpClient.Download(evt.Message.VideoMessage)
-                    media_path_subdir = "videos"
-                case evt.Message.DocumentMessage != nil:
-                    mimetype = evt.Message.DocumentMessage.GetMimetype()
-                    data, err = w.wpClient.Download(evt.Message.DocumentMessage)
-                    media_path_subdir = "documents"
-                case evt.Message.StickerMessage != nil:
-                    mimetype = evt.Message.StickerMessage.GetMimetype()
-                    data, err = w.wpClient.Download(evt.Message.StickerMessage)
-                    media_path_subdir = "stickers"
-                }
+		if evt.Message.ImageMessage != nil || evt.Message.AudioMessage != nil || evt.Message.VideoMessage != nil || evt.Message.DocumentMessage != nil || evt.Message.StickerMessage != nil {
+			if len(w.mediaPath) > 0 {
+				var mimetype string
+				var media_path_subdir string
+				var data []byte
+				var err error
+				switch {
+				case evt.Message.ImageMessage != nil:
+					mimetype = evt.Message.ImageMessage.GetMimetype()
+					data, err = w.wpClient.Download(evt.Message.ImageMessage)
+					media_path_subdir = "images"
+				case evt.Message.AudioMessage != nil:
+					mimetype = evt.Message.AudioMessage.GetMimetype()
+					data, err = w.wpClient.Download(evt.Message.AudioMessage)
+					media_path_subdir = "audios"
+				case evt.Message.VideoMessage != nil:
+					mimetype = evt.Message.VideoMessage.GetMimetype()
+					data, err = w.wpClient.Download(evt.Message.VideoMessage)
+					media_path_subdir = "videos"
+				case evt.Message.DocumentMessage != nil:
+					mimetype = evt.Message.DocumentMessage.GetMimetype()
+					data, err = w.wpClient.Download(evt.Message.DocumentMessage)
+					media_path_subdir = "documents"
+				case evt.Message.StickerMessage != nil:
+					mimetype = evt.Message.StickerMessage.GetMimetype()
+					data, err = w.wpClient.Download(evt.Message.StickerMessage)
+					media_path_subdir = "stickers"
+				}
 
+				if err != nil {
+					fmt.Printf("Failed to download media: %v", err)
+				} else {
+					exts, _ := mime.ExtensionsByType(mimetype)
+					path := fmt.Sprintf("%s/%s/%s%s", w.mediaPath, media_path_subdir, evt.Info.ID, exts[0])
 
+					err = os.WriteFile(path, data, 0600)
+					if err != nil {
+						fmt.Printf("Failed to save media: %v", err)
+					} else {
+						info += ",\"filepath\":\"" + path + "\""
+						w.addEventToQueue("{\"eventType\": \"MediaDownloaded\", \"path\": \"" + path + "\", \"associatedMessageInfo\": " + info + "}}")
+					}
+				}
 
-                if err != nil {
-                    fmt.Printf("Failed to download media: %v", err)
-                } else {
-                    exts, _ := mime.ExtensionsByType(mimetype)
-                    path := fmt.Sprintf("%s/%s/%s%s", w.mediaPath, media_path_subdir, evt.Info.ID, exts[0])
-
-                    err = os.WriteFile(path, data, 0600)
-                    if err != nil {
-                        fmt.Printf("Failed to save media: %v", err)
-                    } else {
-                        info += ",\"filepath\":\"" + path + "\""
-                        w.addEventToQueue("{\"eventType\": \"MediaDownloaded\", \"path\": \""+path+"\", \"associatedMessageInfo\": "+info+"}}")
-                    }
-                }
-
-
-
-            }
-        }
+			}
+		}
 
 		info += "}"
-
-
 
 		var m, _ = protojson.Marshal(evt.Message)
 		var message_info string = string(m)
 		json_str := "{\"eventType\":\"Message\",\"info\":" + info + ",\"message\":" + message_info + "}"
 
 		w.addEventToQueue(json_str)
-        data, _ := json.Marshal(evt)
-        w.addEventToQueue("{\"eventType\": \"MessageJson\", \"message\": "+string(data)+"}")
-
+		data, _ := json.Marshal(evt)
+		w.addEventToQueue("{\"eventType\": \"MessageJson\", \"message\": " + string(data) + "}")
 
 	case *events.Receipt:
 		if evt.Type == types.ReceiptTypeRead || evt.Type == types.ReceiptTypeReadSelf {
@@ -449,11 +441,10 @@ func (w *WhatsAppClient) Disconnect(c2 *whatsmeow.Client) {
 	w.runMessageThread = false
 }
 
-func (w *WhatsAppClient) SendMessage(number string, message *waProto.Message, is_group bool) int {
+func (w *WhatsAppClient) SendMessage(number string, message *waE2E.Message, is_group bool) int {
 	var numberObj types.JID = getJid(number, is_group)
 
 	messageObj := message
-
 
 	// Check if the client is connected
 	if !w.wpClient.IsConnected() {
@@ -474,6 +465,53 @@ func (w *WhatsAppClient) SendMessage(number string, message *waProto.Message, is
 	if err != nil {
 		return 1
 	}
+	return 0
+}
+
+func (w *WhatsAppClient) UploadFile(path string, kind string, return_id string) int {
+	if !w.wpClient.IsConnected() {
+		err := w.wpClient.Connect()
+		if err != nil {
+			fmt.Printf("ah3")
+			return 1
+		}
+	}
+
+	// var filedata []byte
+	filedata, err := os.ReadFile(path)
+	if err != nil {
+		fmt.Println("ah1")
+		fmt.Println(path)
+		fmt.Println(kind)
+		fmt.Println(return_id)
+		return 1
+	}
+
+	var mediakind whatsmeow.MediaType
+
+	if kind == "image" {
+		mediakind = whatsmeow.MediaImage
+	}
+	if kind == "video" {
+		mediakind = whatsmeow.MediaVideo
+	}
+	if kind == "audio" {
+		mediakind = whatsmeow.MediaAudio
+	}
+	if kind == "document" {
+		mediakind = whatsmeow.MediaDocument
+	}
+
+	var uploaded whatsmeow.UploadResponse
+	uploaded, err = w.wpClient.Upload(context.Background(), filedata, mediakind)
+	if err != nil {
+		fmt.Printf("ah2")
+		return 1
+	}
+	data, _ := json.Marshal(uploaded)
+
+	w.addEventToQueue("{\"eventType\":\"methodReturn\",\"return\": " + string(data) + ", \"callid\":\"" + return_id + "\"}")
+
 	return 0
 }
 
@@ -509,15 +547,15 @@ func (w *WhatsAppClient) SendImage(number string, imagePath string, caption stri
 	}
 	// "data:image/png;base64,\""
 
-	messageObj := &waProto.Message{ImageMessage: &waProto.ImageMessage{
-		Caption:       proto.String(caption),
-		Mimetype:      proto.String(http.DetectContentType(filedata)),
+	messageObj := &waE2E.Message{ImageMessage: &waE2E.ImageMessage{
+		Caption:  proto.String(caption),
+		Mimetype: proto.String(http.DetectContentType(filedata)),
 
-		URL: &uploaded.URL,
+		URL:           &uploaded.URL,
 		DirectPath:    proto.String(uploaded.DirectPath),
 		MediaKey:      uploaded.MediaKey,
 		FileEncSHA256: uploaded.FileEncSHA256,
-		FileSHA256: uploaded.FileSHA256,
+		FileSHA256:    uploaded.FileSHA256,
 		FileLength:    proto.Uint64(uint64(len(filedata))),
 	}}
 	_, err = w.wpClient.SendMessage(context.Background(), numberObj, messageObj)
@@ -528,7 +566,7 @@ func (w *WhatsAppClient) SendImage(number string, imagePath string, caption stri
 }
 
 func (w *WhatsAppClient) SendVideo(number string, videoPath string, caption string, is_group bool) int {
-    numberObj := getJid(number, is_group)
+	numberObj := getJid(number, is_group)
 
 	// type imageStruct struct {
 	//     Phone       string
@@ -552,7 +590,6 @@ func (w *WhatsAppClient) SendVideo(number string, videoPath string, caption stri
 		return 1
 	}
 
-
 	var uploaded whatsmeow.UploadResponse
 	uploaded, err = w.wpClient.Upload(context.Background(), filedata, whatsmeow.MediaVideo)
 	if err != nil {
@@ -561,18 +598,17 @@ func (w *WhatsAppClient) SendVideo(number string, videoPath string, caption stri
 
 	// "data:image/png;base64,\""
 
-	messageObj := &waProto.Message{VideoMessage: &waProto.VideoMessage{
-		Caption:       proto.String(caption),
-		Mimetype:      proto.String(http.DetectContentType(filedata)),
+	messageObj := &waE2E.Message{VideoMessage: &waE2E.VideoMessage{
+		Caption:  proto.String(caption),
+		Mimetype: proto.String(http.DetectContentType(filedata)),
 
-		URL: &uploaded.URL,
+		URL:           &uploaded.URL,
 		DirectPath:    proto.String(uploaded.DirectPath),
 		MediaKey:      uploaded.MediaKey,
 		FileEncSHA256: uploaded.FileEncSHA256,
-		FileSHA256: uploaded.FileSHA256,
+		FileSHA256:    uploaded.FileSHA256,
 		FileLength:    proto.Uint64(uint64(len(filedata))),
 	}}
-
 
 	_, err = w.wpClient.SendMessage(context.Background(), numberObj, messageObj)
 	if err != nil {
@@ -582,7 +618,7 @@ func (w *WhatsAppClient) SendVideo(number string, videoPath string, caption stri
 }
 
 func (w *WhatsAppClient) SendAudio(number string, audioPath string, is_group bool) int {
-    numberObj := getJid(number, is_group)
+	numberObj := getJid(number, is_group)
 
 	// type imageStruct struct {
 	//     Phone       string
@@ -606,29 +642,24 @@ func (w *WhatsAppClient) SendAudio(number string, audioPath string, is_group boo
 		return 1
 	}
 
-
 	var uploaded whatsmeow.UploadResponse
 	uploaded, err = w.wpClient.Upload(context.Background(), filedata, whatsmeow.MediaAudio)
 	if err != nil {
 		return 1
 	}
 
-
-
 	// "data:image/png;base64,\""
 
-	messageObj := &waProto.Message{AudioMessage: &waProto.AudioMessage{
-		Mimetype: proto.String("audio/ogg; codec=opus"),
-		URL: &uploaded.URL,
-		PTT: proto.Bool(true),
+	messageObj := &waE2E.Message{AudioMessage: &waE2E.AudioMessage{
+		Mimetype:      proto.String("audio/ogg; codec=opus"),
+		URL:           &uploaded.URL,
+		PTT:           proto.Bool(true),
 		DirectPath:    proto.String(uploaded.DirectPath),
 		MediaKey:      uploaded.MediaKey,
 		FileEncSHA256: uploaded.FileEncSHA256,
-		FileSHA256: uploaded.FileSHA256,
+		FileSHA256:    uploaded.FileSHA256,
 		FileLength:    proto.Uint64(uint64(len(filedata))),
 	}}
-
-
 
 	_, err = w.wpClient.SendMessage(context.Background(), numberObj, messageObj)
 	if err != nil {
@@ -638,7 +669,7 @@ func (w *WhatsAppClient) SendAudio(number string, audioPath string, is_group boo
 }
 
 func (w *WhatsAppClient) SendDocument(number string, documentPath string, caption string, is_group bool) int {
-    numberObj := getJid(number, is_group)
+	numberObj := getJid(number, is_group)
 
 	// type imageStruct struct {
 	//     Phone       string
@@ -662,7 +693,6 @@ func (w *WhatsAppClient) SendDocument(number string, documentPath string, captio
 		return 1
 	}
 
-
 	var uploaded whatsmeow.UploadResponse
 	uploaded, err = w.wpClient.Upload(context.Background(), filedata, whatsmeow.MediaDocument)
 	if err != nil {
@@ -671,18 +701,17 @@ func (w *WhatsAppClient) SendDocument(number string, documentPath string, captio
 
 	// "data:image/png;base64,\""
 
-	messageObj := &waProto.Message{DocumentMessage: &waProto.DocumentMessage{
-		Caption:       proto.String(caption),
-		Mimetype:      proto.String(http.DetectContentType(filedata)),
+	messageObj := &waE2E.Message{DocumentMessage: &waE2E.DocumentMessage{
+		Caption:  proto.String(caption),
+		Mimetype: proto.String(http.DetectContentType(filedata)),
 
-		URL: &uploaded.URL,
+		URL:           &uploaded.URL,
 		DirectPath:    proto.String(uploaded.DirectPath),
 		MediaKey:      uploaded.MediaKey,
 		FileEncSHA256: uploaded.FileEncSHA256,
-		FileSHA256: uploaded.FileSHA256,
+		FileSHA256:    uploaded.FileSHA256,
 		FileLength:    proto.Uint64(uint64(len(filedata))),
 	}}
-
 
 	_, err = w.wpClient.SendMessage(context.Background(), numberObj, messageObj)
 	if err != nil {
@@ -692,7 +721,7 @@ func (w *WhatsAppClient) SendDocument(number string, documentPath string, captio
 }
 
 func (w *WhatsAppClient) GetGroupInviteLink(group string, reset bool, returnid string) int {
-    numberObj := getJid(group, true)
+	numberObj := getJid(group, true)
 
 	if !w.wpClient.IsConnected() {
 		err := w.wpClient.Connect()
@@ -702,8 +731,8 @@ func (w *WhatsAppClient) GetGroupInviteLink(group string, reset bool, returnid s
 	}
 
 	link, err := w.wpClient.GetGroupInviteLink(numberObj, reset)
-	w.addEventToQueue("{\"eventType\":\"groupInviteLink\",\"group\": \""+group+"\", \"link\":\"" + link + "\"}")
-	w.addEventToQueue("{\"eventType\":\"methodReturn\",\"return\": \""+link+"\", \"callid\":\"" + returnid + "\"}")
+	w.addEventToQueue("{\"eventType\":\"groupInviteLink\",\"group\": \"" + group + "\", \"link\":\"" + link + "\"}")
+	w.addEventToQueue("{\"eventType\":\"methodReturn\",\"return\": \"" + link + "\", \"callid\":\"" + returnid + "\"}")
 	if err != nil {
 		return 1
 	}
@@ -726,7 +755,7 @@ func (w *WhatsAppClient) JoinGroupWithInviteLink(link string) int {
 }
 
 func (w *WhatsAppClient) SetGroupAnnounce(group string, announce bool) int {
-    numberObj := getJid(group, true)
+	numberObj := getJid(group, true)
 
 	if !w.wpClient.IsConnected() {
 		err := w.wpClient.Connect()
@@ -743,7 +772,7 @@ func (w *WhatsAppClient) SetGroupAnnounce(group string, announce bool) int {
 }
 
 func (w *WhatsAppClient) SetGroupLocked(group string, locked bool) int {
-    numberObj := getJid(group, true)
+	numberObj := getJid(group, true)
 
 	if !w.wpClient.IsConnected() {
 		err := w.wpClient.Connect()
@@ -760,7 +789,7 @@ func (w *WhatsAppClient) SetGroupLocked(group string, locked bool) int {
 }
 
 func (w *WhatsAppClient) SetGroupName(group string, name string) int {
-    numberObj := getJid(group, true)
+	numberObj := getJid(group, true)
 
 	if !w.wpClient.IsConnected() {
 		err := w.wpClient.Connect()
@@ -777,7 +806,7 @@ func (w *WhatsAppClient) SetGroupName(group string, name string) int {
 }
 
 func (w *WhatsAppClient) SetGroupTopic(group string, topic string) int {
-    numberObj := getJid(group, true)
+	numberObj := getJid(group, true)
 
 	if !w.wpClient.IsConnected() {
 		err := w.wpClient.Connect()
@@ -794,7 +823,7 @@ func (w *WhatsAppClient) SetGroupTopic(group string, topic string) int {
 }
 
 func (w *WhatsAppClient) GetGroupInfo(group string, return_id string) int {
-    numberObj := getJid(group, true)
+	numberObj := getJid(group, true)
 
 	if !w.wpClient.IsConnected() {
 		err := w.wpClient.Connect()
@@ -808,17 +837,15 @@ func (w *WhatsAppClient) GetGroupInfo(group string, return_id string) int {
 		return 1
 	}
 
-    b, err := json.Marshal(&groupinfo)
-    if err != nil {
-        return 1
-    }
+	b, err := json.Marshal(&groupinfo)
+	if err != nil {
+		return 1
+	}
 
-    w.addEventToQueue("{\"eventType\":\"methodReturn\",\"return\": "+string(b)+", \"callid\":\"" + return_id + "\"}")
+	w.addEventToQueue("{\"eventType\":\"methodReturn\",\"return\": " + string(b) + ", \"callid\":\"" + return_id + "\"}")
 
 	return 0
 }
-
-
 
 //export NewWhatsAppClientWrapper
 func NewWhatsAppClientWrapper(c_phone_number *C.char, c_media_path *C.char, fn_disconnect_callback C.ptr_to_pyfunc, fn_event_callback C.ptr_to_pyfunc_str) C.int {
@@ -853,13 +880,13 @@ func MessageThreadWrapper(id C.int) {
 func SendMessageProtobufWrapper(id C.int, c_phone_number *C.char, c_message *C.char, c_is_group C.bool) C.int {
 	phone_number := C.GoString(c_phone_number)
 
-	message := &waProto.Message{}
+	message := &waE2E.Message{}
 
-    length := C.strlen(c_message)
+	length := C.strlen(c_message)
 
-    goBytes := C.GoBytes(unsafe.Pointer(c_message), C.int(length))
+	goBytes := C.GoBytes(unsafe.Pointer(c_message), C.int(length))
 
-    proto.Unmarshal(goBytes, message)
+	proto.Unmarshal(goBytes, message)
 	is_group := bool(c_is_group)
 
 	w := handles[int(id)]
@@ -868,17 +895,17 @@ func SendMessageProtobufWrapper(id C.int, c_phone_number *C.char, c_message *C.c
 
 //export SendMessageWrapper
 func SendMessageWrapper(id C.int, c_phone_number *C.char, c_message *C.char, c_is_group C.bool) C.int {
-    message_str := C.GoString(c_message)
+	message_str := C.GoString(c_message)
 
-    message := &waProto.Message{
-        Conversation: &message_str,
-    }
+	message := &waE2E.Message{
+		Conversation: &message_str,
+	}
 
-    marshalled, _ := proto.Marshal(message)
+	marshalled, _ := proto.Marshal(message)
 
-    message_encoded := C.CString(string(marshalled))
+	message_encoded := C.CString(string(marshalled))
 
-    return SendMessageProtobufWrapper(id, c_phone_number, message_encoded, c_is_group)
+	return SendMessageProtobufWrapper(id, c_phone_number, message_encoded, c_is_group)
 }
 
 //export SendImageWrapper
@@ -994,12 +1021,21 @@ func GetGroupInfoWrapper(id C.int, c_jid *C.char, c_return_id *C.char) C.int {
 	return C.int(w.GetGroupInfo(jid, return_id))
 }
 
+//export UploadFileWrapper
+func UploadFileWrapper(id C.int, c_path *C.char, c_kind *C.char, c_return_id *C.char) C.int {
+	path := C.GoString(c_path)
+	return_id := C.GoString(c_return_id)
+	kind := C.GoString(c_kind)
+
+	w := handles[int(id)]
+
+	return C.int(w.UploadFile(path, kind, return_id))
+}
 
 //export Version
 func Version() C.int {
 	return C.int(012)
 }
-
 
 func main() {
 }
