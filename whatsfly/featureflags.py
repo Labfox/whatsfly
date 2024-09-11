@@ -8,10 +8,12 @@ class Feature():
     A class representing a feature.
     You can directly assign the class's variables
     '''
-    name = None
-    version = 0
-    stage = STAGE_PROD
-    function_name = None
+    def __init__(self):
+        self.name = None
+        self.version = 0
+        self.stage = STAGE_PROD
+        self.function_name = None
+
 
     def compile_feature(self) -> dict:
         '''
@@ -26,7 +28,7 @@ class Feature():
         }
         return final_string
 
-    def decompile_feature(self, feature: dict):
+    def decompile_feature(self, feature: dict) -> Self:
         '''
         A function to translate a dict into a feature
         :param feature: The feature dict
@@ -44,7 +46,7 @@ class Feature():
         '''
         if ofeat.name != self.name:
             return False
-        if ofeat.version <= self.version:
+        if ofeat.version > self.version:
             return False
         if ofeat.stage != self.stage:
             return False
@@ -57,8 +59,11 @@ class Version():
     A class to represent a binary's version.
 
     '''
-    _features: List[Feature] = {}
-    _version_type: int = 0
+    def __init__(self):
+        self._features: List[Feature] = {}
+        self._version_type: int = 0
+
+
 
     def add_feature(self, feature: Feature):
         '''
@@ -67,7 +72,7 @@ class Version():
         '''
         self._features[feature.name] = feature
 
-    def bulk_compile_features(self, feats: List[Feature]) -> List[dict]:
+    def bulk_compile_features(self, feats: dict[Feature]) -> List[dict]:
         '''
         Bulks translates features
         :param feats: The features to translate
@@ -75,19 +80,22 @@ class Version():
         '''
         nfeats = []
         for feat in feats:
-            nfeats.append(feat.compile_feature())
+            nfeats.append(feats[feat].compile_feature())
 
         return nfeats
 
-    def bulk_decompile_features(self, feats: List[dict]) -> List[Feature]:
+    def bulk_decompile_features(self, feats: List[dict]) -> dict[Feature]:
         '''
         Bulks deserialize features
         :param feats: The features to deserialize
         :return: The deserialized features
         '''
-        nfeats = []
+        nfeats = {}
         for feat in feats:
-            nfeats.append(Feature().decompile_feature(feat))
+            nfeat = Feature()
+            nfeat.decompile_feature(feat)
+
+            nfeats[nfeat.name] = nfeat
 
         return nfeats
 
@@ -117,5 +125,5 @@ class Version():
         :return: Is the feature present
         '''
         if feature.name in self._features:
-            return feature.check_feature(self._features[feature.name])
+            return self._features[feature.name].check_feature(feature)
         return False
