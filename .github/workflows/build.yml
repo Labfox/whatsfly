@@ -64,7 +64,6 @@ jobs:
           git fetch
           git push
   build-osx:
-    needs: build-ubuntu
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v4
