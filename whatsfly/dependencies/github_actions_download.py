@@ -4,7 +4,7 @@ from zipfile import ZipFile
 
 
 def download_file(file, path):
-    github_path = "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"
+    github_path = "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"
 
     headers = {"Authorization": "token "+github_path}
 
