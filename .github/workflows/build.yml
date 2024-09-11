@@ -36,9 +36,8 @@ jobs:
     - name: Upload Linux binaries
       uses: actions/upload-artifact@v4
       with:
-        name: whatsmeow-linux-amd64.so.zip
-        path: .
-        visibility: public
+        name: whatsmeow-linux-amd64.zip
+        path: whatsmeow-linux-amd64.zip
   build-windows:
     runs-on: windows-latest
     if: false
@@ -98,11 +97,9 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: whatsmeow-darwin-amd64.zip
-        path: .
-        visibility: public
+        path: whatsmeow-darwin-amd64.zip
     - name: Upload macos binaries
       uses: actions/upload-artifact@v4
       with:
         name: whatsmeow-darwin-arm64.zip
-        path: .
-        visibility: public
+        path: whatsmeow-darwin-arm64.zip

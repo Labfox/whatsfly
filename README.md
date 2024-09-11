@@ -1,4 +1,5 @@
 # WhatsFly
+[![Build](https://github.com/Labfox/whatsfly/actions/workflows/build.yml/badge.svg)](https://github.com/Labfox/whatsfly/actions/workflows/build.yml)
 ## Just run and have fun. Just try and go fly. 
 
 WhatsApp web wrapper in Python. No selenium nor gecko web driver needed. 
