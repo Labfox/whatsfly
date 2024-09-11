@@ -27,17 +27,17 @@ jobs:
         cd whatsfly/dependencies
         GOOS=linux GOARCH=amd64 CGO_ENABLED=1 go build -v -buildmode=c-shared -ldflags=-s -o ./whatsmeow/static/whatsmeow-linux-amd64.so ./main.go
 
-    - uses: vimtor/action-zip@v1.2
-      name: Zip builds
+    - name: Upload Linux binaries
+      uses: actions/upload-artifact@v4
       with:
-        files: ./whatsmeow/static/whatsmeow-linux-amd64.so ./whatsmeow/static/whatsmeow-linux-amd64.h
-        dest: whatsmeow-linux-amd64.zip
+        name: whatsmeow-linux-amd64.so
+        path: whatsmeow/static/whatsmeow-linux-amd64.so
 
     - name: Upload Linux binaries
       uses: actions/upload-artifact@v4
       with:
-        name: whatsmeow-linux-amd64.zip
-        path: whatsmeow-linux-amd64.zip
+        name: whatsmeow-linux-amd64.h
+        path: whatsmeow/static/whatsmeow-linux-amd64.h
   build-windows:
     runs-on: windows-latest
     if: false
@@ -83,23 +83,23 @@ jobs:
           cd whatsfly/dependencies
           GOOS=darwin GOARCH=amd64 go build -v -buildmode=c-shared -o ./whatsmeow/static/whatsmeow-darwin-amd64.dylib ./main.go
           GOOS=darwin GOARCH=arm64 go build -v -buildmode=c-shared -o ./whatsmeow/static/whatsmeow-darwin-arm64.dylib ./main.go
-    - uses: vimtor/action-zip@v1.2
-      name: Zip builds
-      with:
-        files: ./whatsmeow/static/whatsmeow-darwin-amd64.dylib ./whatsmeow/static/whatsmeow-darwin-amd64.h
-        dest: whatsmeow-darwin-amd64.zip
-    - uses: vimtor/action-zip@v1.2
-      name: Zip builds
-      with:
-        files: ./whatsmeow/static/whatsmeow-darwin-arm64.dylib ./whatsmeow/static/whatsmeow-darwin-arm64.h
-        dest: whatsmeow-darwin-arm64.zip
     - name: Upload macos binaries
       uses: actions/upload-artifact@v4
       with:
-        name: whatsmeow-darwin-amd64.zip
-        path: whatsmeow-darwin-amd64.zip
+        name: whatsmeow-darwin-amd64.dylib
+        path: whatsmeow/static/whatsmeow-darwin-amd64.dylib
     - name: Upload macos binaries
       uses: actions/upload-artifact@v4
       with:
-        name: whatsmeow-darwin-arm64.zip
-        path: whatsmeow-darwin-arm64.zip
+        name: whatsmeow-darwin-amd64.h
+        path: whatsmeow/static/whatsmeow-darwin-amd64.h
+    - name: Upload macos binaries
+      uses: actions/upload-artifact@v4
+      with:
+        name: whatsmeow-darwin-arm64.dylib
+        path: whatsmeow/static/whatsmeow-darwin-arm64.dylib
+    - name: Upload macos binaries
+      uses: actions/upload-artifact@v4
+      with:
+        name: whatsmeow-darwin-arm64.h
+        path: whatsmeow/static/whatsmeow-darwin-arm64.h
