@@ -31,13 +31,13 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: whatsmeow-linux-amd64.so
-        path: ./whatsmeow/static/whatsmeow-linux-amd64.so
+        path: whatsfly/dependencies/whatsmeow/static/whatsmeow-linux-amd64.so
 
     - name: Upload Linux binaries
       uses: actions/upload-artifact@v4
       with:
         name: whatsmeow-linux-amd64.h
-        path: ./whatsmeow/static/whatsmeow-linux-amd64.h
+        path: whatsfly/dependencies/whatsmeow/static/whatsmeow-linux-amd64.h
   build-windows:
     runs-on: windows-latest
     if: false
@@ -87,19 +87,19 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: whatsmeow-darwin-amd64.dylib
-        path: ./whatsmeow/static/whatsmeow-darwin-amd64.dylib
+        path: whatsfly/dependencies/whatsmeow/static/whatsmeow-darwin-amd64.dylib
     - name: Upload macos binaries
       uses: actions/upload-artifact@v4
       with:
         name: whatsmeow-darwin-amd64.h
-        path: ./whatsmeow/static/whatsmeow-darwin-amd64.h
+        path: whatsfly/dependencies/whatsmeow/static/whatsmeow-darwin-amd64.h
     - name: Upload macos binaries
       uses: actions/upload-artifact@v4
       with:
         name: whatsmeow-darwin-arm64.dylib
-        path: ./whatsmeow/static/whatsmeow-darwin-arm64.dylib
+        path: whatsfly/dependencies/whatsmeow/static/whatsmeow-darwin-arm64.dylib
     - name: Upload macos binaries
       uses: actions/upload-artifact@v4
       with:
         name: whatsmeow-darwin-arm64.h
-        path: ./whatsmeow/static/whatsmeow-darwin-arm64.h
+        path: whatsfly/dependencies/whatsmeow/static/whatsmeow-darwin-arm64.h
