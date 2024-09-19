@@ -2,6 +2,8 @@
 [![Build](https://github.com/Labfox/whatsfly/actions/workflows/build.yml/badge.svg)](https://github.com/Labfox/whatsfly/actions/workflows/build.yml)
 ## Just run and have fun. Just try and go fly. 
 
+# Warning ! The main branch is currently in restructuration, a lot of changes will happend, breaking backwards compatibility, until 1.0.0
+
 WhatsApp web wrapper in Python. No selenium nor gecko web driver needed. 
 
 Setting up browser driver is tricky for python newcomers, and thus it makes your code so 'laggy' while using lots of ram.
