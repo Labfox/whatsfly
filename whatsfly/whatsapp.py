@@ -1,4 +1,6 @@
 import os
+import shutil
+import tempfile
 import time
 import uuid
 from typing import Callable
@@ -26,6 +28,7 @@ import threading
 import warnings
 import functools
 import qrcode
+import mimetypes
 
 def deprecated(func):
     """This is a decorator which can be used to mark functions
@@ -323,13 +326,27 @@ class WhatsApp:
 
 
     def uploadFile(
-            self, path: str, kind: str, mimetype: str
+            self, path: str, kind: str, mimetype: str=None
     ) -> id:
         """
-        Get info for a link
-        :param group: Group id
+        Uploads a file
+        :param path: The filepath
+        :param kind: The kind of the upload. One of: image, video, audio, document
         :return: Group information
         """
+
+        if mimetype == None:
+            mimetype = mimetypes.guess_type(path)[0]
+
+        if not kind in ["image", "video", "audio", "document"]:
+            raise Exception("Invalid kind")
+
+        temporaryDirectory = tempfile.TemporaryDirectory(ignore_cleanup_errors=True)
+
+        tempName = temporaryDirectory.name+"/"+path.split("/")[-1]
+
+        shutil.copyfile(path, tempName)
+
         return_uuid = uuid.uuid1()
 
         error = upload_file_wrapper(
@@ -339,8 +356,11 @@ class WhatsApp:
             str(return_uuid).encode()
         )
 
+
         while not str(return_uuid) in self._methodReturns:
             time.sleep(0.001)
+
+        temporaryDirectory.cleanup()
 
         response = self._methodReturns[str(return_uuid)]["return"]
 

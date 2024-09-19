@@ -472,7 +472,6 @@ func (w *WhatsAppClient) UploadFile(path string, kind string, return_id string) 
 	if !w.wpClient.IsConnected() {
 		err := w.wpClient.Connect()
 		if err != nil {
-			fmt.Printf("ah3")
 			return 1
 		}
 	}
@@ -480,10 +479,6 @@ func (w *WhatsAppClient) UploadFile(path string, kind string, return_id string) 
 	// var filedata []byte
 	filedata, err := os.ReadFile(path)
 	if err != nil {
-		fmt.Println("ah1")
-		fmt.Println(path)
-		fmt.Println(kind)
-		fmt.Println(return_id)
 		return 1
 	}
 
@@ -505,7 +500,6 @@ func (w *WhatsAppClient) UploadFile(path string, kind string, return_id string) 
 	var uploaded whatsmeow.UploadResponse
 	uploaded, err = w.wpClient.Upload(context.Background(), filedata, mediakind)
 	if err != nil {
-		fmt.Printf("ah2")
 		return 1
 	}
 
