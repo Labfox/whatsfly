@@ -24,12 +24,8 @@ extern "C" {
   extern void ConnectWrapper(int id);
   extern void DisconnectWrapper(int id);
   extern void MessageThreadWrapper(int id);
-  extern int SendMessageWrapper(int id, char* c_number, char* c_msg, bool is_group);
   extern int SendMessageProtobufWrapper(int id, char* c_number, char* c_msg, bool is_group);
-  extern int SendImageWrapper(int id, char* c_number, char* c_image_path, char* c_caption, bool is_group);
-  extern int SendVideoWrapper(int id, char* c_number, char* c_video_path, char* c_caption, bool is_group);
-  extern int SendAudioWrapper(int id, char* c_number, char* c_audio_path, bool is_group);
-  extern int SendDocumentWrapper(int id, char* c_number, char* c_video_path, char* c_caption, bool is_group);
+  extern int SendMessageWithUploadWrapper(int id, char* c_phone_number, char* c_message, bool is_group, int upload_id, char* c_upload_id, char* kind);
   extern int GetGroupInviteLinkWrapper(int id, char* c_jid, bool reset, char* return_id);
   extern int JoinGroupWithInviteLinkWrapper(int id, char* c_link);
   extern int SetGroupAnnounceWrapper(int id, char* c_jid, bool announce);

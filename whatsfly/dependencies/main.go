@@ -7,7 +7,6 @@ package main
 import "C"
 
 import (
-	"net/http"
 	"os"
 
 	// "os/signal"
@@ -67,6 +66,7 @@ type WhatsAppClient struct {
 	isLoggedIn           bool
 	startupTime          int64
 	historySyncID        int32
+	uploadsData          []whatsmeow.UploadResponse
 }
 
 var handles []*WhatsAppClient
@@ -508,216 +508,64 @@ func (w *WhatsAppClient) UploadFile(path string, kind string, return_id string) 
 		fmt.Printf("ah2")
 		return 1
 	}
-	data, _ := json.Marshal(uploaded)
 
-	w.addEventToQueue("{\"eventType\":\"methodReturn\",\"return\": " + string(data) + ", \"callid\":\"" + return_id + "\"}")
+	w.uploadsData = append(w.uploadsData, uploaded)
+	data_return_uuid := len(w.uploadsData) - 1
+	// Get the id and set it to data_return_uuid
+
+	w.addEventToQueue("{\"eventType\":\"methodReturn\",\"return\": \"" + strconv.Itoa(data_return_uuid) + "\", \"callid\":\"" + return_id + "\"}")
 
 	return 0
 }
 
-func (w *WhatsAppClient) SendImage(number string, imagePath string, caption string, is_group bool) int {
-	numberObj := getJid(number, is_group)
-
-	// type imageStruct struct {
-	//     Phone       string
-	//     Image       string
-	//     Caption     string
-	//     Id          string
-	//     ContextInfo waProto.ContextInfo
-	// }
-	// Check if the client is connected
-
+func (w *WhatsAppClient) InjectMessageWithUploadData(originMessage waE2E.Message, upload whatsmeow.UploadResponse, mimetype string, kind string) waE2E.Message {
 	if !w.wpClient.IsConnected() {
 		err := w.wpClient.Connect()
 		if err != nil {
-			return 1
+			panic(err)
 		}
 	}
 
 	// var filedata []byte
-	filedata, err := os.ReadFile(imagePath)
-	if err != nil {
-		return 1
+
+	if kind == "image" {
+		originMessage.ImageMessage.Mimetype = proto.String(mimetype)
+		originMessage.ImageMessage.URL = &upload.URL
+		originMessage.ImageMessage.DirectPath = proto.String(upload.DirectPath)
+		originMessage.ImageMessage.MediaKey = upload.MediaKey
+		originMessage.ImageMessage.FileEncSHA256 = upload.FileEncSHA256
+		originMessage.ImageMessage.FileSHA256 = upload.FileSHA256
+		originMessage.ImageMessage.FileLength = proto.Uint64(uint64(upload.FileLength))
+	}
+	if kind == "video" {
+		originMessage.VideoMessage.Mimetype = proto.String(mimetype)
+		originMessage.VideoMessage.URL = &upload.URL
+		originMessage.VideoMessage.DirectPath = proto.String(upload.DirectPath)
+		originMessage.VideoMessage.MediaKey = upload.MediaKey
+		originMessage.VideoMessage.FileEncSHA256 = upload.FileEncSHA256
+		originMessage.VideoMessage.FileSHA256 = upload.FileSHA256
+		originMessage.VideoMessage.FileLength = proto.Uint64(uint64(upload.FileLength))
+	}
+	if kind == "audio" {
+		originMessage.AudioMessage.Mimetype = proto.String(mimetype)
+		originMessage.AudioMessage.URL = &upload.URL
+		originMessage.AudioMessage.DirectPath = proto.String(upload.DirectPath)
+		originMessage.AudioMessage.MediaKey = upload.MediaKey
+		originMessage.AudioMessage.FileEncSHA256 = upload.FileEncSHA256
+		originMessage.AudioMessage.FileSHA256 = upload.FileSHA256
+		originMessage.AudioMessage.FileLength = proto.Uint64(uint64(upload.FileLength))
+	}
+	if kind == "document" {
+		originMessage.DocumentMessage.Mimetype = proto.String(mimetype)
+		originMessage.DocumentMessage.URL = &upload.URL
+		originMessage.DocumentMessage.DirectPath = proto.String(upload.DirectPath)
+		originMessage.DocumentMessage.MediaKey = upload.MediaKey
+		originMessage.DocumentMessage.FileEncSHA256 = upload.FileEncSHA256
+		originMessage.DocumentMessage.FileSHA256 = upload.FileSHA256
+		originMessage.DocumentMessage.FileLength = proto.Uint64(uint64(upload.FileLength))
 	}
 
-	var uploaded whatsmeow.UploadResponse
-	uploaded, err = w.wpClient.Upload(context.Background(), filedata, whatsmeow.MediaImage)
-	if err != nil {
-		return 1
-	}
-	// "data:image/png;base64,\""
-
-	messageObj := &waE2E.Message{ImageMessage: &waE2E.ImageMessage{
-		Caption:  proto.String(caption),
-		Mimetype: proto.String(http.DetectContentType(filedata)),
-
-		URL:           &uploaded.URL,
-		DirectPath:    proto.String(uploaded.DirectPath),
-		MediaKey:      uploaded.MediaKey,
-		FileEncSHA256: uploaded.FileEncSHA256,
-		FileSHA256:    uploaded.FileSHA256,
-		FileLength:    proto.Uint64(uint64(len(filedata))),
-	}}
-	_, err = w.wpClient.SendMessage(context.Background(), numberObj, messageObj)
-	if err != nil {
-		return 1
-	}
-	return 0
-}
-
-func (w *WhatsAppClient) SendVideo(number string, videoPath string, caption string, is_group bool) int {
-	numberObj := getJid(number, is_group)
-
-	// type imageStruct struct {
-	//     Phone       string
-	//     Image       string
-	//     Caption     string
-	//     Id          string
-	//     ContextInfo waProto.ContextInfo
-	// }
-	// Check if the client is connected
-
-	if !w.wpClient.IsConnected() {
-		err := w.wpClient.Connect()
-		if err != nil {
-			return 1
-		}
-	}
-
-	// var filedata []byte
-	filedata, err := os.ReadFile(videoPath)
-	if err != nil {
-		return 1
-	}
-
-	var uploaded whatsmeow.UploadResponse
-	uploaded, err = w.wpClient.Upload(context.Background(), filedata, whatsmeow.MediaVideo)
-	if err != nil {
-		return 1
-	}
-
-	// "data:image/png;base64,\""
-
-	messageObj := &waE2E.Message{VideoMessage: &waE2E.VideoMessage{
-		Caption:  proto.String(caption),
-		Mimetype: proto.String(http.DetectContentType(filedata)),
-
-		URL:           &uploaded.URL,
-		DirectPath:    proto.String(uploaded.DirectPath),
-		MediaKey:      uploaded.MediaKey,
-		FileEncSHA256: uploaded.FileEncSHA256,
-		FileSHA256:    uploaded.FileSHA256,
-		FileLength:    proto.Uint64(uint64(len(filedata))),
-	}}
-
-	_, err = w.wpClient.SendMessage(context.Background(), numberObj, messageObj)
-	if err != nil {
-		return 1
-	}
-	return 0
-}
-
-func (w *WhatsAppClient) SendAudio(number string, audioPath string, is_group bool) int {
-	numberObj := getJid(number, is_group)
-
-	// type imageStruct struct {
-	//     Phone       string
-	//     Image       string
-	//     Caption     string
-	//     Id          string
-	//     ContextInfo waProto.ContextInfo
-	// }
-	// Check if the client is connected
-
-	if !w.wpClient.IsConnected() {
-		err := w.wpClient.Connect()
-		if err != nil {
-			return 1
-		}
-	}
-
-	// var filedata []byte
-	filedata, err := os.ReadFile(audioPath)
-	if err != nil {
-		return 1
-	}
-
-	var uploaded whatsmeow.UploadResponse
-	uploaded, err = w.wpClient.Upload(context.Background(), filedata, whatsmeow.MediaAudio)
-	if err != nil {
-		return 1
-	}
-
-	// "data:image/png;base64,\""
-
-	messageObj := &waE2E.Message{AudioMessage: &waE2E.AudioMessage{
-		Mimetype:      proto.String("audio/ogg; codec=opus"),
-		URL:           &uploaded.URL,
-		PTT:           proto.Bool(true),
-		DirectPath:    proto.String(uploaded.DirectPath),
-		MediaKey:      uploaded.MediaKey,
-		FileEncSHA256: uploaded.FileEncSHA256,
-		FileSHA256:    uploaded.FileSHA256,
-		FileLength:    proto.Uint64(uint64(len(filedata))),
-	}}
-
-	_, err = w.wpClient.SendMessage(context.Background(), numberObj, messageObj)
-	if err != nil {
-		return 1
-	}
-	return 0
-}
-
-func (w *WhatsAppClient) SendDocument(number string, documentPath string, caption string, is_group bool) int {
-	numberObj := getJid(number, is_group)
-
-	// type imageStruct struct {
-	//     Phone       string
-	//     Image       string
-	//     Caption     string
-	//     Id          string
-	//     ContextInfo waProto.ContextInfo
-	// }
-	// Check if the client is connected
-
-	if !w.wpClient.IsConnected() {
-		err := w.wpClient.Connect()
-		if err != nil {
-			return 1
-		}
-	}
-
-	// var filedata []byte
-	filedata, err := os.ReadFile(documentPath)
-	if err != nil {
-		return 1
-	}
-
-	var uploaded whatsmeow.UploadResponse
-	uploaded, err = w.wpClient.Upload(context.Background(), filedata, whatsmeow.MediaDocument)
-	if err != nil {
-		return 1
-	}
-
-	// "data:image/png;base64,\""
-
-	messageObj := &waE2E.Message{DocumentMessage: &waE2E.DocumentMessage{
-		Caption:  proto.String(caption),
-		Mimetype: proto.String(http.DetectContentType(filedata)),
-
-		URL:           &uploaded.URL,
-		DirectPath:    proto.String(uploaded.DirectPath),
-		MediaKey:      uploaded.MediaKey,
-		FileEncSHA256: uploaded.FileEncSHA256,
-		FileSHA256:    uploaded.FileSHA256,
-		FileLength:    proto.Uint64(uint64(len(filedata))),
-	}}
-
-	_, err = w.wpClient.SendMessage(context.Background(), numberObj, messageObj)
-	if err != nil {
-		return 1
-	}
-	return 0
+	return originMessage
 }
 
 func (w *WhatsAppClient) GetGroupInviteLink(group string, reset bool, returnid string) int {
@@ -893,62 +741,28 @@ func SendMessageProtobufWrapper(id C.int, c_phone_number *C.char, c_message *C.c
 	return C.int(w.SendMessage(phone_number, message, is_group))
 }
 
-//export SendMessageWrapper
-func SendMessageWrapper(id C.int, c_phone_number *C.char, c_message *C.char, c_is_group C.bool) C.int {
-	message_str := C.GoString(c_message)
-
-	message := &waE2E.Message{
-		Conversation: &message_str,
-	}
-
-	marshalled, _ := proto.Marshal(message)
-
-	message_encoded := C.CString(string(marshalled))
-
-	return SendMessageProtobufWrapper(id, c_phone_number, message_encoded, c_is_group)
-}
-
-//export SendImageWrapper
-func SendImageWrapper(id C.int, c_phone_number *C.char, c_image_path *C.char, c_caption *C.char, c_is_group C.bool) C.int {
+//export SendMessageWithUploadWrapper
+func SendMessageWithUploadWrapper(id C.int, c_phone_number *C.char, c_message *C.char, c_is_group C.bool, c_upload_id C.int, c_mimetype *C.char, c_kind *C.char) C.int {
 	phone_number := C.GoString(c_phone_number)
-	image_path := C.GoString(c_image_path)
-	caption := C.GoString(c_caption)
+
+	mimetype := C.GoString(c_mimetype)
+
+	kind := C.GoString(c_kind)
+
+	message := &waE2E.Message{}
+
+	length := C.strlen(c_message)
+
+	goBytes := C.GoBytes(unsafe.Pointer(c_message), C.int(length))
+
+	proto.Unmarshal(goBytes, message)
 	is_group := bool(c_is_group)
 
 	w := handles[int(id)]
-	return C.int(w.SendImage(phone_number, image_path, caption, is_group))
-}
 
-//export SendVideoWrapper
-func SendVideoWrapper(id C.int, c_phone_number *C.char, c_video_path *C.char, c_caption *C.char, c_is_group C.bool) C.int {
-	phone_number := C.GoString(c_phone_number)
-	video_path := C.GoString(c_video_path)
-	caption := C.GoString(c_caption)
-	is_group := bool(c_is_group)
+	injected := w.InjectMessageWithUploadData(*message, w.uploadsData[c_upload_id], mimetype, kind)
 
-	w := handles[int(id)]
-	return C.int(w.SendVideo(phone_number, video_path, caption, is_group))
-}
-
-//export SendAudioWrapper
-func SendAudioWrapper(id C.int, c_phone_number *C.char, c_audio_path *C.char, c_is_group C.bool) C.int {
-	phone_number := C.GoString(c_phone_number)
-	audio_path := C.GoString(c_audio_path)
-	is_group := bool(c_is_group)
-
-	w := handles[int(id)]
-	return C.int(w.SendAudio(phone_number, audio_path, is_group))
-}
-
-//export SendDocumentWrapper
-func SendDocumentWrapper(id C.int, c_phone_number *C.char, c_document_path *C.char, c_caption *C.char, c_is_group C.bool) C.int {
-	phone_number := C.GoString(c_phone_number)
-	document_path := C.GoString(c_document_path)
-	caption := C.GoString(c_caption)
-	is_group := bool(c_is_group)
-
-	w := handles[int(id)]
-	return C.int(w.SendDocument(phone_number, document_path, caption, is_group))
+	return C.int(w.SendMessage(phone_number, &injected, is_group))
 }
 
 //export GetGroupInviteLinkWrapper

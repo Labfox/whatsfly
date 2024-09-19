@@ -48,14 +48,6 @@ disconnect_wrapper.argstype = [ctypes.c_int]
 message_thread_wrapper = lib.MessageThreadWrapper
 message_thread_wrapper.argstype = [ctypes.c_int]
 
-send_message_wrapper = lib.SendMessageWrapper
-send_message_wrapper.argstype = [
-    ctypes.c_int,
-    ctypes.c_char_p,
-    ctypes.c_char_p,
-    ctypes.c_bool,
-]
-
 send_message_protobuf_wrapper = lib.SendMessageProtobufWrapper
 send_message_protobuf_wrapper.argstype = [
     ctypes.c_int,
@@ -64,40 +56,17 @@ send_message_protobuf_wrapper.argstype = [
     ctypes.c_bool,
 ]
 
-send_image_wrapper = lib.SendImageWrapper
-send_image_wrapper.argstype = [
+send_message_with_upload_wrapper = lib.SendMessageWithUploadWrapper
+send_message_with_upload_wrapper.argstype = [
     ctypes.c_int,
     ctypes.c_char_p,
     ctypes.c_char_p,
-    ctypes.c_char_p,
     ctypes.c_bool,
+    ctypes.c_int,
+    ctypes.c_char_p,
+    ctypes.c_char_p
 ]
 
-send_video_wrapper = lib.SendVideoWrapper
-send_video_wrapper.argstype = [
-    ctypes.c_int,
-    ctypes.c_char_p,
-    ctypes.c_char_p,
-    ctypes.c_char_p,
-    ctypes.c_bool,
-]
-
-send_audio_wrapper = lib.SendAudioWrapper
-send_audio_wrapper.argstype = [
-    ctypes.c_int,
-    ctypes.c_char_p,
-    ctypes.c_char_p,
-    ctypes.c_bool,
-]
-
-send_document_wrapper = lib.SendDocumentWrapper
-send_document_wrapper.argstype = [
-    ctypes.c_int,
-    ctypes.c_char_p,
-    ctypes.c_char_p,
-    ctypes.c_char_p,
-    ctypes.c_bool,
-]
 
 get_group_invite_link_wrapper = lib.GetGroupInviteLinkWrapper
 get_group_invite_link_wrapper.argstype = [

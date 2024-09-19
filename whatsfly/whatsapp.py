@@ -9,17 +9,15 @@ from .whatsmeow import (
     disconnect_wrapper,
     message_thread_wrapper,
     send_message_protobuf_wrapper,
-    send_image_wrapper,
-    send_video_wrapper,
-    send_audio_wrapper,
-    send_document_wrapper,
+    send_message_with_upload_wrapper,
     get_group_invite_link_wrapper,
     join_group_with_invite_link_wrapper,
     set_group_announce_wrapper,
     set_group_locked_wrapper,
     set_group_name_wrapper,
     set_group_topic_wrapper,
-    get_group_info_wrapper
+    get_group_info_wrapper,
+    upload_file_wrapper
 )
 from .proto.waE2E import WAWebProtobufsE2E_pb2
 import ctypes
@@ -43,7 +41,20 @@ def deprecated(func):
         return func(*args, **kwargs)
     return new_func
 
+class Upload:
+    def __init__(self, id, mimetype, kind):
+        self._id = id
+        self._mimetype = mimetype
+        self._kind = kind
 
+    def _getId(self):
+        return self._id
+
+    def _getMimetype(self):
+        return self._mimetype
+
+    def _getKind(self):
+        return self._kind
 
 class WhatsApp:
     """
@@ -143,7 +154,10 @@ class WhatsApp:
             message_thread_wrapper(self.c_WhatsAppClientId)
 
     def _handleMessage(self, message):
-        message = json.loads(message.decode())
+        try:
+            message = json.loads(message.decode())
+        except Exception as err:
+            raise err
 
         match message["eventType"]:
             case "linkCode":
@@ -163,84 +177,42 @@ class WhatsApp:
         for handler in self._userEventHandlers:
             handler(message)
 
-    def sendMessage(self, phone: str, message, group: bool = False):
+    def sendMessage(self, phone: str, message, group: bool = False, upload: Upload = None):
         """
         Sends a text message
         :param phone: The phone number or group number to send the message.
         :param message: The message to send. It can be a string with the message, or a protobuf message
         :param group: Is the message sent to a group ?
+        :param upload: An optional Upload object to be added to the protobuf before sending.
         """
+
         if type(message) == str:
             message1 = WAWebProtobufsE2E_pb2.Message()
             message1.conversation = message
             message = message1
 
-        ret = send_message_protobuf_wrapper(
-            self.c_WhatsAppClientId, phone.encode(), message.SerializeToString(), group
-        )
+
+        if upload == None:
+            ret = send_message_protobuf_wrapper(
+                self.c_WhatsAppClientId,
+                phone.encode(),
+                message.SerializeToString(),
+                group
+            )
+        else:
+            ret = send_message_with_upload_wrapper(
+                self.c_WhatsAppClientId,
+                phone.encode(),
+                message.SerializeToString(),
+                group,
+                int(upload._getId()),
+                upload._getMimetype().encode(),
+                upload._getKind().encode()
+            )
+
         return ret == 0
 
-    def sendImage(
-        self, phone: str, image_path: str, caption: str = "", group: bool = False
-    ):
-        """
-        Sends an image message
-        :param phone: The phone number or group number to send the message.
-        :param image_path: The path to the image to send
-        :param caption: The caption for the image
-        :param group: Is the message sent to a group ?
-        """
-        ret = send_image_wrapper(
-            self.c_WhatsAppClientId,
-            phone.encode(),
-            image_path.encode(),
-            caption.encode(),
-            group,
-        )
-        return ret == 1
 
-    def sendVideo(
-        self, phone: str, video_path: str, caption: str = "", group: bool = False
-    ):
-        """
-        Sends a video message
-        :param phone: The phone number or group number to send the message.
-        :param video_path: The path to the video to send
-        :param caption: The caption for the video
-        :param group: Is the message sent to a group ?
-        """
-        ret = send_video_wrapper(
-            self.c_WhatsAppClientId,
-            phone.encode(),
-            video_path.encode(),
-            caption.encode(),
-            group,
-        )
-        return ret == 1
-
-    def sendAudio(self, phone: str, audio_path: str, group: bool = False):
-        raise NotImplementedError
-        return send_audio_wrapper(
-            self.c_WhatsAppClientId, phone.encode(), audio_path.encode(), group
-        )
-
-    def sendDocument(
-        self, phone: str, document_path: str, caption: str, group: bool = False
-    ):
-        """
-        Sends a document message
-        :param phone: The phone number or group number to send the message.
-        :param document_path: The path to the document to send
-        :param caption: The caption for the document
-        :param group: Is the message sent to a group ?
-        """
-        return send_document_wrapper(
-            self.c_WhatsAppClientId,
-            phone.encode(),
-            document_path.encode(),
-            caption.encode(),
-            group,
-        )
 
     def getGroupInviteLink(
             self, group: str, reset: bool = False
@@ -348,6 +320,31 @@ class WhatsApp:
         response = self._methodReturns[str(return_uuid)]["return"]
 
         return response
+
+
+    def uploadFile(
+            self, path: str, kind: str, mimetype: str
+    ) -> id:
+        """
+        Get info for a link
+        :param group: Group id
+        :return: Group information
+        """
+        return_uuid = uuid.uuid1()
+
+        error = upload_file_wrapper(
+            self.c_WhatsAppClientId,
+            path.encode(),
+            kind.encode(),
+            str(return_uuid).encode()
+        )
+
+        while not str(return_uuid) in self._methodReturns:
+            time.sleep(0.001)
+
+        response = self._methodReturns[str(return_uuid)]["return"]
+
+        return Upload(int(response), mimetype, kind)
 
 
 
