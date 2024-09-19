@@ -74,7 +74,7 @@ platformdirs==4.2.2
     # via
     #   mkdocs-get-deps
     #   mkdocstrings
-protobuf==5.28.1
+protobuf==5.28.2
     # via -r requirements.in
 pygments==2.18.0
     # via mkdocs-material
