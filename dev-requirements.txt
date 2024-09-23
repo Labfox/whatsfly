@@ -113,7 +113,7 @@ requests==2.32.3
     # via -r dev-requirements.in
 rich==13.8.1
     # via typer
-ruff==0.6.5
+ruff==0.6.7
     # via -r dev-requirements.in
 shellingham==1.5.4
     # via typer
