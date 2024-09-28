@@ -45,6 +45,12 @@ connect_wrapper.argstype = [ctypes.c_int]
 disconnect_wrapper = lib.DisconnectWrapper
 disconnect_wrapper.argstype = [ctypes.c_int]
 
+logged_in_wrapper = lib.LoggedInWrapper
+logged_in_wrapper.argstype = [ctypes.c_int]
+
+connected_wrapper = lib.ConnectedWrapper
+connected_wrapper.argstype = [ctypes.c_int]
+
 message_thread_wrapper = lib.MessageThreadWrapper
 message_thread_wrapper.argstype = [ctypes.c_int]
 

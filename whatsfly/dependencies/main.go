@@ -390,6 +390,9 @@ func (w *WhatsAppClient) MessageThread() {
 	w.runMessageThread = true
 	for {
 		if w.wpClient != nil {
+			if !w.wpClient.IsConnected() {
+				w.wpClient.Connect()
+			}
 			var is_logged_in_now = w.wpClient.IsLoggedIn()
 
 			if w.isLoggedIn != is_logged_in_now {
@@ -710,6 +713,26 @@ func ConnectWrapper(id C.int) {
 func DisconnectWrapper(id C.int) {
 	w := handles[int(id)]
 	w.Disconnect(nil)
+}
+
+//export ConnectedWrapper
+func ConnectedWrapper(id C.int) C.int {
+	w := handles[int(id)]
+	if w.wpClient.IsConnected() {
+		return C.int(1)
+	} else {
+		return C.int(0)
+	}
+}
+
+//export LoggedInWrapper
+func LoggedInWrapper(id C.int) C.int {
+	w := handles[int(id)]
+	if w.wpClient.IsLoggedIn() {
+		return C.int(1)
+	} else {
+		return C.int(0)
+	}
 }
 
 //export MessageThreadWrapper

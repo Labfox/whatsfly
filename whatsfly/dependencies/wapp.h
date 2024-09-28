@@ -23,6 +23,8 @@ extern "C" {
   extern int NewWhatsAppClientWrapper(char* c_phone_number, char* c_media_path, ptr_to_pyfunc fn_disconnect_callback, ptr_to_pyfunc_str fn_event_callback);
   extern void ConnectWrapper(int id);
   extern void DisconnectWrapper(int id);
+  extern int LoggedInWrapper(int id);
+  extern int ConnectedWrapper(int id);
   extern void MessageThreadWrapper(int id);
   extern int SendMessageProtobufWrapper(int id, char* c_number, char* c_msg, bool is_group);
   extern int SendMessageWithUploadWrapper(int id, char* c_phone_number, char* c_message, bool is_group, int upload_id, char* c_upload_id, char* kind);

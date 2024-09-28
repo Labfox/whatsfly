@@ -19,7 +19,7 @@ from .whatsmeow import (
     set_group_name_wrapper,
     set_group_topic_wrapper,
     get_group_info_wrapper,
-    upload_file_wrapper
+    upload_file_wrapper, logged_in_wrapper, connected_wrapper
 )
 from .proto.waE2E import WAWebProtobufsE2E_pb2
 import ctypes
@@ -63,6 +63,7 @@ class WhatsApp:
     """
     The main whatsapp handler
     """
+    c_WhatsAppClientId = None
 
     def __init__(
         self,
@@ -179,6 +180,29 @@ class WhatsApp:
 
         for handler in self._userEventHandlers:
             handler(message)
+
+    def loggedIn(self) -> bool:
+        """
+        Determines if the user is logged into WhatsApp.
+
+        Returns:
+            bool: True if the user is logged in, False otherwise.
+        """
+        if self.c_WhatsAppClientId == None:
+            return False
+        return logged_in_wrapper(self.c_WhatsAppClientId) == 1
+
+    def isConnected(self) -> bool:
+        """
+
+        Checks if the connection is currently established.
+
+        Returns:
+            bool: True if the client is connected, otherwise False.
+        """
+        if self.c_WhatsAppClientId == None:
+            return False
+        return connected_wrapper(self.c_WhatsAppClientId) == 1
 
     def sendMessage(self, phone: str, message, group: bool = False, upload: Upload = None):
         """
