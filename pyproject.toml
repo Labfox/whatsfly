@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "whatsfly_Labfox"
+version = "0.2.0"
+authors = [
+  { name="Doy Bachtiar", email="adityabachtiar996@gmail.com" },
+    { name="Labfox", email="consockbind@gmail.com"},
+    { name = "Otamay", email="mauricio@ulisse.io"},
+    { name = "David Arnold"},
+    { name = "Ivo Bellin Salarin", email="ivo@nilleb.com"}
+]
+description = "Whatsapp Web wrapper in Python, without webdrivers"
+readme = "README.md"
+requires-python = ">=3.12"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/Labfox/whatsfly"
+Issues = "https://github.com/Labfox/whatsfly/issues"
