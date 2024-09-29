@@ -9,7 +9,6 @@ authors = [
   { name="Doy Bachtiar", email="adityabachtiar996@gmail.com" },
     { name="Labfox", email="consockbind@gmail.com"},
     { name = "Otamay", email="mauricio@ulisse.io"},
-    { name = "David Arnold"},
     { name = "Ivo Bellin Salarin", email="ivo@nilleb.com"}
 ]
 description = "Whatsapp Web wrapper in Python, without webdrivers"
