@@ -8,7 +8,7 @@ import os
 from .github_actions_download import download_file
 
 
-def get_dll_filename(h=False):
+def get_dll_filename(h=False, version=None):
     current_os = platform.system().lower()
     current_arch = platform.machine().lower()
 
@@ -23,6 +23,12 @@ def get_dll_filename(h=False):
 
     go_arch = arch_map.get(current_arch, current_arch)
     dll_extension = extension_map.get(current_os, current_os)
+
+    if version != None:
+        if not h:
+            return f"whatsmeow/whatsmeow-{current_os}-{go_arch}-{version}.{dll_extension}"
+        else:
+            return f"whatsmeow/whatsmeow-{current_os}-{go_arch}-{version}.h"
 
     if not h:
         return f"whatsmeow/whatsmeow-{current_os}-{go_arch}.{dll_extension}"
@@ -98,14 +104,18 @@ def ensureUsableBinaries():
     logging.info("Trying to download pre-built binaries")
 
     download_file(
-        get_dll_filename().replace("whatsfly/", "").replace("whatsmeow/", "")+"-v20",
-        root_dir.replace("dependencies", "")+"/dependencies/whatsmeow/"+get_dll_filename().replace("whatsfly/", "").replace("whatsmeow/", "") )
+        get_dll_filename(version="v20").replace("whatsfly/", "").replace("whatsmeow/", ""),
+        root_dir.replace("dependencies", "")+"/dependencies/whatsmeow/"+get_dll_filename().replace("whatsfly/", "").replace("whatsmeow/", ""),
+        version="v20"
+    )
 
     download_file(
-        get_dll_filename(h=True).replace("whatsfly/", "").replace("whatsmeow/", "")+"-v20",
+        get_dll_filename(h=True, version="v20").replace("whatsfly/", "").replace("whatsmeow/", ""),
         root_dir.replace("dependencies", "") + "/dependencies/whatsmeow/" + get_dll_filename(h=True).replace("whatsfly/",
                                                                                                        "").replace(
-            "whatsmeow/", ""))
+            "whatsmeow/", ""),
+        version="v20"
+    )
 
 
 class BuildGoModule(install):
