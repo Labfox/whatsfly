@@ -20,6 +20,13 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
+dependencies = [
+  "types-pyyaml",
+  "setuptools",
+  "requests",
+  "qrcode",
+    "protobuf"
+]
 
 [project.urls]
 Homepage = "https://github.com/Labfox/whatsfly"
