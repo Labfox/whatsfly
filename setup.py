@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from setuptools import setup, find_packages
+from setuptools import setup
 
 setup(
     name="whatsfly",
@@ -11,7 +11,7 @@ setup(
     keywords="whatsfly whatsapp python",
     description="WhatsApp on the fly.",
     package_dir={"": "whatsfly"},
-    packages=find_packages(),
+    packages=["whatsfly"],
     install_requires = ["types-PyYAML", "setuptools", "requests", "qrcode", "protobuf"],
     include_package_data=True,
     classifiers=[
