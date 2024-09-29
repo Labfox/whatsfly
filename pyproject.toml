@@ -6,8 +6,8 @@ build-backend = "setuptools.build_meta"
 name = "whatsfly_labfox"
 version = "0.2.01"
 authors = [
-  { name="Doy Bachtiar", email="adityabachtiar996@gmail.com" },
     { name="Labfox", email="consockbind@gmail.com"},
+  { name="Doy Bachtiar", email="adityabachtiar996@gmail.com" },
     { name = "Otamay", email="mauricio@ulisse.io"},
     { name = "Ivo Bellin Salarin", email="ivo@nilleb.com"}
 ]
@@ -18,7 +18,11 @@ requires-python = ">=3.12"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
+    "Operating System :: Unix",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: MacOS :: MacOS X",
+    "Topic :: Communications",
+    "Topic :: Communications :: Chat",
 ]
 dependencies = [
     "types-pyyaml",
