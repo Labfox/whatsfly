@@ -25,18 +25,18 @@ jobs:
     - name: Build
       run: | 
         cd whatsfly/dependencies
-        GOOS=linux GOARCH=amd64 CGO_ENABLED=1 go build -v -buildmode=c-shared -ldflags=-s -o ./whatsmeow/static/whatsmeow-linux-amd64-v20.so ./main.go
+        GOOS=linux GOARCH=amd64 CGO_ENABLED=1 go build -v -buildmode=c-shared -ldflags=-s -o ./whatsmeow/static/whatsmeow-linux-amd64.so ./main.go
 
     - name: Upload Linux binaries
       uses: actions/upload-artifact@v4
       with:
-        name: whatsmeow-linux-amd64.so
+        name: whatsmeow-linux-amd64-v20.so
         path: whatsfly/dependencies/whatsmeow/static/whatsmeow-linux-amd64.so
 
     - name: Upload Linux binaries
       uses: actions/upload-artifact@v4
       with:
-        name: whatsmeow-linux-amd64.h
+        name: whatsmeow-linux-amd64-v20.h
         path: whatsfly/dependencies/whatsmeow/static/whatsmeow-linux-amd64.h
   build-windows:
     runs-on: windows-latest
@@ -56,7 +56,7 @@ jobs:
         CGO_ENABLED: 1
         CC: x86_64-w64-mingw32-gcc
       run: |
-          go build -v -buildmode=c-shared -o ./whatsfly/dependencies/whatsmeow/static/whatsmeow-windows-64-v20.dll ./whatsfly/dependencies/main.go
+          go build -v -buildmode=c-shared -o ./whatsfly/dependencies/whatsmeow/static/whatsmeow-windows-64.dll ./whatsfly/dependencies/main.go
         
     - name: Commit changes
       run: |
@@ -81,25 +81,25 @@ jobs:
         CGO_ENABLED: 1
       run: |
           cd whatsfly/dependencies
-          GOOS=darwin GOARCH=amd64 go build -v -buildmode=c-shared -o ./whatsmeow/static/whatsmeow-darwin-amd64-v20.dylib ./main.go
-          GOOS=darwin GOARCH=arm64 go build -v -buildmode=c-shared -o ./whatsmeow/static/whatsmeow-darwin-arm64-v20.dylib ./main.go
+          GOOS=darwin GOARCH=amd64 go build -v -buildmode=c-shared -o ./whatsmeow/static/whatsmeow-darwin-amd64.dylib ./main.go
+          GOOS=darwin GOARCH=arm64 go build -v -buildmode=c-shared -o ./whatsmeow/static/whatsmeow-darwin-arm64.dylib ./main.go
     - name: Upload macos binaries
       uses: actions/upload-artifact@v4
       with:
-        name: whatsmeow-darwin-amd64.dylib
+        name: whatsmeow-darwin-amd64-v20.dylib
         path: whatsfly/dependencies/whatsmeow/static/whatsmeow-darwin-amd64.dylib
     - name: Upload macos binaries
       uses: actions/upload-artifact@v4
       with:
-        name: whatsmeow-darwin-amd64.h
+        name: whatsmeow-darwin-amd64-v20.h
         path: whatsfly/dependencies/whatsmeow/static/whatsmeow-darwin-amd64.h
     - name: Upload macos binaries
       uses: actions/upload-artifact@v4
       with:
-        name: whatsmeow-darwin-arm64.dylib
+        name: whatsmeow-darwin-arm64-v20.dylib
         path: whatsfly/dependencies/whatsmeow/static/whatsmeow-darwin-arm64.dylib
     - name: Upload macos binaries
       uses: actions/upload-artifact@v4
       with:
-        name: whatsmeow-darwin-arm64.h
+        name: whatsmeow-darwin-arm64-v20.h
         path: whatsfly/dependencies/whatsmeow/static/whatsmeow-darwin-arm64.h
