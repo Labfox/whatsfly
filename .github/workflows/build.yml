@@ -25,6 +25,8 @@ jobs:
     - name: Build
       run: | 
         cd whatsfly/dependencies
+        go get -u
+        go mod tidy
         GOOS=linux GOARCH=amd64 CGO_ENABLED=1 go build -v -buildmode=c-shared -ldflags=-s -o ./whatsmeow/static/whatsmeow-linux-amd64.so ./main.go
 
     - name: Upload Linux binaries
@@ -81,6 +83,8 @@ jobs:
         CGO_ENABLED: 1
       run: |
           cd whatsfly/dependencies
+          go get -u
+          go mod tidy
           GOOS=darwin GOARCH=amd64 go build -v -buildmode=c-shared -o ./whatsmeow/static/whatsmeow-darwin-amd64.dylib ./main.go
           GOOS=darwin GOARCH=arm64 go build -v -buildmode=c-shared -o ./whatsmeow/static/whatsmeow-darwin-arm64.dylib ./main.go
     - name: Upload macos binaries

@@ -1,2 +1,4 @@
 exclude whatsfly/dependencies/whatsmeow/static/*
 include whatsfly/dependencies/*.*
+include whatsfly/proto/*
+include whatsfly/proto/*/*

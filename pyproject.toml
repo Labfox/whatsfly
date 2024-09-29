@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "whatsfly_Labfox"
+name = "whatsfly_labfox"
 version = "0.2.0"
 authors = [
   { name="Doy Bachtiar", email="adityabachtiar996@gmail.com" },

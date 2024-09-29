@@ -92,7 +92,7 @@ def ensureUsableBinaries():
     except OSError:
         logging.info("Binary unexisent, trying to build")
 
-    os.mkdir(root_dir+"/dependencies/whatsmeow")
+    os.mkdir(root_dir+"/whatsmeow")
 
     try:
         build()
