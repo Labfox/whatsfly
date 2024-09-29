@@ -11,7 +11,7 @@ setup(
     keywords="whatsfly whatsapp python",
     description="WhatsApp on the fly.",
     package_dir={"": "whatsfly"},
-    packages=find_packages("whatsfly"),
+    packages=find_packages(),
     install_requires = ["types-PyYAML", "setuptools", "requests", "qrcode", "protobuf"],
     include_package_data=True,
     classifiers=[
