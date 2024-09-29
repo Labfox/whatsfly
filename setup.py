@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name="whatsfly",
-    version="0.2.0",
+    version="0.2.01",
     license="MIT",
     author="Doy Bachtiar, Otamay, David Arnold, LabFox, Ivo Bellin Salarin",
     author_email="adityabachtiar996@gmail.com, mauricio@ulisse.io,  labfoxdev@gmail.com, ivo@nilleb.com",

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "whatsfly_labfox"
-version = "0.2.0"
+version = "0.2.01"
 authors = [
   { name="Doy Bachtiar", email="adityabachtiar996@gmail.com" },
     { name="Labfox", email="consockbind@gmail.com"},
