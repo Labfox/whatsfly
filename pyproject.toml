@@ -22,10 +22,10 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = [
-  "types-pyyaml",
-  "setuptools",
-  "requests",
-  "qrcode",
+    "types-pyyaml",
+    "setuptools",
+    "requests",
+    "qrcode",
     "protobuf"
 ]
 

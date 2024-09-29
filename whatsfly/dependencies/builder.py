@@ -92,6 +92,8 @@ def ensureUsableBinaries():
     except OSError:
         logging.info("Binary unexisent, trying to build")
 
+    os.mkdir(root_dir+"/dependencies/whatsmeow")
+
     try:
         build()
         import whatsfly.whatsmeow
