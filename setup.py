@@ -10,7 +10,8 @@ setup(
     url="https://whatsfly.labfox.fr",
     keywords="whatsfly whatsapp python",
     description="WhatsApp on the fly.",
-    packages=find_packages(),
+    package_dir={"": "whatsfly"},
+    packages=find_packages("whatsfly"),
     install_requires = ["types-PyYAML", "setuptools", "requests", "qrcode", "protobuf"],
     include_package_data=True,
     classifiers=[
