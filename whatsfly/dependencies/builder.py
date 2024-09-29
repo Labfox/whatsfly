@@ -96,16 +96,13 @@ def ensureUsableBinaries():
         logging.warning("Unexpected error while building")
 
     logging.info("Trying to download pre-built binaries")
-    url = f"https://github.com/Labfox/whatsfly/raw/main/whatsfly/dependencies/{get_dll_filename().replace("whatsmeow/", "whatsmeow/static/")}"
-    h_url = f"https://github.com/Labfox/whatsfly/raw/main/whatsfly/dependencies/{get_dll_filename(h=True).replace("whatsmeow/", "whatsmeow/static/")}"
-
 
     download_file(
-        get_dll_filename().replace("whatsfly/", "").replace("whatsmeow/", ""),
+        get_dll_filename().replace("whatsfly/", "").replace("whatsmeow/", "")+"-v20",
         root_dir.replace("dependencies", "")+"/dependencies/whatsmeow/"+get_dll_filename().replace("whatsfly/", "").replace("whatsmeow/", "") )
 
     download_file(
-        get_dll_filename(h=True).replace("whatsfly/", "").replace("whatsmeow/", ""),
+        get_dll_filename(h=True).replace("whatsfly/", "").replace("whatsmeow/", "")+"-v20",
         root_dir.replace("dependencies", "") + "/dependencies/whatsmeow/" + get_dll_filename(h=True).replace("whatsfly/",
                                                                                                        "").replace(
             "whatsmeow/", ""))

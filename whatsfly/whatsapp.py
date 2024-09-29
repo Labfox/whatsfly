@@ -89,11 +89,9 @@ class WhatsApp:
         :param print_qr_code: Setting to true will print the qr code to terminal on connection
         """
 
-        self.user_name = None
         self.machine = machine
         self.browser = browser
         self.wapi_functions = browser
-        self.connected = None
         self._messageThreadRunner = threading.Thread(target=self._messageThread)
         self._userEventHandlers = [on_event]
         self._methodReturns = {}
@@ -389,13 +387,3 @@ class WhatsApp:
         response = self._methodReturns[str(return_uuid)]["return"]
 
         return Upload(int(response), mimetype, kind)
-
-
-
-
-
-if __name__ == "__main__":
-    client = WhatsApp()
-    message = "Hello World!"
-    phone = "6283139000000"
-    client.sendMessage(message=message, phone=phone)
