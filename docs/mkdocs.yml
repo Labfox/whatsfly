@@ -2,6 +2,9 @@ site_name: Whatsfly Docs
 repo_name: Labfox/whatsfly
 edit_uri: tree/main/docs/docs
 repo_url: https://github.com/Labfox/whatsfly
+extra:
+  version:
+    provider: mike
 theme:
   name: material
   custom_dir: overrides
@@ -43,6 +46,9 @@ plugins:
         options:
           show_submodules: true
           docstring_style: sphinx
+- mike
+
+
 nav:
   - Home: index.md
   - "Api Reference":
