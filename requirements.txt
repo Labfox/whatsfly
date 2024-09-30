@@ -110,5 +110,5 @@ typing-extensions==4.12.2
     # via qrcode
 urllib3==2.2.2
     # via requests
-watchdog==5.0.2
+watchdog==5.0.3
     # via mkdocs
