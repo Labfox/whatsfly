@@ -137,7 +137,7 @@ vcrpy==6.0.1
     #   pytest-vcr
 virtualenv==20.26.4
     # via pre-commit
-watchdog==5.0.2
+watchdog==5.0.3
     # via
     #   -r dev-requirements.in
     #   mkdocs
