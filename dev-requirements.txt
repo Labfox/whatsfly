@@ -85,8 +85,6 @@ protobuf==5.28.2
     # via -r dev-requirements.in
 pygments==2.18.0
     # via rich
-pypng==0.20220715.0
-    # via qrcode
 pytest==8.3.3
     # via
     #   -r dev-requirements.in
@@ -107,7 +105,7 @@ pyyaml==6.0.2
     #   vcrpy
 pyyaml-env-tag==0.1
     # via mkdocs
-qrcode==7.4.2
+qrcode==8.0
     # via -r dev-requirements.in
 requests==2.32.3
     # via -r dev-requirements.in
@@ -127,7 +125,6 @@ typing-extensions==4.12.2
     # via
     #   aiosqlite
     #   mypy
-    #   qrcode
     #   typer
 urllib3==2.2.2
     # via requests
