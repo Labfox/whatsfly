@@ -127,8 +127,10 @@ typing-extensions==4.12.2
     #   mypy
     #   typer
 urllib3==2.2.2
-    # via requests
-vcrpy==6.0.1
+    # via
+    #   requests
+    #   vcrpy
+vcrpy==6.0.2
     # via
     #   -r dev-requirements.in
     #   pytest-vcr
