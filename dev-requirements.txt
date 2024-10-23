@@ -81,7 +81,7 @@ pluggy==1.5.0
     # via pytest
 pre-commit==4.0.1
     # via -r dev-requirements.in
-protobuf==5.28.2
+protobuf==5.28.3
     # via -r dev-requirements.in
 pygments==2.18.0
     # via rich
