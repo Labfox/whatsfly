@@ -42,7 +42,6 @@ jobs:
         path: whatsfly/dependencies/whatsmeow/static/whatsmeow-linux-amd64.h
   build-windows:
     runs-on: windows-latest
-    if: false
     steps:
     - uses: actions/checkout@v4
 
@@ -60,14 +59,17 @@ jobs:
       run: |
           go build -v -buildmode=c-shared -o ./whatsfly/dependencies/whatsmeow/static/whatsmeow-windows-64.dll ./whatsfly/dependencies/main.go
         
-    - name: Commit changes
-      run: |
-          git config --global user.email "action@github.com"
-          git config --global user.name "Github Actions"
-          git add *
-          git commit -am "New build for $GITHUB_SHA"
-          git fetch
-          git push
+    - name: Upload Windows binaries
+      uses: actions/upload-artifact@v4
+      with:
+        name: whatsmeow-windows-amd64-v20.dll
+        path: whatsfly/dependencies/whatsmeow/static/whatsmeow-windows-amd64.dll
+
+    - name: Upload Windows binaries
+      uses: actions/upload-artifact@v4
+      with:
+        name: whatsmeow-windows-amd64-v20.h
+        path: whatsfly/dependencies/whatsmeow/static/whatsmeow-windows-amd64.h
   build-osx:
     runs-on: macos-latest
     steps:
