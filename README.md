@@ -22,7 +22,7 @@ The library theoretically support every machine with go and cgo, but if the buil
 | Linux ARM64  | GH Worlflow error |
 | Linux 686  | GH Worlflow error  |
 | Linux 386  | GH Worlflow error   |
-| Windows amd64  | GH Worlflow error  |
+| Windows amd64  | ![#83](https://github.com/Labfox/whatsfly/issues/83) |
 | Windows 32 bit  | GH Worlflow error  |
 | OSX arm64  | ✅ |
 | OSX amd64  | ✅ |
