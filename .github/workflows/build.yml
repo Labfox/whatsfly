@@ -60,7 +60,8 @@ jobs:
           cd whatsfly/dependencies
           go get -u
           go mod tidy
-          go build -v -buildmode=c-shared -o ./whatsfly/dependencies/whatsmeow/static/whatsmeow-windows-64.dll ./whatsfly/dependencies/main.go
+          go build -v -buildmode=c-shared -ldflags=-s -o ./whatsmeow/static/whatsmeow-windows-amd64.dll ./main.go
+
         
     - name: Upload Windows binaries
       uses: actions/upload-artifact@v4
