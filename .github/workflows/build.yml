@@ -57,6 +57,9 @@ jobs:
         CGO_ENABLED: 1
         CC: x86_64-w64-mingw32-gcc
       run: |
+          cd whatsfly/dependencies
+          go get -u
+          go mod tidy
           go build -v -buildmode=c-shared -o ./whatsfly/dependencies/whatsmeow/static/whatsmeow-windows-64.dll ./whatsfly/dependencies/main.go
         
     - name: Upload Windows binaries
