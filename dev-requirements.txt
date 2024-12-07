@@ -85,7 +85,7 @@ protobuf==5.29.1
     # via -r dev-requirements.in
 pygments==2.18.0
     # via rich
-pytest==8.3.3
+pytest==8.3.4
     # via
     #   -r dev-requirements.in
     #   pytest-asyncio
