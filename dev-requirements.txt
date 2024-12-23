@@ -55,7 +55,7 @@ mkdocs-get-deps==0.2.0
     # via mkdocs
 multidict==6.1.0
     # via yarl
-mypy==1.13.0
+mypy==1.14.0
     # via -r dev-requirements.in
 mypy-extensions==1.0.0
     # via
