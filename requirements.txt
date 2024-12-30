@@ -115,7 +115,7 @@ requests==2.32.3
     #   mkdocs-material
 six==1.16.0
     # via python-dateutil
-types-pyyaml==6.0.12.20241221
+types-pyyaml==6.0.12.20241230
     # via -r requirements.in
 urllib3==2.2.3
     # via requests
