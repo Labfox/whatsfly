@@ -130,7 +130,7 @@ urllib3==2.2.2
     # via
     #   requests
     #   vcrpy
-vcrpy==6.0.2
+vcrpy==7.0.0
     # via
     #   -r dev-requirements.in
     #   pytest-vcr
