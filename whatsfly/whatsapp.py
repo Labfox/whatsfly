@@ -19,7 +19,10 @@ from .whatsmeow import (
     set_group_name_wrapper,
     set_group_topic_wrapper,
     get_group_info_wrapper,
-    upload_file_wrapper, logged_in_wrapper, connected_wrapper
+    upload_file_wrapper,
+    logged_in_wrapper,
+    connected_wrapper,
+    send_reaction_wrapper
 )
 from .proto.waE2E import WAWebProtobufsE2E_pb2
 import ctypes
@@ -234,6 +237,27 @@ class WhatsApp:
                 upload._getMimetype().encode(),
                 upload._getKind().encode()
             )
+
+        return ret == 0
+
+    def sendReaction(self, jid: str, message_jid: str, sender_jid: str, reaction: str, group: bool = False):
+        """
+        Reacts to a message
+        :param jid: The phone number or group number the message was sent to.
+        :param message_jid: The JID of the message to react to
+        :param sender_jid: The JID of the message to react to
+        :param reaction: The emoji of the reaction
+        :param group: Was the message sent to a group ?
+        """
+
+        ret = send_reaction_wrapper(
+            self.c_WhatsAppClientId,
+            jid.encode(),
+            message_jid.encode(),
+            sender_jid.encode(),
+            reaction.encode(),
+            group
+        )
 
         return ret == 0
 

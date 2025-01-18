@@ -240,6 +240,15 @@ func (w *WhatsAppClient) handler(rawEvt interface{}) {
 		info += strings.Join(flags, ",")
 		info += "]"
 
+		if evt.Message.GetPollUpdateMessage() != nil {
+			decrytedPollvote, err := w.wpClient.DecryptPollVote(evt)
+			if err == nil {
+				data, _ := json.Marshal(decrytedPollvote)
+				w.addEventToQueue("{\"eventType\": \"DecryptedPollvote\", \"message\": " + string(data) + "}")
+				return
+			}
+		}
+
 		if evt.Message.ImageMessage != nil || evt.Message.AudioMessage != nil || evt.Message.VideoMessage != nil || evt.Message.DocumentMessage != nil || evt.Message.StickerMessage != nil {
 			if len(w.mediaPath) > 0 {
 				var mimetype string
@@ -861,6 +870,24 @@ func UploadFileWrapper(id C.int, c_path *C.char, c_kind *C.char, c_return_id *C.
 	w := handles[int(id)]
 
 	return C.int(w.UploadFile(path, kind, return_id))
+}
+
+//export SendReactionWrapper
+func SendReactionWrapper(id C.int, c_jid *C.char, c_message_id *C.char, c_sender_jid *C.char, c_reaction *C.char, c_group C.bool) C.int {
+	message_id := C.GoString(c_message_id)
+	reaction := C.GoString(c_reaction)
+
+	numberObj := getJid(C.GoString(c_jid), bool(c_group))
+	senderJID := getJid(C.GoString(c_sender_jid), false)
+
+
+	w := handles[int(id)]
+
+	_, err := w.wpClient.SendMessage(context.Background(), numberObj, w.wpClient.BuildReaction(numberObj, senderJID, message_id, reaction))
+	if err != nil {
+		return 1
+	}
+	return 0
 }
 
 //export Version

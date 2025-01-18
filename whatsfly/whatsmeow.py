@@ -130,3 +130,13 @@ upload_file_wrapper.argstype = [
     ctypes.c_char_p,
     ctypes.c_char_p
 ]
+
+send_reaction_wrapper = lib.SendReactionWrapper
+send_reaction_wrapper.argstype = [
+    ctypes.c_int,
+    ctypes.c_char_p,
+    ctypes.c_char_p,
+    ctypes.c_char_p,
+    ctypes.c_char_p,
+    ctypes.c_bool
+]

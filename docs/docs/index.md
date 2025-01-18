@@ -34,43 +34,66 @@ WhatsFly offers a streamlined and efficient way to integrate WhatsApp into your 
 ⏳: Soon
 🔧: Can work with some tinkering
 
-| Feature                                        | Status |
-|------------------------------------------------|--------|
-| Multi Device                                   | ✅ |
-| Send messages                                  | ✅ |
-| Receive messages                               | ✅ |
-| Receive media (images/audio/video/documents)   | ✅ |
-| Receive location                               | ✅ |
-| Send image                                     | ✅ |
-| Send media (video)                             | ✅ |
-| Send media (documents)                         | ✅ |
-| Send media (audio)                             | ❌  |
-| Send stickers                                  | ⏳  |
-| Send contact cards                             | ⏳ |
-| Send location                                  | ⏳ |
-| Message replies                                | 🔧 |
-| Join groups by invite                          | ✅ |
-| Get invite for group                           | ✅ |
-| Modify group name       | ✅ |
-| Modify group topic | ✅ |
-| Allow non-admin to edit group settings and send message (vice-versa) | ✅ |
-| Get Group info | ✅ |
-| Add group participants                         | ⏳ |
-| Kick group participants                        | ⏳ |
-| Promote/demote group participants              | ⏳ |
-| Mention users                                  | 🔧 |
-| Mute/unmute chats                              | ⏳ |
-| Block/unblock contacts                         | ⏳ |
-| Get contact info                               | ⏳ |
-| Get profile pictures                           | ⏳ |
-| Set user status message                        | ⏳ |
-| React to messages                              | ⏳ |
+|                               Feature                                |                          Status                          |
+|:--------------------------------------------------------------------:|:--------------------------------------------------------:|
+|                             Multi Device                             |                            ✅                             |
+|                            Send messages                             |                            ✅                             |
+|                           Receive messages                           |                            ✅                             |
+|             Receive media (images/audio/video/documents)             |                            ✅                             |
+|                           Receive location                           |                            ✅                             |
+|                              Send image                              |                            ✅                             |
+|                          Send media (video)                          |                            ✅                             |
+|                        Send media (documents)                        |                            ✅                             |
+|                          Send media (audio)                          |                            ✅                             |
+|                            Send stickers                             |                  ⏳: update the uploader                  |
+|                          Send contact cards                          |                            ✅                             |
+|                            Send location                             |                            ✅                             |
+|                           Message replies                            |                            ✅                             |
+|                        Join groups by invite                         |                            ✅                             |
+|                         Get invite for group                         |                            ✅                             |
+|                          Modify group name                           |                            ✅                             |
+|                          Modify group topic                          |                            ✅                             |
+| Allow non-admin to edit group settings and send message (vice-versa) |                            ✅                             |
+|                            Get Group info                            |                            ✅                             |
+|                        Add group participants                        |                            ⏳                             |
+|                       Kick group participants                        |                            ⏳                             |
+|                  Promote/demote group participants                   |                            ⏳                             |
+|                            Mention users                             |                            ✅                             |
+|                          Mute/unmute chats                           |                            ⏳                             |
+|                        Block/unblock contacts                        |                            ⏳                             |
+|                         Get profile pictures                         |                            ⏳                             |
+|                       Set user status message                        |                            ⏳                             |
+|                             Create Group                             |                            ⏳                             |
+|                          Create Newsletter                           |                            ⏳                             |
+|                                Polls                                 | ⏳: create function + vote funtion, correctly reads votes |
+|                          Receive Reactions                           |                            ✅                             |
+|                           React to message                           |                            ✅                             |
+|                          Follow newsletter                           |                            ⏳                             |
+|                         Get business profile                         |                            ⏳                             |
+|                         Get contact QR link                          |                            ⏳                             |
+|                 Get group info from invite and link                  |                            ⏳                             |
+|                    Get group participants request                    |                            ⏳                             |
+|                          Get joined Groups                           |                            ⏳                             |
+|                      Get community participants                      |                            ⏳                             |
+|                         Get newsletter info                          |                            ⏳                             |
+|                         Get privacy settings                         |                            ⏳                             |
+|                       Get profile picture info                       |                            ⏳                             |
+|                            Set/get status                            |                            ⏳                             |
+|                       Get groups of community                        |                            ⏳                             |
+|                            Get user info                             |                            ⏳                             |
+|                      Get if user is on whatsapp                      |                            ⏳                             |
+|                        Join group with invite                        |                            ✅                             |
+|                             Leave group                              |                            ⏳                             |
+|                      Link group with community                       |                            ⏳                             |
+|                             Mark as read                             |                            ⏳                             |
+|                            Send presence                             |                            ⏳                             |
+|                                                                      |                                                          |
+
 
 ## Install
-If git is found in the path, the binaries will be built dynamically
+If go is found in the path, the binaries will be built dynamically
 ```bash
-pip install types-PyYAML setuptools requests qrcode protobuf
-pip install https://github.com/Labfox/whatsfly/releases/latest/download/install.zip
+pip install whatsfly-Labfox
 ```
 
 ## Usage
@@ -99,7 +122,7 @@ if __name__ == "__main__":
 
     whatsapp.connect()
 
-    message_sent = whatsapp.sendMessage(phone, message)
+    message_sent = whatsapp.sendMessage(phone, message, False)
     
     time.sleep(5 * 60)  # Listen for messages for 5 minutes
 

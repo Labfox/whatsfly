@@ -2,7 +2,9 @@
 [![Build](https://github.com/Labfox/whatsfly/actions/workflows/build.yml/badge.svg)](https://github.com/Labfox/whatsfly/actions/workflows/build.yml)
 ## Just run and have fun. Just try and go fly. 
 
-# Warning ! The main branch is currently in restructuration, a lot of changes will happend, breaking backwards compatibility, until 1.0.0
+> [!NOTE]  
+> There currently isn't active development, but the project is still maintained. If you want a feature, please create an issue, I'll try to implement it as soon as possible (I usually respond withing 1-2 weeks).
+
 
 WhatsApp web wrapper in Python. No selenium nor gecko web driver needed. 
 
@@ -16,16 +18,16 @@ https://whatsfly.labfox.fr
 
 The library theoretically support every machine with go and cgo, but if the builds fails on your machine, there are pre-built binaries auto-downloaded for the following architectures:
 
-| Architecture  | Status |
-| ------------- | ------------- |
-| Linux amd64  | ✅ |
-| Linux ARM64  | GH Worlflow error |
-| Linux 686  | GH Worlflow error  |
-| Linux 386  | GH Worlflow error   |
-| Windows amd64  | ![#83](https://github.com/Labfox/whatsfly/issues/83) |
-| Windows 32 bit  | GH Worlflow error  |
-| OSX arm64  | ✅ |
-| OSX amd64  | ✅ |
+| Architecture   | Status            |
+|----------------|-------------------|
+| Linux amd64    | ✅                 |
+| Linux ARM64    | GH Worlflow error |
+| Linux 686      | GH Worlflow error |
+| Linux 386      | GH Worlflow error |
+| Windows amd64  | ✅                 |
+| Windows 32 bit | GH Worlflow error |
+| OSX arm64      | ✅                 |
+| OSX amd64      | ✅                 |
 
 ## Contributing
 > If you'd like to support my work, please consider making a pull request to help fix any issues with the code.
