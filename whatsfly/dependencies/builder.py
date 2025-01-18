@@ -106,17 +106,17 @@ def ensureUsableBinaries():
     logging.info("Trying to download pre-built binaries")
 
     download_file(
-        get_dll_filename(version="v20").replace("whatsfly/", "").replace("whatsmeow/", ""),
+        get_dll_filename(version="v22").replace("whatsfly/", "").replace("whatsmeow/", ""),
         root_dir.replace("dependencies", "")+"/dependencies/whatsmeow/"+get_dll_filename().replace("whatsfly/", "").replace("whatsmeow/", ""),
-        version="v20"
+        version="v22"
     )
 
     download_file(
-        get_dll_filename(h=True, version="v20").replace("whatsfly/", "").replace("whatsmeow/", ""),
+        get_dll_filename(h=True, version="v22").replace("whatsfly/", "").replace("whatsmeow/", ""),
         root_dir.replace("dependencies", "") + "/dependencies/whatsmeow/" + get_dll_filename(h=True).replace("whatsfly/",
                                                                                                        "").replace(
             "whatsmeow/", ""),
-        version="v20"
+        version="v22"
     )
 
 

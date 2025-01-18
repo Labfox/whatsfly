@@ -3,10 +3,10 @@ from setuptools import setup
 
 setup(
     name="whatsfly",
-    version="0.2.01",
+    version="0.2.2",
     license="MIT",
-    author="Doy Bachtiar, Otamay, David Arnold, LabFox, Ivo Bellin Salarin",
-    author_email="adityabachtiar996@gmail.com, mauricio@ulisse.io,  labfoxdev@gmail.com, ivo@nilleb.com",
+    author="LabFox",
+    author_email="labfoxdev@gmail.com",
     url="https://whatsfly.labfox.fr",
     keywords="whatsfly whatsapp python",
     description="WhatsApp on the fly.",
