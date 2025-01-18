@@ -31,7 +31,7 @@ iniconfig==2.0.0
     # via pytest
 isort==5.13.2
     # via -r dev-requirements.in
-jinja2==3.1.4
+jinja2==3.1.5
     # via mkdocs
 lazydocs==0.4.8
     # via -r dev-requirements.in
