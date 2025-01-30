@@ -2,7 +2,7 @@
 #    uv pip compile dev-requirements.in
 aiosqlite==0.20.0
     # via -r dev-requirements.in
-black==24.10.0
+black==25.1.0
     # via -r dev-requirements.in
 certifi==2024.8.30
     # via requests
