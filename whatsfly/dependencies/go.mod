@@ -2,7 +2,7 @@ module hey.jude/hey
 
 go 1.23
 
-toolchain go1.23
+toolchain go1.23.0
 
 require (
 	github.com/enriquebris/goconcurrentqueue v0.7.0
