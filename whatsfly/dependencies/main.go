@@ -86,9 +86,9 @@ func NewWhatsAppClient(phoneNumber string, mediaPath string, fn_disconnect_callb
 	}
 }
 
-func (w *WhatsAppClient) Connect() {
+func (w *WhatsAppClient) Connect(dbPath string) {
 	// Set the path for the database file
-	dbPath := "whatsapp/wapp.db"
+	//dbPath := "whatsapp/wapp.db"
 
 	// Set Browser
 	store.DeviceProps.PlatformType = waProto.DeviceProps_SAFARI.Enum()
@@ -713,9 +713,11 @@ func NewWhatsAppClientWrapper(c_phone_number *C.char, c_media_path *C.char, fn_d
 }
 
 //export ConnectWrapper
-func ConnectWrapper(id C.int) {
+func ConnectWrapper(id C.int, c_dbpath *C.char) {
+	dbPath := C.GoString(c_dbpath)
+
 	w := handles[int(id)]
-	w.Connect()
+	w.Connect(dbPath)
 }
 
 //export DisconnectWrapper
@@ -879,7 +881,6 @@ func SendReactionWrapper(id C.int, c_jid *C.char, c_message_id *C.char, c_sender
 
 	numberObj := getJid(C.GoString(c_jid), bool(c_group))
 	senderJID := getJid(C.GoString(c_sender_jid), false)
-
 
 	w := handles[int(id)]
 

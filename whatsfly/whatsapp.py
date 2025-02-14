@@ -74,6 +74,7 @@ class WhatsApp:
         media_path: str = "",
         machine: str = "mac",
         browser: str = "safari",
+        database_dir: str = "whatsapp",
         on_event: Callable[[dict], None] =None,
         on_disconnect: Callable[[None], None]=None,
         print_qr_code: bool=True
@@ -87,6 +88,7 @@ class WhatsApp:
         :param media_path: A directory to save all the media received
         :param machine: OS login info (showed on the whatsapp app)
         :param browser: Browser login info (showed on the whatsapp app)
+        :param database_dir: The directory storing whatsfly's data
         :param on_event: Function to call on event
         :param on_disconnect: Function to call on disconnect
         :param print_qr_code: Setting to true will print the qr code to terminal on connection
@@ -99,6 +101,7 @@ class WhatsApp:
         self._userEventHandlers = [on_event]
         self._methodReturns = {}
         self.print_qr_code = print_qr_code
+        self.db_dir = database_dir
 
         if media_path:
             if not os.path.exists(media_path):
@@ -114,8 +117,6 @@ class WhatsApp:
 
         self.C_ON_EVENT = (
             CMPFUNC_NONE_STR(self._handleMessage)
-            if callable(on_event)
-            else ctypes.cast(None, CMPFUNC_NONE_STR)
         )
         self.C_ON_DISCONNECT = (
             CMPFUNC_NONE(on_disconnect)
@@ -136,7 +137,7 @@ class WhatsApp:
         """
         Connects the whatsapp client to whatsapp servers. This method SHOULD be called before any other.
         """
-        connect_wrapper(self.c_WhatsAppClientId)
+        connect_wrapper(self.c_WhatsAppClientId, os.path.join(self.db_dir, "wapp.db").encode())
 
     def disconnect(self):
         """

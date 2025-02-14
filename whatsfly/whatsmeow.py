@@ -40,7 +40,7 @@ new_whatsapp_client_wrapper.argstype = [
 new_whatsapp_client_wrapper.restype = ctypes.c_int
 
 connect_wrapper = lib.ConnectWrapper
-connect_wrapper.argstype = [ctypes.c_int]
+connect_wrapper.argstype = [ctypes.c_int, ctypes.c_char_p]
 
 disconnect_wrapper = lib.DisconnectWrapper
 disconnect_wrapper.argstype = [ctypes.c_int]

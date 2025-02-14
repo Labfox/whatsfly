@@ -92,7 +92,10 @@ def ensureUsableBinaries():
     except OSError:
         logging.info("Binary unexisent, trying to build")
 
-    os.mkdir(root_dir+"/whatsmeow")
+    try:
+        os.mkdir(root_dir+"/whatsmeow")
+    except:
+        pass
 
     try:
         build()
@@ -106,17 +109,17 @@ def ensureUsableBinaries():
     logging.info("Trying to download pre-built binaries")
 
     download_file(
-        get_dll_filename(version="v22").replace("whatsfly/", "").replace("whatsmeow/", ""),
+        get_dll_filename(version="v23").replace("whatsfly/", "").replace("whatsmeow/", ""),
         root_dir.replace("dependencies", "")+"/dependencies/whatsmeow/"+get_dll_filename().replace("whatsfly/", "").replace("whatsmeow/", ""),
-        version="v22"
+        version="v23"
     )
 
     download_file(
-        get_dll_filename(h=True, version="v22").replace("whatsfly/", "").replace("whatsmeow/", ""),
+        get_dll_filename(h=True, version="v23").replace("whatsfly/", "").replace("whatsmeow/", ""),
         root_dir.replace("dependencies", "") + "/dependencies/whatsmeow/" + get_dll_filename(h=True).replace("whatsfly/",
                                                                                                        "").replace(
             "whatsmeow/", ""),
-        version="v22"
+        version="v23"
     )
 
 
