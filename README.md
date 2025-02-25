@@ -2,17 +2,17 @@
 [![Build](https://github.com/Labfox/whatsfly/actions/workflows/build.yml/badge.svg)](https://github.com/Labfox/whatsfly/actions/workflows/build.yml)
 
 > [!WARNING]
-> Our github page was hijacked, and I am working on removing the website. For now, please use ![https://labfox.github.io/whatsfly/](https://labfox.github.io/whatsfly/)
+> Our GitHub page was hijacked, and I am working on removing the website. For now, please use ![https://labfox.github.io/whatsfly/](https://labfox.github.io/whatsfly/)
 
 ## Just run and have fun. Just try and go fly. 
 
 > [!NOTE]  
-> There currently isn't active development, but the project is still maintained. If you want a feature, please create an issue, I'll try to implement it as soon as possible (I usually respond withing 1-2 weeks).
+> There currently isn't active development, but the project is still maintained. If you want a feature, please create an issue, I'll try to implement it as soon as possible (I usually respond within 1-2 weeks).
 
 
 WhatsApp web wrapper in Python. No selenium nor gecko web driver needed. 
 
-Setting up browser driver is tricky for python newcomers, and thus it makes your code so 'laggy' while using lots of ram.
+Setting up browser driver is tricky for python newcomers, and thus it makes your code so 'laggy' while using lots of RAM.
 
 ## Documentation
 
@@ -20,16 +20,16 @@ Setting up browser driver is tricky for python newcomers, and thus it makes your
 
 ## Supported machines
 
-The library theoretically support every machine with go and cgo, but if the builds fails on your machine, there are pre-built binaries auto-downloaded for the following architectures:
+The library theoretically supports every machine with Go and CGo, but if the builds fail on your machine, there are pre-built binaries auto-downloaded for the following architectures:
 
 | Architecture   | Status            |
 |----------------|-------------------|
 | Linux amd64    | ✅                 |
-| Linux ARM64    | GH Worlflow error |
-| Linux 686      | GH Worlflow error |
-| Linux 386      | GH Worlflow error |
+| Linux ARM64    | GH Workflow error |
+| Linux 686      | GH Workflow error |
+| Linux 386      | GH Workflow error |
 | Windows amd64  | ✅                 |
-| Windows 32 bit | GH Worlflow error |
+| Windows 32 bit | GH Workflow error |
 | OSX arm64      | ✅                 |
 | OSX amd64      | ✅                 |
 
