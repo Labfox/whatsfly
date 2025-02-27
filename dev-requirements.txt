@@ -29,7 +29,7 @@ idna==3.8
     #   yarl
 iniconfig==2.0.0
     # via pytest
-isort==6.0.0
+isort==6.0.1
     # via -r dev-requirements.in
 jinja2==3.1.5
     # via mkdocs
