@@ -524,7 +524,7 @@ func (w *WhatsAppClient) UploadFile(path string, kind string, return_id string) 
 	return 0
 }
 
-func (w *WhatsAppClient) InjectMessageWithUploadData(originMessage waE2E.Message, upload whatsmeow.UploadResponse, mimetype string, kind string) waE2E.Message {
+func (w *WhatsAppClient) InjectMessageWithUploadData(originMessage waE2E.Message, upload whatsmeow.UploadResponse, mimetype string, kind string, caption string) waE2E.Message {
 	if !w.wpClient.IsConnected() {
 		err := w.wpClient.Connect()
 		if err != nil {
@@ -535,6 +535,8 @@ func (w *WhatsAppClient) InjectMessageWithUploadData(originMessage waE2E.Message
 	// var filedata []byte
 
 	if kind == "image" {
+		originMessage.ImageMessage = &waE2E.ImageMessage{}
+		originMessage.ImageMessage.Caption = proto.String(caption)
 		originMessage.ImageMessage.Mimetype = proto.String(mimetype)
 		originMessage.ImageMessage.URL = &upload.URL
 		originMessage.ImageMessage.DirectPath = proto.String(upload.DirectPath)
@@ -544,6 +546,8 @@ func (w *WhatsAppClient) InjectMessageWithUploadData(originMessage waE2E.Message
 		originMessage.ImageMessage.FileLength = proto.Uint64(uint64(upload.FileLength))
 	}
 	if kind == "video" {
+		originMessage.VideoMessage = &waE2E.VideoMessage{}
+		originMessage.VideoMessage.Caption = proto.String(caption)
 		originMessage.VideoMessage.Mimetype = proto.String(mimetype)
 		originMessage.VideoMessage.URL = &upload.URL
 		originMessage.VideoMessage.DirectPath = proto.String(upload.DirectPath)
@@ -553,6 +557,7 @@ func (w *WhatsAppClient) InjectMessageWithUploadData(originMessage waE2E.Message
 		originMessage.VideoMessage.FileLength = proto.Uint64(uint64(upload.FileLength))
 	}
 	if kind == "audio" {
+		originMessage.AudioMessage = &waE2E.AudioMessage{}
 		originMessage.AudioMessage.Mimetype = proto.String(mimetype)
 		originMessage.AudioMessage.URL = &upload.URL
 		originMessage.AudioMessage.DirectPath = proto.String(upload.DirectPath)
@@ -562,6 +567,8 @@ func (w *WhatsAppClient) InjectMessageWithUploadData(originMessage waE2E.Message
 		originMessage.AudioMessage.FileLength = proto.Uint64(uint64(upload.FileLength))
 	}
 	if kind == "document" {
+		originMessage.DocumentMessage = &waE2E.DocumentMessage{}
+		originMessage.DocumentMessage.Caption = proto.String(caption)
 		originMessage.DocumentMessage.Mimetype = proto.String(mimetype)
 		originMessage.DocumentMessage.URL = &upload.URL
 		originMessage.DocumentMessage.DirectPath = proto.String(upload.DirectPath)
@@ -777,18 +784,20 @@ func SendMessageWithUploadWrapper(id C.int, c_phone_number *C.char, c_message *C
 
 	kind := C.GoString(c_kind)
 
+	caption := C.GoString(c_message)
+
 	message := &waE2E.Message{}
 
-	length := C.strlen(c_message)
+	// length := C.strlen(c_message)
 
-	goBytes := C.GoBytes(unsafe.Pointer(c_message), C.int(length))
+	// goBytes := C.GoBytes(unsafe.Pointer(c_message), C.int(length))
 
-	proto.Unmarshal(goBytes, message)
+	// proto.Unmarshal(goBytes, message)
 	is_group := bool(c_is_group)
 
 	w := handles[int(id)]
 
-	injected := w.InjectMessageWithUploadData(*message, w.uploadsData[c_upload_id], mimetype, kind)
+	injected := w.InjectMessageWithUploadData(*message, w.uploadsData[c_upload_id], mimetype, kind, caption)
 
 	return C.int(w.SendMessage(phone_number, &injected, is_group))
 }
