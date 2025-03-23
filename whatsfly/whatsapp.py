@@ -62,6 +62,9 @@ class Upload:
     def _getKind(self):
         return self._kind
 
+def _emptyFunc(*args, **kwars):
+    return
+
 class WhatsApp:
     """
     The main whatsapp handler
@@ -75,7 +78,7 @@ class WhatsApp:
         machine: str = "mac",
         browser: str = "safari",
         database_dir: str = "whatsapp",
-        on_event: Callable[[dict], None] =None,
+        on_event: Callable[[dict], None] =_emptyFunc,
         on_disconnect: Callable[[None], None]=None,
         print_qr_code: bool=True
     ):
@@ -215,10 +218,15 @@ class WhatsApp:
         :param upload: An optional Upload object to be added to the protobuf before sending.
         """
 
+        # search what is fucked up
+
+        ispb = True
+
         if type(message) == str:
             message1 = WAWebProtobufsE2E_pb2.Message()
             message1.conversation = message
             message = message1
+            ispb = False
 
 
         if upload == None:
@@ -232,7 +240,7 @@ class WhatsApp:
             ret = send_message_with_upload_wrapper(
                 self.c_WhatsAppClientId,
                 phone.encode(),
-                message.SerializeToString(),
+                message.SerializeToString() if ispb else message.encode(),
                 group,
                 int(upload._getId()),
                 upload._getMimetype().encode(),

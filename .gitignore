@@ -7,6 +7,10 @@
 /test
 /whatsfly/whatsfly.egg-info
 /whatsfly.egg-info
+/venv
+*.pyc
+/whatsapp
+/whatsfly/dependencies/whatsmeow
 # /whatsfly/dependencies/example*
 __init__.py
 whatsfly-0.0.2/

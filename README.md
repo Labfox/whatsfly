@@ -1,9 +1,6 @@
 # WhatsFly
 [![Build](https://github.com/Labfox/whatsfly/actions/workflows/build.yml/badge.svg)](https://github.com/Labfox/whatsfly/actions/workflows/build.yml)
 
-> [!WARNING]
-> Our GitHub page was hijacked, and I am working on removing the website. For now, please use ![https://labfox.github.io/whatsfly/](https://labfox.github.io/whatsfly/)
-
 ## Just run and have fun. Just try and go fly. 
 
 > [!NOTE]  
@@ -16,7 +13,7 @@ Setting up browser driver is tricky for python newcomers, and thus it makes your
 
 ## Documentation
 
-**Don't use** https://whatsfly.labfox.fr for now
+https://labfox.github.io/whatsfly/
 
 ## Supported machines
 

@@ -6,6 +6,7 @@
 |:--------:|:------------------:|
 |   dev    | :white_check_mark: |
 |  0.2.2   | :white_check_mark: |
+|  0.3.0   | :white_check_mark: |
 | < 0.2.2  |        :x:         |
 
 ## Reporting a Vulnerability
