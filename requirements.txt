@@ -103,7 +103,7 @@ pyyaml-env-tag==0.1
     # via
     #   mike
     #   mkdocs
-qrcode==8.0
+qrcode==8.1
     # via -r requirements.in
 requests==2.32.3
     # via
