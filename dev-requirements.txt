@@ -105,7 +105,7 @@ pyyaml==6.0.2
     #   vcrpy
 pyyaml-env-tag==0.1
     # via mkdocs
-qrcode==8.1
+qrcode==8.2
     # via -r dev-requirements.in
 requests==2.32.3
     # via -r dev-requirements.in
