@@ -35,6 +35,7 @@ import (
 	"sync/atomic"
 	"time"
 	"unsafe"
+    "sync"
 
 	"github.com/enriquebris/goconcurrentqueue"
 	"go.mau.fi/whatsmeow/appstate"
@@ -66,7 +67,8 @@ type WhatsAppClient struct {
 	isLoggedIn           bool
 	startupTime          int64
 	historySyncID        int32
-	uploadsData          []whatsmeow.UploadResponse
+	uploadsData          map[string]whatsmeow.UploadResponse
+	uploadsDataMutex     sync.Mutex
 }
 
 var handles []*WhatsAppClient
@@ -83,6 +85,7 @@ func NewWhatsAppClient(phoneNumber string, mediaPath string, fn_disconnect_callb
 		isLoggedIn:           false,
 		startupTime:          time.Now().Unix(),
 		historySyncID:        0,
+		uploadsData:          make(map[string]whatsmeow.UploadResponse),
 	}
 }
 
@@ -515,22 +518,29 @@ func (w *WhatsAppClient) UploadFile(path string, kind string, return_id string) 
 		return 1
 	}
 
-	w.uploadsData = append(w.uploadsData, uploaded)
-	data_return_uuid := len(w.uploadsData) - 1
+	// w.uploadsData = append(w.uploadsData, uploaded)
+	// data_return_uuid := len(w.uploadsData) - 1
 	// Get the id and set it to data_return_uuid
 
-	w.addEventToQueue("{\"eventType\":\"methodReturn\",\"return\": \"" + strconv.Itoa(data_return_uuid) + "\", \"callid\":\"" + return_id + "\"}")
+	w.uploadsDataMutex.Lock()
+	w.uploadsData[return_id] = uploaded
+	w.uploadsDataMutex.Unlock()
+
+	//w.addEventToQueue("{\"eventType\":\"methodReturn\",\"return\": \"" + strconv.Itoa(data_return_uuid) + "\", \"callid\":\"" + return_id + "\"}")
+	w.addEventToQueue("{\"eventType\":\"methodReturn\", \"callid\":\"" + return_id + "\"}")
 
 	return 0
 }
 
-func (w *WhatsAppClient) InjectMessageWithUploadData(originMessage waE2E.Message, upload whatsmeow.UploadResponse, mimetype string, kind string, caption string) waE2E.Message {
+func (w *WhatsAppClient) InjectMessageWithUploadData(originMessage waE2E.Message, upload whatsmeow.UploadResponse, mimetype string, kind string, caption string, thumbnail_path string) waE2E.Message {
 	if !w.wpClient.IsConnected() {
 		err := w.wpClient.Connect()
 		if err != nil {
 			panic(err)
 		}
 	}
+
+	thumbnail_data, _ := os.ReadFile(thumbnail_path)
 
 	// var filedata []byte
 
@@ -548,6 +558,10 @@ func (w *WhatsAppClient) InjectMessageWithUploadData(originMessage waE2E.Message
 		originMessage.ImageMessage.FileEncSHA256 = upload.FileEncSHA256
 		originMessage.ImageMessage.FileSHA256 = upload.FileSHA256
 		originMessage.ImageMessage.FileLength = proto.Uint64(uint64(upload.FileLength))
+
+		if thumbnail_data != nil {
+			originMessage.ImageMessage.JPEGThumbnail = thumbnail_data
+        }
 	}
 	if kind == "video" {
 		originMessage.VideoMessage = &waE2E.VideoMessage{}
@@ -785,7 +799,7 @@ func SendMessageProtobufWrapper(id C.int, c_phone_number *C.char, c_message *C.c
 }
 
 //export SendMessageWithUploadWrapper
-func SendMessageWithUploadWrapper(id C.int, c_phone_number *C.char, c_message *C.char, c_is_group C.bool, c_upload_id C.int, c_mimetype *C.char, c_kind *C.char, c_ispb C.bool) C.int {
+func SendMessageWithUploadWrapper(id C.int, c_phone_number *C.char, c_message *C.char, c_is_group C.bool, c_upload_id *C.char, c_mimetype *C.char, c_kind *C.char, c_ispb C.bool, c_thumbnail_path *C.char) C.int {
 	phone_number := C.GoString(c_phone_number)
 
 	mimetype := C.GoString(c_mimetype)
@@ -809,9 +823,20 @@ func SendMessageWithUploadWrapper(id C.int, c_phone_number *C.char, c_message *C
 
 	is_group := bool(c_is_group)
 
+	thumbnail_path := ""
+	if c_thumbnail_path != nil {
+		thumbnail_path = C.GoString(c_thumbnail_path)
+	}
+
+    upload_id := C.GoString(c_upload_id)
+
 	w := handles[int(id)]
 
-	injected := w.InjectMessageWithUploadData(*message, w.uploadsData[c_upload_id], mimetype, kind, caption)
+	w.uploadsDataMutex.Lock()
+	defer w.uploadsDataMutex.Unlock()
+	defer delete(w.uploadsData, upload_id)
+
+	injected := w.InjectMessageWithUploadData(*message, w.uploadsData[upload_id], mimetype, kind, caption, thumbnail_path)
 
 	return C.int(w.SendMessage(phone_number, &injected, is_group))
 }

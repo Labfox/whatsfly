@@ -97,6 +97,7 @@ class WhatsApp:
         :param print_qr_code: Setting to true will print the qr code to terminal on connection
         """
 
+        self.phone_number = phone_number
         self.machine = machine
         self.browser = browser
         self.wapi_functions = browser
@@ -184,7 +185,7 @@ class WhatsApp:
 
 
         for handler in self._userEventHandlers:
-            handler(message)
+            handler(self, message)
 
     def loggedIn(self) -> bool:
         """
@@ -209,7 +210,7 @@ class WhatsApp:
             return False
         return connected_wrapper(self.c_WhatsAppClientId) == 1
 
-    def sendMessage(self, phone: str, message, group: bool = False, upload: Upload = None):
+    def sendMessage(self, phone: str, message, group: bool = False, upload: Upload = None, thumbnail_path = ""):
         """
         Sends a text message
         :param phone: The phone number or group number to send the message.
@@ -228,7 +229,6 @@ class WhatsApp:
             message = message1
             ispb = False
 
-
         if upload == None:
             ret = send_message_protobuf_wrapper(
                 self.c_WhatsAppClientId,
@@ -240,11 +240,13 @@ class WhatsApp:
             ret = send_message_with_upload_wrapper(
                 self.c_WhatsAppClientId,
                 phone.encode(),
-                message.SerializeToString() if ispb else message.encode(),
+                message.SerializeToString(), # message.SerializeToString() if ispb else message.encode(),
                 group,
-                int(upload._getId()),
+                upload._getId().encode(),
                 upload._getMimetype().encode(),
-                upload._getKind().encode()
+                upload._getKind().encode(),
+                ispb,
+                thumbnail_path.encode()
             )
 
         return ret == 0
@@ -411,12 +413,11 @@ class WhatsApp:
             str(return_uuid).encode()
         )
 
-
         while not str(return_uuid) in self._methodReturns:
             time.sleep(0.001)
 
         temporaryDirectory.cleanup()
 
-        response = self._methodReturns[str(return_uuid)]["return"]
+        # response = self._methodReturns[str(return_uuid)]["return"]
 
-        return Upload(int(response), mimetype, kind)
+        return Upload(str(return_uuid), mimetype, kind)
