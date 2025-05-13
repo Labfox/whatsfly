@@ -27,7 +27,7 @@ extern "C" {
   extern int ConnectedWrapper(int id);
   extern void MessageThreadWrapper(int id);
   extern int SendMessageProtobufWrapper(int id, char* c_number, char* c_msg, bool is_group);
-  extern int SendMessageWithUploadWrapper(int id, char* c_phone_number, char* c_message, bool is_group, int upload_id, char* c_upload_id, char* kind, bool ispb);
+  extern int SendMessageWithUploadWrapper(int id, char* c_phone_number, char* c_message, bool is_group, char* c_upload_id, char* c_mimetype, char* kind, bool ispb, char* c_thumbnail_path);
   extern int GetGroupInviteLinkWrapper(int id, char* c_jid, bool reset, char* return_id);
   extern int JoinGroupWithInviteLinkWrapper(int id, char* c_link);
   extern int SetGroupAnnounceWrapper(int id, char* c_jid, bool announce);

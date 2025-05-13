@@ -68,9 +68,11 @@ send_message_with_upload_wrapper.argstype = [
     ctypes.c_char_p,
     ctypes.c_char_p,
     ctypes.c_bool,
-    ctypes.c_int,
     ctypes.c_char_p,
-    ctypes.c_char_p
+    ctypes.c_char_p,
+    ctypes.c_char_p,
+    ctypes.c_bool,
+    ctypes.c_char_p,
 ]
 
 
