@@ -7,8 +7,9 @@ import platform
 import os
 from .github_actions_download import download_file
 
+current_version = "v25-LTBR"
 
-def get_dll_filename(h=False, version=None):
+def get_dll_filename(headers=False, version=None):
     current_os = platform.system().lower()
     current_arch = platform.machine().lower()
 
@@ -25,12 +26,12 @@ def get_dll_filename(h=False, version=None):
     dll_extension = extension_map.get(current_os, current_os)
 
     if version != None:
-        if not h:
+        if not headers:
             return f"whatsmeow/whatsmeow-{current_os}-{go_arch}-{version}.{dll_extension}"
         else:
             return f"whatsmeow/whatsmeow-{current_os}-{go_arch}-{version}.h"
 
-    if not h:
+    if not headers:
         return f"whatsmeow/whatsmeow-{current_os}-{go_arch}.{dll_extension}"
     else:
         return f"whatsmeow/whatsmeow-{current_os}-{go_arch}.h"
@@ -109,17 +110,17 @@ def ensureUsableBinaries():
     logging.info("Trying to download pre-built binaries")
 
     download_file(
-        get_dll_filename(version="v23").replace("whatsfly/", "").replace("whatsmeow/", ""),
+        get_dll_filename(version=current_version).replace("whatsfly/", "").replace("whatsmeow/", ""),
         root_dir.replace("dependencies", "")+"/dependencies/whatsmeow/"+get_dll_filename().replace("whatsfly/", "").replace("whatsmeow/", ""),
-        version="v23"
+        version=current_version
     )
 
     download_file(
-        get_dll_filename(h=True, version="v23").replace("whatsfly/", "").replace("whatsmeow/", ""),
+        get_dll_filename(headers=True, version=current_version).replace("whatsfly/", "").replace("whatsmeow/", ""),
         root_dir.replace("dependencies", "") + "/dependencies/whatsmeow/" + get_dll_filename(h=True).replace("whatsfly/",
                                                                                                        "").replace(
             "whatsmeow/", ""),
-        version="v23"
+        version=current_version
     )
 
 

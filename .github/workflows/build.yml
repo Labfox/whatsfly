@@ -32,13 +32,13 @@ jobs:
     - name: Upload Linux binaries
       uses: actions/upload-artifact@v4
       with:
-        name: whatsmeow-linux-amd64-v23.so
+        name: whatsmeow-linux-amd64-v25-LTBR.so
         path: whatsfly/dependencies/whatsmeow/static/whatsmeow-linux-amd64.so
 
     - name: Upload Linux binaries
       uses: actions/upload-artifact@v4
       with:
-        name: whatsmeow-linux-amd64-v23.h
+        name: whatsmeow-linux-amd64-v25-LTBR.h
         path: whatsfly/dependencies/whatsmeow/static/whatsmeow-linux-amd64.h
   build-windows:
     runs-on: windows-latest
@@ -66,13 +66,13 @@ jobs:
     - name: Upload Windows binaries
       uses: actions/upload-artifact@v4
       with:
-        name: whatsmeow-windows-amd64-v23.dll
+        name: whatsmeow-windows-amd64-v25-LTBR.dll
         path: whatsfly/dependencies/whatsmeow/static/whatsmeow-windows-amd64.dll
 
     - name: Upload Windows binaries
       uses: actions/upload-artifact@v4
       with:
-        name: whatsmeow-windows-amd64-v23.h
+        name: whatsmeow-windows-amd64-v25-LTBR.h
         path: whatsfly/dependencies/whatsmeow/static/whatsmeow-windows-amd64.h
   build-osx:
     runs-on: macos-latest
@@ -96,20 +96,20 @@ jobs:
     - name: Upload macos binaries
       uses: actions/upload-artifact@v4
       with:
-        name: whatsmeow-darwin-amd64-v23.dylib
+        name: whatsmeow-darwin-amd64-v25-LTBR.dylib
         path: whatsfly/dependencies/whatsmeow/static/whatsmeow-darwin-amd64.dylib
     - name: Upload macos binaries
       uses: actions/upload-artifact@v4
       with:
-        name: whatsmeow-darwin-amd64-v23.h
+        name: whatsmeow-darwin-amd64-v25-LTBR.h
         path: whatsfly/dependencies/whatsmeow/static/whatsmeow-darwin-amd64.h
     - name: Upload macos binaries
       uses: actions/upload-artifact@v4
       with:
-        name: whatsmeow-darwin-arm64-v23.dylib
+        name: whatsmeow-darwin-arm64-v25-LTBR.dylib
         path: whatsfly/dependencies/whatsmeow/static/whatsmeow-darwin-arm64.dylib
     - name: Upload macos binaries
       uses: actions/upload-artifact@v4
       with:
-        name: whatsmeow-darwin-arm64-v23.h
+        name: whatsmeow-darwin-arm64-v25-LTBR.h
         path: whatsfly/dependencies/whatsmeow/static/whatsmeow-darwin-arm64.h

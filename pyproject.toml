@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "whatsfly_labfox"
-version = "0.3.0"
+version = "0.3.1"
 authors = [
     { name="Labfox", email="consockbind@gmail.com"},
   { name="Doy Bachtiar", email="adityabachtiar996@gmail.com" },
@@ -21,6 +21,7 @@ classifiers = [
     "Operating System :: Unix",
     "Operating System :: POSIX :: Linux",
     "Operating System :: MacOS :: MacOS X",
+    "Operating System :: Windows",
     "Topic :: Communications",
     "Topic :: Communications :: Chat",
 ]

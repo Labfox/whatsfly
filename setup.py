@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name="whatsfly",
-    version="0.3.0",
+    version="0.3.1",
     license="MIT",
     author="LabFox",
     author_email="labfoxdev@gmail.com",
@@ -19,6 +19,7 @@ setup(
         "Natural Language :: English",
         "Operating System :: Unix",
         "Operating System :: MacOS :: MacOS X",
+        "Operating System :: Windows",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
         "Environment :: Web Environment",
