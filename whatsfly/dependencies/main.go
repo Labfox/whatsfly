@@ -32,10 +32,10 @@ import (
 	"mime"
 	"strconv"
 	"strings"
+	"sync"
 	"sync/atomic"
 	"time"
 	"unsafe"
-    "sync"
 
 	"github.com/enriquebris/goconcurrentqueue"
 	"go.mau.fi/whatsmeow/appstate"
@@ -104,12 +104,12 @@ func (w *WhatsAppClient) Connect(dbPath string) {
 	}
 
 	// Connect to the database
-	container, err := sqlstore.New("sqlite", "file:"+dbPath+"?_pragma=foreign_keys(1)", waLog.Noop)
+	container, err := sqlstore.New(context.Background(), "sqlite", "file:"+dbPath+"?_pragma=foreign_keys(1)", waLog.Noop)
 	if err != nil {
 		panic(err)
 	}
 
-	deviceStore, err := container.GetFirstDevice()
+	deviceStore, err := container.GetFirstDevice(context.Background())
 	if err != nil {
 		panic(err)
 	}
@@ -138,7 +138,7 @@ func (w *WhatsAppClient) Connect(dbPath string) {
 				}
 				if evt.Event == "code" {
 					if len(w.phoneNumber) > 0 {
-						linkingCode, err := client.PairPhone(w.phoneNumber, true, whatsmeow.PairClientChrome, "Chrome (Linux)")
+						linkingCode, err := client.PairPhone(context.Background(), w.phoneNumber, true, whatsmeow.PairClientChrome, "Chrome (Linux)")
 						if err != nil {
 							panic(err)
 						}
@@ -244,7 +244,7 @@ func (w *WhatsAppClient) handler(rawEvt interface{}) {
 		info += "]"
 
 		if evt.Message.GetPollUpdateMessage() != nil {
-			decrytedPollvote, err := w.wpClient.DecryptPollVote(evt)
+			decrytedPollvote, err := w.wpClient.DecryptPollVote(context.Background(), evt)
 			if err == nil {
 				data, _ := json.Marshal(decrytedPollvote)
 				w.addEventToQueue("{\"eventType\": \"DecryptedPollvote\", \"message\": " + string(data) + "}")
@@ -261,23 +261,23 @@ func (w *WhatsAppClient) handler(rawEvt interface{}) {
 				switch {
 				case evt.Message.ImageMessage != nil:
 					mimetype = evt.Message.ImageMessage.GetMimetype()
-					data, err = w.wpClient.Download(evt.Message.ImageMessage)
+					data, err = w.wpClient.Download(context.Background(), evt.Message.ImageMessage)
 					media_path_subdir = "images"
 				case evt.Message.AudioMessage != nil:
 					mimetype = evt.Message.AudioMessage.GetMimetype()
-					data, err = w.wpClient.Download(evt.Message.AudioMessage)
+					data, err = w.wpClient.Download(context.Background(), evt.Message.AudioMessage)
 					media_path_subdir = "audios"
 				case evt.Message.VideoMessage != nil:
 					mimetype = evt.Message.VideoMessage.GetMimetype()
-					data, err = w.wpClient.Download(evt.Message.VideoMessage)
+					data, err = w.wpClient.Download(context.Background(), evt.Message.VideoMessage)
 					media_path_subdir = "videos"
 				case evt.Message.DocumentMessage != nil:
 					mimetype = evt.Message.DocumentMessage.GetMimetype()
-					data, err = w.wpClient.Download(evt.Message.DocumentMessage)
+					data, err = w.wpClient.Download(context.Background(), evt.Message.DocumentMessage)
 					media_path_subdir = "documents"
 				case evt.Message.StickerMessage != nil:
 					mimetype = evt.Message.StickerMessage.GetMimetype()
-					data, err = w.wpClient.Download(evt.Message.StickerMessage)
+					data, err = w.wpClient.Download(context.Background(), evt.Message.StickerMessage)
 					media_path_subdir = "stickers"
 				}
 
@@ -561,7 +561,7 @@ func (w *WhatsAppClient) InjectMessageWithUploadData(originMessage waE2E.Message
 
 		if thumbnail_data != nil {
 			originMessage.ImageMessage.JPEGThumbnail = thumbnail_data
-        }
+		}
 	}
 	if kind == "video" {
 		originMessage.VideoMessage = &waE2E.VideoMessage{}
@@ -828,7 +828,7 @@ func SendMessageWithUploadWrapper(id C.int, c_phone_number *C.char, c_message *C
 		thumbnail_path = C.GoString(c_thumbnail_path)
 	}
 
-    upload_id := C.GoString(c_upload_id)
+	upload_id := C.GoString(c_upload_id)
 
 	w := handles[int(id)]
 
