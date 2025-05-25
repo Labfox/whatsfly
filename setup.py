@@ -4,7 +4,6 @@ from setuptools import setup
 setup(
     name="whatsfly",
     version="0.3.1",
-    license="MIT",
     author="LabFox",
     author_email="labfoxdev@gmail.com",
     url="https://whatsfly.labfox.fr",
@@ -19,12 +18,13 @@ setup(
         "Natural Language :: English",
         "Operating System :: Unix",
         "Operating System :: MacOS :: MacOS X",
-        "Operating System :: Windows",
+        "Operating System :: Microsoft :: Windows",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
         "Environment :: Web Environment",
         "Topic :: Communications",
         "Topic :: Communications :: Chat",
         "Topic :: Software Development :: Libraries :: Python Modules",
+        "License :: OSI Approved :: MIT License",
     ],
 )

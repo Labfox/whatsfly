@@ -13,7 +13,6 @@ authors = [
 ]
 description = "Whatsapp Web wrapper in Python, without webdrivers"
 readme = "README.md"
-license = {file = "LICENSE"}
 requires-python = ">=3.12"
 classifiers = [
     "Programming Language :: Python :: 3",
@@ -21,7 +20,7 @@ classifiers = [
     "Operating System :: Unix",
     "Operating System :: POSIX :: Linux",
     "Operating System :: MacOS :: MacOS X",
-    "Operating System :: Windows",
+    "Operating System :: Microsoft :: Windows",
     "Topic :: Communications",
     "Topic :: Communications :: Chat",
 ]
