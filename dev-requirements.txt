@@ -55,7 +55,7 @@ mkdocs-get-deps==0.2.0
     # via mkdocs
 multidict==6.1.0
     # via yarl
-mypy==1.15.0
+mypy==1.16.0
     # via -r dev-requirements.in
 mypy-extensions==1.0.0
     # via
@@ -72,6 +72,7 @@ pathspec==0.12.1
     # via
     #   black
     #   mkdocs
+    #   mypy
 platformdirs==4.3.2
     # via
     #   black
