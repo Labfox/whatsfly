@@ -85,8 +85,10 @@ pre-commit==4.2.0
 protobuf==6.31.1
     # via -r dev-requirements.in
 pygments==2.18.0
-    # via rich
-pytest==8.3.5
+    # via
+    #   pytest
+    #   rich
+pytest==8.4.0
     # via
     #   -r dev-requirements.in
     #   pytest-asyncio
