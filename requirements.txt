@@ -105,7 +105,7 @@ pyyaml-env-tag==0.1
     #   mkdocs
 qrcode==8.2
     # via -r requirements.in
-requests==2.32.3
+requests==2.32.4
     # via
     #   -r requirements.in
     #   mkdocs-material
