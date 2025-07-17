@@ -105,13 +105,14 @@ Here's a basic example to get you started with WhatsFly. This code demonstrates 
 ```python
 from whatsfly import WhatsApp
 import time
+import pprint
 
-def my_event_callback(event_data):
+def my_event_callback(whatsapp, event_data):
     ''' 
     Simple event callback to listen to incoming events/messages. 
     Whenever this function is called, it will retrieve the current incoming event or messages.
     '''
-    print("Received event data:", event_data)
+    pprint.pprint("Received event data:", event_data)
 
 if __name__ == "__main__":
 
