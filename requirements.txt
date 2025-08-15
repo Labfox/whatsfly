@@ -16,7 +16,7 @@ colorama==0.4.6
     #   mkdocs-material
 ghp-import==2.1.0
     # via mkdocs
-griffe==1.6.2
+griffe==1.12.1
     # via mkdocstrings-python
 idna==3.10
     # via requests
@@ -70,7 +70,7 @@ mkdocstrings==0.30.0
     # via
     #   -r requirements.in
     #   mkdocstrings-python
-mkdocstrings-python==1.16.12
+mkdocstrings-python==1.17.0
     # via -r requirements.in
 packaging==24.1
     # via mkdocs
