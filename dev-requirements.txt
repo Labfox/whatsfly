@@ -110,7 +110,7 @@ pyyaml-env-tag==0.1
     # via mkdocs
 qrcode==8.2
     # via -r dev-requirements.in
-requests==2.32.4
+requests==2.32.5
     # via -r dev-requirements.in
 rich==13.8.1
     # via typer
