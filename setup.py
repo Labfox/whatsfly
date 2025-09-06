@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name="whatsfly",
-    version="0.3.1",
+    version="0.3.2",
     author="LabFox",
     author_email="labfoxdev@gmail.com",
     url="https://whatsfly.labfox.fr",

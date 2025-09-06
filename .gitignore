@@ -25,3 +25,4 @@ whatsfly/dependencies/libwapp.so
 whatsfly/dependencies/wapp.db
 whatsfly/dependencies/whatsmeow/whatsmeow-*.h
 /whatsfly-0.*
+whatsfly_labfox.egg-info
