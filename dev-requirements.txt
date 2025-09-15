@@ -93,7 +93,7 @@ pytest==8.4.2
     #   -r dev-requirements.in
     #   pytest-asyncio
     #   pytest-vcr
-pytest-asyncio==1.1.0
+pytest-asyncio==1.2.0
     # via -r dev-requirements.in
 pytest-vcr==1.0.2
     # via -r dev-requirements.in
@@ -128,6 +128,7 @@ typing-extensions==4.12.2
     # via
     #   aiosqlite
     #   mypy
+    #   pytest-asyncio
     #   typer
 urllib3==2.2.2
     # via
