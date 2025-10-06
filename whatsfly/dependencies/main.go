@@ -400,7 +400,7 @@ func (w *WhatsAppClient) handler(rawEvt interface{}) {
 
 func (w *WhatsAppClient) MessageThread() {
 	w.runMessageThread = true
-	for {
+	for w.runMessageThread {
 		if w.wpClient != nil {
 			if !w.wpClient.IsConnected() {
 				w.wpClient.Connect()
@@ -430,11 +430,13 @@ func (w *WhatsAppClient) MessageThread() {
 			}
 		}
 
+		time.Sleep(100 * time.Millisecond)
+
 		if !w.runMessageThread {
 			break
 		}
 
-		time.Sleep(100 * time.Millisecond)
+		
 	}
 }
 
