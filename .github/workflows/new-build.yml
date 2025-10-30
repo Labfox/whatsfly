@@ -26,9 +26,15 @@ jobs:
     - name: Build
       run: | 
         cd whatsfly/dependencies
+        cp whatsfly/dependencies/go.mod go.mod.save
+        cp whatsfly/dependencies/go.sum go.sum.save
         go get -u
         go mod tidy
         GOOS=linux GOARCH=amd64 CGO_ENABLED=1 go build -buildmode=c-shared -ldflags=-s -o ../../whatsmeow-linux-amd64.so ./main.go
+        rm whatsfly/dependencies/go.mod
+        rm whatsfly/dependencies/go.sum
+        cp go.mod.save whatsfly/dependencies/go.mod 
+        cp go.sum.save whatsfly/dependencies/go.sum 
 
     - name: Commit changes
       run: |
