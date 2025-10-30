@@ -28,7 +28,7 @@ jobs:
         cd whatsfly/dependencies
         go get -u
         go mod tidy
-        GOOS=linux GOARCH=amd64 CGO_ENABLED=1 go build -buildmode=c-shared -ldflags=-s -o ./whatsmeow/static/whatsmeow-linux-amd64.so ./main.go
+        GOOS=linux GOARCH=amd64 CGO_ENABLED=1 go build -buildmode=c-shared -ldflags=-s -o whatsmeow-linux-amd64.so ./main.go
 
     - name: Commit changes
       run: |
