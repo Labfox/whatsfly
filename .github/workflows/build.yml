@@ -5,7 +5,7 @@ name: Build library
 
 on:
   push:
-    branches: [ "main", "0.3.3-support" ]
+    branches: [ "0.3.3-support" ]
   schedule:
     - cron: "1 1 * * *"
 

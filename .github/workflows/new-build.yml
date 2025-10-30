@@ -1,0 +1,114 @@
+# This workflow will build a golang project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
+
+name: Generate prebuilts and publish
+
+on:
+  push:
+    branches: [ "main" ]
+  schedule:
+    - cron: "1 1 * * *"
+
+
+jobs:
+  build-ubuntu:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # full history so we can switch branches
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.24'
+
+    - name: Build
+      run: | 
+        cd whatsfly/dependencies
+        go get -u
+        go mod tidy
+        GOOS=linux GOARCH=amd64 CGO_ENABLED=1 go build -buildmode=c-shared -ldflags=-s -o ./whatsmeow/static/whatsmeow-linux-amd64.so ./main.go
+
+    - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          
+          git checkout -B prebuilts
+
+          mv whatsmeow-linux-amd64.so linux-amd64-$GITHUB_REF.so
+
+          git add linux-amd64-$GITHUB_REF.so
+          
+          git commit -m "Push prebuilts" || echo "No changes to commit"
+
+    - name: Push to docs branch
+      run: |
+        git push origin prebuilts
+
+
+  # build-windows:
+  #   runs-on: windows-latest
+  #   steps:
+  #   - uses: actions/checkout@v4
+  #     with:
+  #       fetch-depth: 0  # full history so we can switch branches
+
+  #   - name: Set up Go
+  #     uses: actions/setup-go@v4
+  #     with:
+  #       go-version: '1.24'
+
+  #   - name: Build
+  #     env:
+  #       GOOS: windows
+  #       GOARCH: amd64
+  #       CGO_ENABLED: 1
+  #       CC: x86_64-w64-mingw32-gcc
+  #     run: |
+  #         cd whatsfly/dependencies
+  #         go get -u
+  #         go mod tidy
+  #         go build -v -buildmode=c-shared -ldflags=-s -o ./whatsmeow/static/whatsmeow-windows-amd64.dll ./main.go
+
+        
+  #   - name: Upload Windows binaries
+  #     uses: actions/upload-artifact@v4
+  #     with:
+  #       name: whatsmeow-windows-amd64.dll
+  #       path: whatsfly/dependencies/whatsmeow/static/whatsmeow-windows-amd64.dll
+
+  # build-osx:
+  #   runs-on: macos-latest
+  #   steps:
+  #   - uses: actions/checkout@v4
+  #     with:
+  #       fetch-depth: 0  # full history so we can switch branches
+
+  #   - name: Set up Go
+  #     uses: actions/setup-go@v4
+  #     with:
+  #       go-version: '1.24'
+
+  #   - name: Build
+  #     env:
+  #       CGO_ENABLED: 1
+  #     run: |
+  #         cd whatsfly/dependencies
+  #         go get -u
+  #         go mod tidy
+  #         GOOS=darwin GOARCH=amd64 go build -v -buildmode=c-shared -o ./whatsmeow/static/whatsmeow-darwin-amd64.dylib ./main.go
+  #         GOOS=darwin GOARCH=arm64 go build -v -buildmode=c-shared -o ./whatsmeow/static/whatsmeow-darwin-arm64.dylib ./main.go
+  #   - name: Upload macos binaries
+  #     uses: actions/upload-artifact@v4
+  #     with:
+  #       name: whatsmeow-darwin-amd64.dylib
+  #       path: whatsfly/dependencies/whatsmeow/static/whatsmeow-darwin-amd64.dylib
+
+  #   - name: Upload macos binaries
+  #     uses: actions/upload-artifact@v4
+  #     with:
+  #       name: whatsmeow-darwin-arm64.dylib
+  #       path: whatsfly/dependencies/whatsmeow/static/whatsmeow-darwin-arm64.dylib
