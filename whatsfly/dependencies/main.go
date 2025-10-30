@@ -168,7 +168,7 @@ func (w *WhatsAppClient) handler(rawEvt interface{}) {
 	switch evt := rawEvt.(type) {
 	case *events.AppStateSyncComplete:
 		if len(w.wpClient.Store.PushName) > 0 && evt.Name == appstate.WAPatchCriticalBlock {
-			err := w.wpClient.SendPresence(types.PresenceAvailable)
+			err := w.wpClient.SendPresence(context.Background(), types.PresenceAvailable)
 			if err != nil {
 				//log.Warnf("Failed to send available presence: %v", err)
 			} else {
@@ -182,7 +182,7 @@ func (w *WhatsAppClient) handler(rawEvt interface{}) {
 		}
 		// Send presence available when connecting and when the pushname is changed.
 		// This makes sure that outgoing messages always have the right pushname.
-		err := w.wpClient.SendPresence(types.PresenceAvailable)
+		err := w.wpClient.SendPresence(context.Background(), types.PresenceAvailable)
 		if err != nil {
 			//log.Warnf("Failed to send available presence: %v", err)
 		} else {
@@ -195,7 +195,7 @@ func (w *WhatsAppClient) handler(rawEvt interface{}) {
 		}
 		// Send presence available when connecting and when the pushname is changed.
 		// This makes sure that outgoing messages always have the right pushname.
-		err := w.wpClient.SendPresence(types.PresenceAvailable)
+		err := w.wpClient.SendPresence(context.Background(), types.PresenceAvailable)
 		if err != nil {
 			//log.Warnf("Failed to send available presence: %v", err)
 		} else {
@@ -436,7 +436,6 @@ func (w *WhatsAppClient) MessageThread() {
 			break
 		}
 
-		
 	}
 }
 
@@ -534,7 +533,7 @@ func (w *WhatsAppClient) UploadFile(path string, kind string, return_id string) 
 	return 0
 }
 
-func (w *WhatsAppClient) InjectMessageWithUploadData(originMessage waE2E.Message, upload whatsmeow.UploadResponse, mimetype string, kind string, caption string, thumbnail_path string) waE2E.Message {
+func (w *WhatsAppClient) InjectMessageWithUploadData(originMessage *waE2E.Message, upload whatsmeow.UploadResponse, mimetype string, kind string, caption string, thumbnail_path string) *waE2E.Message {
 	if !w.wpClient.IsConnected() {
 		err := w.wpClient.Connect()
 		if err != nil {
@@ -615,7 +614,7 @@ func (w *WhatsAppClient) GetGroupInviteLink(group string, reset bool, returnid s
 		}
 	}
 
-	link, err := w.wpClient.GetGroupInviteLink(numberObj, reset)
+	link, err := w.wpClient.GetGroupInviteLink(context.Background(), numberObj, reset)
 	w.addEventToQueue("{\"eventType\":\"groupInviteLink\",\"group\": \"" + group + "\", \"link\":\"" + link + "\"}")
 	w.addEventToQueue("{\"eventType\":\"methodReturn\",\"return\": \"" + link + "\", \"callid\":\"" + returnid + "\"}")
 	if err != nil {
@@ -632,7 +631,7 @@ func (w *WhatsAppClient) JoinGroupWithInviteLink(link string) int {
 		}
 	}
 
-	_, err := w.wpClient.JoinGroupWithLink(link)
+	_, err := w.wpClient.JoinGroupWithLink(context.Background(), link)
 	if err != nil {
 		return 1
 	}
@@ -649,7 +648,7 @@ func (w *WhatsAppClient) SetGroupAnnounce(group string, announce bool) int {
 		}
 	}
 
-	err := w.wpClient.SetGroupAnnounce(numberObj, announce)
+	err := w.wpClient.SetGroupAnnounce(context.Background(), numberObj, announce)
 	if err != nil {
 		return 1
 	}
@@ -666,7 +665,7 @@ func (w *WhatsAppClient) SetGroupLocked(group string, locked bool) int {
 		}
 	}
 
-	err := w.wpClient.SetGroupLocked(numberObj, locked)
+	err := w.wpClient.SetGroupLocked(context.Background(), numberObj, locked)
 	if err != nil {
 		return 1
 	}
@@ -683,7 +682,7 @@ func (w *WhatsAppClient) SetGroupName(group string, name string) int {
 		}
 	}
 
-	err := w.wpClient.SetGroupName(numberObj, name)
+	err := w.wpClient.SetGroupName(context.Background(), numberObj, name)
 	if err != nil {
 		return 1
 	}
@@ -700,7 +699,7 @@ func (w *WhatsAppClient) SetGroupTopic(group string, topic string) int {
 		}
 	}
 
-	err := w.wpClient.SetGroupTopic(numberObj, "", "", topic)
+	err := w.wpClient.SetGroupTopic(context.Background(), numberObj, "", "", topic)
 	if err != nil {
 		return 1
 	}
@@ -717,7 +716,7 @@ func (w *WhatsAppClient) GetGroupInfo(group string, return_id string) int {
 		}
 	}
 
-	groupinfo, err := w.wpClient.GetGroupInfo(numberObj)
+	groupinfo, err := w.wpClient.GetGroupInfo(context.Background(), numberObj)
 	if err != nil {
 		return 1
 	}
@@ -838,9 +837,9 @@ func SendMessageWithUploadWrapper(id C.int, c_phone_number *C.char, c_message *C
 	defer w.uploadsDataMutex.Unlock()
 	defer delete(w.uploadsData, upload_id)
 
-	injected := w.InjectMessageWithUploadData(*message, w.uploadsData[upload_id], mimetype, kind, caption, thumbnail_path)
+	injected := w.InjectMessageWithUploadData(message, w.uploadsData[upload_id], mimetype, kind, caption, thumbnail_path)
 
-	return C.int(w.SendMessage(phone_number, &injected, is_group))
+	return C.int(w.SendMessage(phone_number, injected, is_group))
 }
 
 //export GetGroupInviteLinkWrapper
