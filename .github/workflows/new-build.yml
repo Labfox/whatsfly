@@ -49,12 +49,20 @@ jobs:
         echo "$GITHUB_SHA" >> linux-amd64-$GITHUB_REF_NAME
 
         git add linux-amd64-$GITHUB_SHA.so
+        git add linux-amd64-$GITHUB_REF_NAME
           
         git commit -m "Push prebuilts" || echo "No changes to commit"
 
     - name: Push to docs branch
       run: |
         git push origin prebuilts
+
+  publish_pages:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Test init 
+      run: ls
+
 
 
   # build-windows:
