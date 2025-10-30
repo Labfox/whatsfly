@@ -35,13 +35,13 @@ jobs:
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
 
-        ls
+        
         git checkout -B prebuilts
-        ls
+        
 
         mv whatsmeow-linux-amd64.so linux-amd64-$GITHUB_REF.so
 
-        git add linux-amd64-$GITHUB_REF.so
+        git add linux-amd64-$GITHUB_SHA.so
           
         git commit -m "Push prebuilts" || echo "No changes to commit"
 
