@@ -31,18 +31,18 @@ jobs:
         GOOS=linux GOARCH=amd64 CGO_ENABLED=1 go build -buildmode=c-shared -ldflags=-s -o ./whatsmeow/static/whatsmeow-linux-amd64.so ./main.go
 
     - name: Commit changes
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
 
           
-          git checkout -B prebuilts
+        git checkout -B prebuilts
 
-          mv whatsmeow-linux-amd64.so linux-amd64-$GITHUB_REF.so
+        mv whatsmeow-linux-amd64.so linux-amd64-$GITHUB_REF.so
 
-          git add linux-amd64-$GITHUB_REF.so
+        git add linux-amd64-$GITHUB_REF.so
           
-          git commit -m "Push prebuilts" || echo "No changes to commit"
+        git commit -m "Push prebuilts" || echo "No changes to commit"
 
     - name: Push to docs branch
       run: |
