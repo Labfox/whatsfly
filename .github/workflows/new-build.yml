@@ -39,7 +39,7 @@ jobs:
         git checkout -B prebuilts
         
 
-        mv whatsmeow-linux-amd64.so linux-amd64-$GITHUB_REF.so
+        mv whatsmeow-linux-amd64.so linux-amd64-$GITHUB_SHA.so
 
         git add linux-amd64-$GITHUB_SHA.so
           
