@@ -3,6 +3,7 @@ name: Build docs
 on:
   push:
     branches: ["main"]
+    paths: [".github/", "docs/"]
 
 jobs:
   build-docs:
