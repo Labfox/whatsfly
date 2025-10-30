@@ -46,6 +46,7 @@ jobs:
         
 
         mv whatsmeow-linux-amd64.so linux-amd64-$GITHUB_SHA.so
+        echo "$GITHUB_SHA" >> linux-amd64-$GITHUB_REF_NAME
 
         git add linux-amd64-$GITHUB_SHA.so
           
