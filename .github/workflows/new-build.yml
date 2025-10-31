@@ -51,17 +51,19 @@ jobs:
         git checkout prebuilts
         
 
-        mv whatsmeow-linux-amd64.so linux-amd64-$GITHUB_SHA.so
-        echo "$GITHUB_SHA" >> linux-amd64-$GITHUB_REF_NAME
+        
+        mkdir -p linux-amd64-$GITHUB_REF_NAME
+        mv whatsmeow-linux-amd64.so linux-amd64-$GITHUB_REF_NAME/linux-amd64-$GITHUB_SHA.so
 
-        git add linux-amd64-$GITHUB_SHA.so
-        git add linux-amd64-$GITHUB_REF_NAME
+        git add inux-amd64-$GITHUB_REF_NAME/linux-amd64-$GITHUB_SHA.so
+        
 
-        mv whatsmeow-windows-amd64.dll windows-amd64-$GITHUB_SHA.dll
-        echo "$GITHUB_SHA" >> windows-amd64-$GITHUB_REF_NAME
+        
+        mkdir -p windows-amd64-$GITHUB_REF_NAME
+        mv whatsmeow-windows-amd64.dll windows-amd64-$GITHUB_REF_NAME/windows-amd64-$GITHUB_SHA.dll
 
-        git add windows-amd64-$GITHUB_SHA.dll
-        git add windows-amd64-$GITHUB_REF_NAME
+        git add windows-amd64-$GITHUB_REF_NAME/windows-amd64-$GITHUB_SHA.dll
+        
           
         git commit -m "Push prebuilts" || echo "No changes to commit"
 
@@ -158,17 +160,19 @@ jobs:
         git checkout prebuilts
         
 
-        mv whatsmeow-darwin-amd64.dylib darwin-amd64-$GITHUB_SHA.dylib
-        echo "$GITHUB_SHA" >> darwin-amd64-$GITHUB_REF_NAME
+        
+        mkdir -p darwin-amd64-$GITHUB_REF_NAME
+        mv whatsmeow-darwin-amd64.dylib darwin-amd64-$GITHUB_REF_NAME/darwin-amd64-$GITHUB_SHA.dylib
 
-        git add darwin-amd64-$GITHUB_SHA.dylib
-        git add darwin-amd64-$GITHUB_REF_NAME
+        git add darwin-amd64-$GITHUB_REF_NAME/darwin-amd64-$GITHUB_SHA.dylib
+        
 
-        mv whatsmeow-darwin-arm64.dylib darwin-arm64-$GITHUB_SHA.dylib
-        echo "$GITHUB_SHA" >> darwin-arm64-$GITHUB_REF_NAME
+        
+        mkdir -p darwin-arm64-$GITHUB_REF_NAME
+        mv whatsmeow-darwin-arm64.dylib darwin-arm64-$GITHUB_REF_NAME/darwin-arm64-$GITHUB_SHA.dylib
 
-        git add darwin-arm64-$GITHUB_SHA.dylib
-        git add darwin-arm64-$GITHUB_REF_NAME
+        git add darwin-arm64-$GITHUB_REF_NAME/darwin-arm64-$GITHUB_SHA.dylib
+        
           
         git commit -m "Push prebuilts" || echo "No changes to commit"
 
