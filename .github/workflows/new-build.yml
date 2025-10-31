@@ -36,7 +36,7 @@ jobs:
         go get -u
         go mod tidy
         GOOS=linux GOARCH=amd64 CGO_ENABLED=1 go build -buildmode=c-shared -ldflags=-s -o ../../whatsmeow-linux-amd64.so ./main.go
-        GOOS=windows GOARCH=amd64 CGO_ENABLED=1 CC=x86_64-w64-mingw64-gcc go build -buildmode=c-shared -ldflags=-s -o ../../whatsmeow-windows-amd64.dll ./main.go
+        GOOS=windows GOARCH=amd64 CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc go build -buildmode=c-shared -ldflags=-s -o ../../whatsmeow-windows-amd64.dll ./main.go
         rm go.mod
         rm go.sum
         cp go.mod.save go.mod 
