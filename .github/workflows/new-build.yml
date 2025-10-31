@@ -53,17 +53,9 @@ jobs:
           
         git commit -m "Push prebuilts" || echo "No changes to commit"
 
-    - name: Push to docs branch
+    - name: Push to prebuilts branch
       run: |
         git push origin prebuilts
-
-  publish_pages:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Test init 
-      run: ls
-
-
 
   # build-windows:
   #   runs-on: windows-latest
