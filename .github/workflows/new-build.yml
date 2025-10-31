@@ -57,66 +57,109 @@ jobs:
       run: |
         git push origin prebuilts
 
-  # build-windows:
-  #   runs-on: windows-latest
-  #   steps:
-  #   - uses: actions/checkout@v4
-  #     with:
-  #       fetch-depth: 0  # full history so we can switch branches
+  build-windows:
+    runs-on: windows-latest
+    needs: build-ubuntu
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # full history so we can switch branches
 
-  #   - name: Set up Go
-  #     uses: actions/setup-go@v4
-  #     with:
-  #       go-version: '1.24'
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.24'
 
-  #   - name: Build
-  #     env:
-  #       GOOS: windows
-  #       GOARCH: amd64
-  #       CGO_ENABLED: 1
-  #       CC: x86_64-w64-mingw32-gcc
-  #     run: |
-  #         cd whatsfly/dependencies
-  #         go get -u
-  #         go mod tidy
-  #         go build -v -buildmode=c-shared -ldflags=-s -o ./whatsmeow/static/whatsmeow-windows-amd64.dll ./main.go
+    - name: Build
+      env:
+        GOOS: windows
+        GOARCH: amd64
+        CGO_ENABLED: 1
+        CC: x86_64-w64-mingw32-gcc
+      run: |
+          cd whatsfly/dependencies
+          cp go.mod go.mod.save
+          cp go.sum go.sum.save
+          go get -u
+          go mod tidy
+          go build -v -buildmode=c-shared -ldflags=-s -o ../../whatsmeow-windows-amd64.dll ./main.go
+          rm go.mod
+          rm go.sum
+          cp go.mod.save go.mod 
+          cp go.sum.save go.sum 
+        
+    - name: Commit changes
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
 
         
-  #   - name: Upload Windows binaries
-  #     uses: actions/upload-artifact@v4
-  #     with:
-  #       name: whatsmeow-windows-amd64.dll
-  #       path: whatsfly/dependencies/whatsmeow/static/whatsmeow-windows-amd64.dll
+        git checkout prebuilts
+        
 
-  # build-osx:
-  #   runs-on: macos-latest
-  #   steps:
-  #   - uses: actions/checkout@v4
-  #     with:
-  #       fetch-depth: 0  # full history so we can switch branches
+        mv whatsmeow-windows-amd64.so windows-amd64-$GITHUB_SHA.so
+        echo "$GITHUB_SHA" >> windows-amd64-$GITHUB_REF_NAME
 
-  #   - name: Set up Go
-  #     uses: actions/setup-go@v4
-  #     with:
-  #       go-version: '1.24'
+        git add windows-amd64-$GITHUB_SHA.so
+        git add windows-amd64-$GITHUB_REF_NAME
+          
+        git commit -m "Push prebuilts" || echo "No changes to commit"
 
-  #   - name: Build
-  #     env:
-  #       CGO_ENABLED: 1
-  #     run: |
-  #         cd whatsfly/dependencies
-  #         go get -u
-  #         go mod tidy
-  #         GOOS=darwin GOARCH=amd64 go build -v -buildmode=c-shared -o ./whatsmeow/static/whatsmeow-darwin-amd64.dylib ./main.go
-  #         GOOS=darwin GOARCH=arm64 go build -v -buildmode=c-shared -o ./whatsmeow/static/whatsmeow-darwin-arm64.dylib ./main.go
-  #   - name: Upload macos binaries
-  #     uses: actions/upload-artifact@v4
-  #     with:
-  #       name: whatsmeow-darwin-amd64.dylib
-  #       path: whatsfly/dependencies/whatsmeow/static/whatsmeow-darwin-amd64.dylib
+    - name: Push to prebuilts branch
+      run: |
+        git push origin prebuilts
+  build-osx:
+    runs-on: macos-latest
+    needs: build-windows
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # full history so we can switch branches
 
-  #   - name: Upload macos binaries
-  #     uses: actions/upload-artifact@v4
-  #     with:
-  #       name: whatsmeow-darwin-arm64.dylib
-  #       path: whatsfly/dependencies/whatsmeow/static/whatsmeow-darwin-arm64.dylib
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.24'
+
+    - name: Build
+      env:
+        CGO_ENABLED: 1
+      run: |
+          cd whatsfly/dependencies
+          cp go.mod go.mod.save
+          cp go.sum go.sum.save
+          go get -u
+          go mod tidy
+          GOOS=darwin GOARCH=amd64 go build -v -buildmode=c-shared -o ../../whatsmeow-darwin-amd64.dylib ./main.go
+          GOOS=darwin GOARCH=arm64 go build -v -buildmode=c-shared -o ../../whatsmeow-darwin-arm64.dylib ./main.go
+          rm go.mod
+          rm go.sum
+          cp go.mod.save go.mod 
+          cp go.sum.save go.sum 
+    
+    - name: Commit changes
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+
+        
+        git checkout prebuilts
+        
+
+        mv whatsmeow-darwin-amd64.so darwin-amd64-$GITHUB_SHA.so
+        echo "$GITHUB_SHA" >> darwin-amd64-$GITHUB_REF_NAME
+
+        git add darwin-amd64-$GITHUB_SHA.so
+        git add darwin-amd64-$GITHUB_REF_NAME
+
+        mv whatsmeow-darwin-arm64.so darwin-arm64-$GITHUB_SHA.so
+        echo "$GITHUB_SHA" >> darwin-arm64-$GITHUB_REF_NAME
+
+        git add darwin-arm64-$GITHUB_SHA.so
+        git add darwin-arm64-$GITHUB_REF_NAME
+          
+        git commit -m "Push prebuilts" || echo "No changes to commit"
+
+    - name: Push to prebuilts branch
+      run: |
+        git push origin prebuilts
