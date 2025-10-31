@@ -97,10 +97,10 @@ jobs:
         git checkout prebuilts
         
 
-        mv whatsmeow-windows-amd64.so windows-amd64-$GITHUB_SHA.so
+        mv whatsmeow-windows-amd64.dll windows-amd64-$GITHUB_SHA.dll
         echo "$GITHUB_SHA" >> windows-amd64-$GITHUB_REF_NAME
 
-        git add windows-amd64-$GITHUB_SHA.so
+        git add windows-amd64-$GITHUB_SHA.dll
         git add windows-amd64-$GITHUB_REF_NAME
           
         git commit -m "Push prebuilts" || echo "No changes to commit"
@@ -146,16 +146,16 @@ jobs:
         git checkout prebuilts
         
 
-        mv whatsmeow-darwin-amd64.so darwin-amd64-$GITHUB_SHA.so
+        mv whatsmeow-darwin-amd64.dylib darwin-amd64-$GITHUB_SHA.dylib
         echo "$GITHUB_SHA" >> darwin-amd64-$GITHUB_REF_NAME
 
-        git add darwin-amd64-$GITHUB_SHA.so
+        git add darwin-amd64-$GITHUB_SHA.dylib
         git add darwin-amd64-$GITHUB_REF_NAME
 
-        mv whatsmeow-darwin-arm64.so darwin-arm64-$GITHUB_SHA.so
+        mv whatsmeow-darwin-arm64.dylib darwin-arm64-$GITHUB_SHA.dylib
         echo "$GITHUB_SHA" >> darwin-arm64-$GITHUB_REF_NAME
 
-        git add darwin-arm64-$GITHUB_SHA.so
+        git add darwin-arm64-$GITHUB_SHA.dylib
         git add darwin-arm64-$GITHUB_REF_NAME
           
         git commit -m "Push prebuilts" || echo "No changes to commit"
