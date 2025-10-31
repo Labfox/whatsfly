@@ -55,7 +55,7 @@ jobs:
         mkdir -p linux-amd64-$GITHUB_REF_NAME
         mv whatsmeow-linux-amd64.so linux-amd64-$GITHUB_REF_NAME/linux-amd64-$GITHUB_SHA.so
 
-        git add inux-amd64-$GITHUB_REF_NAME/linux-amd64-$GITHUB_SHA.so
+        git add linux-amd64-$GITHUB_REF_NAME/linux-amd64-$GITHUB_SHA.so
         
 
         
