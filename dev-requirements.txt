@@ -2,7 +2,7 @@
 #    uv pip compile dev-requirements.in
 aiosqlite==0.21.0
     # via -r dev-requirements.in
-black==25.9.0
+black==25.11.0
     # via -r dev-requirements.in
 certifi==2024.8.30
     # via requests
@@ -99,7 +99,7 @@ pytest-vcr==1.0.2
     # via -r dev-requirements.in
 python-dateutil==2.9.0.post0
     # via ghp-import
-pytokens==0.1.10
+pytokens==0.3.0
     # via black
 pyyaml==6.0.2
     # via
