@@ -32,7 +32,7 @@ jobs:
       run: | 
         rm -f linux-amd64-$GITHUB_REF_NAME/linux-amd64-$GITHUB_SHA.so
         rm -f linux-amd64-$GITHUB_REF_NAME/latest.so
-        rm -f windows-amd64-$GITHUB_REF_NAME/linux-amd64-$GITHUB_SHA.dll
+        rm -f windows-amd64-$GITHUB_REF_NAME/windows-amd64-$GITHUB_SHA.dll
         rm -f windows-amd64-$GITHUB_REF_NAME/latest.dll
         cd whatsfly/dependencies
         cp go.mod go.mod.save
@@ -61,7 +61,7 @@ jobs:
 
 
         
-        ln -s linux-amd64-$GITHUB_REF_NAME/latest.so linux-amd64-$GITHUB_REF_NAME/linux-amd64-$GITHUB_SHA.so
+        ln -s linux-amd64-$GITHUB_REF_NAME/linux-amd64-$GITHUB_SHA.so linux-amd64-$GITHUB_REF_NAME/latest.so
         git add linux-amd64-$GITHUB_REF_NAME/linux-amd64-$GITHUB_SHA.so
         git add linux-amd64-$GITHUB_REF_NAME/latest.so
         
@@ -71,7 +71,7 @@ jobs:
         mv whatsmeow-windows-amd64.dll windows-amd64-$GITHUB_REF_NAME/windows-amd64-$GITHUB_SHA.dll
 
         
-        ln -s windows-amd64-$GITHUB_REF_NAME/latest.dll windows-amd64-$GITHUB_REF_NAME/linux-amd64-$GITHUB_SHA.dll
+        ln -s windows-amd64-$GITHUB_REF_NAME/windows-amd64-$GITHUB_SHA.dll windows-amd64-$GITHUB_REF_NAME/latest.dll
         git add windows-amd64-$GITHUB_REF_NAME/windows-amd64-$GITHUB_SHA.dll
         git add windows-amd64-$GITHUB_REF_NAME/latest.dll
         
@@ -181,7 +181,7 @@ jobs:
 
 
         
-        ln -s darwin-amd64-$GITHUB_REF_NAME/latest.dylib darwin-amd64-$GITHUB_REF_NAME/darwin-amd64-$GITHUB_SHA.dylib
+        ln -s darwin-amd64-$GITHUB_REF_NAME/darwin-amd64-$GITHUB_SHA.dylib darwin-amd64-$GITHUB_REF_NAME/latest.dylib
         git add darwin-amd64-$GITHUB_REF_NAME/darwin-amd64-$GITHUB_SHA.dylib
         git add darwin-amd64-$GITHUB_REF_NAME/latest.dylib
 
@@ -192,7 +192,7 @@ jobs:
         mv whatsmeow-darwin-arm64.dylib darwin-arm64-$GITHUB_REF_NAME/darwin-arm64-$GITHUB_SHA.dylib
 
         
-        ln -s darwin-arm64-$GITHUB_REF_NAME/latest.dylib darwin-arm64-$GITHUB_REF_NAME/darwin-arm64-$GITHUB_SHA.dylib
+        ln -s darwin-arm64-$GITHUB_REF_NAME/darwin-arm64-$GITHUB_SHA.dylib darwin-arm64-$GITHUB_REF_NAME/latest.dylib
         git add darwin-arm64-$GITHUB_REF_NAME/darwin-arm64-$GITHUB_SHA.dylib
         git add darwin-arm64-$GITHUB_REF_NAME/latest.dylib
         
