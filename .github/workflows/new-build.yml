@@ -30,10 +30,6 @@ jobs:
 
     - name: Build
       run: | 
-        rm -f linux-amd64-$GITHUB_REF_NAME/linux-amd64-$GITHUB_SHA.so
-        rm -f linux-amd64-$GITHUB_REF_NAME/latest.so
-        rm -f windows-amd64-$GITHUB_REF_NAME/windows-amd64-$GITHUB_SHA.dll
-        rm -f windows-amd64-$GITHUB_REF_NAME/latest.dll
         cd whatsfly/dependencies
         cp go.mod go.mod.save
         cp go.sum go.sum.save
@@ -53,7 +49,10 @@ jobs:
 
         
         git checkout prebuilts
-        
+        rm -f linux-amd64-$GITHUB_REF_NAME/linux-amd64-$GITHUB_SHA.so
+        rm -f linux-amd64-$GITHUB_REF_NAME/latest.so
+        rm -f windows-amd64-$GITHUB_REF_NAME/windows-amd64-$GITHUB_SHA.dll
+        rm -f windows-amd64-$GITHUB_REF_NAME/latest.dll
 
         
         mkdir -p linux-amd64-$GITHUB_REF_NAME
@@ -150,10 +149,6 @@ jobs:
       env:
         CGO_ENABLED: 1
       run: |
-          rm -f darwin-amd64-$GITHUB_REF_NAME/darwin-amd64-$GITHUB_SHA.dylib
-          rm -f darwin-amd64-$GITHUB_REF_NAME/latest.dylib
-          rm -f darwin-arm64-$GITHUB_REF_NAME/darwin-arm64-$GITHUB_SHA.dylib
-          rm -f darwin-arm64-$GITHUB_REF_NAME/latest.dylib
           cd whatsfly/dependencies
           cp go.mod go.mod.save
           cp go.sum go.sum.save
@@ -174,7 +169,10 @@ jobs:
         
         git checkout prebuilts
         
-
+        rm -f darwin-amd64-$GITHUB_REF_NAME/darwin-amd64-$GITHUB_SHA.dylib
+        rm -f darwin-amd64-$GITHUB_REF_NAME/latest.dylib
+        rm -f darwin-arm64-$GITHUB_REF_NAME/darwin-arm64-$GITHUB_SHA.dylib
+        rm -f darwin-arm64-$GITHUB_REF_NAME/latest.dylib
         
         mkdir -p darwin-amd64-$GITHUB_REF_NAME
         mv whatsmeow-darwin-amd64.dylib darwin-amd64-$GITHUB_REF_NAME/darwin-amd64-$GITHUB_SHA.dylib
