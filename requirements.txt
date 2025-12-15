@@ -113,7 +113,7 @@ six==1.16.0
     # via python-dateutil
 types-pyyaml==6.0.12.20250915
     # via -r requirements.in
-urllib3==2.2.3
+urllib3==2.6.0
     # via requests
 verspec==0.1.0
     # via mike

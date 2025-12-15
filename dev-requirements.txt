@@ -130,7 +130,7 @@ typing-extensions==4.12.2
     #   mypy
     #   pytest-asyncio
     #   typer
-urllib3==2.2.2
+urllib3==2.6.0
     # via requests
 vcrpy==8.0.0
     # via
