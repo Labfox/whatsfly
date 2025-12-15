@@ -70,7 +70,7 @@ mkdocstrings==1.0.0
     # via
     #   -r requirements.in
     #   mkdocstrings-python
-mkdocstrings-python==2.0.0
+mkdocstrings-python==2.0.1
     # via -r requirements.in
 packaging==24.1
     # via mkdocs
