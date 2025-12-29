@@ -8,7 +8,7 @@ require (
 	github.com/enriquebris/goconcurrentqueue v0.7.0
 	go.mau.fi/whatsmeow v0.0.0-20251028165006-ad7a618ba42f
 	google.golang.org/protobuf v1.36.11
-	modernc.org/sqlite v1.41.0
+	modernc.org/sqlite v1.42.2
 )
 
 require (
