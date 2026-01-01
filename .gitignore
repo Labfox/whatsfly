@@ -26,3 +26,7 @@ whatsfly/dependencies/wapp.db
 whatsfly/dependencies/whatsmeow/whatsmeow-*.h
 /whatsfly-0.*
 whatsfly_labfox.egg-info
+test.py
+whatsfly/dependencies/latest.*
+whatsfly/dependencies/go.mod
+whatsfly/last_binary_update.txt

@@ -5,11 +5,25 @@ from setuptools.command.install import install
 import subprocess
 import platform
 import os
-from .github_actions_download import download_file
 
-current_version = "v25-LTBR"
+def download_file(file, path,  isSymLink=True):
+    if isSymLink:
+        r = requests.get(f"https://raw.githubusercontent.com/Labfox/whatsfly/refs/heads/prebuilts/{file}")
+        if r.status_code != 200:
+            raise FileNotFoundError()
 
-def get_dll_filename(headers=False, version=None):
+        file = r.text
+
+
+    r2 = requests.get(f"https://raw.githubusercontent.com/Labfox/whatsfly/refs/heads/prebuilts/{file}")
+
+   
+    
+    open(path, "wb").write(r2.content)
+        
+
+
+def get_dll_filename(branch="main"):
     current_os = platform.system().lower()
     current_arch = platform.machine().lower()
 
@@ -25,17 +39,16 @@ def get_dll_filename(headers=False, version=None):
     go_arch = arch_map.get(current_arch, current_arch)
     dll_extension = extension_map.get(current_os, current_os)
 
-    if version != None:
-        if not headers:
-            return f"whatsmeow/whatsmeow-{current_os}-{go_arch}-{version}.{dll_extension}"
-        else:
-            return f"whatsmeow/whatsmeow-{current_os}-{go_arch}-{version}.h"
+    
+    return f"{current_os}-{go_arch}-{branch}/latest.{dll_extension}"
+    
+def get_extension_name():
+    current_os = platform.system().lower()
 
-    if not headers:
-        return f"whatsmeow/whatsmeow-{current_os}-{go_arch}.{dll_extension}"
-    else:
-        return f"whatsmeow/whatsmeow-{current_os}-{go_arch}.h"
+    extension_map = {"linux": "so", "windows": "dll", "darwin": "dylib"}
 
+    dll_extension = extension_map.get(current_os, current_os)
+    return dll_extension
 
 def build():
     # Define the Go build command, something like
@@ -57,16 +70,15 @@ def build():
     dll_extension = extension_map.get(current_os, current_os)
 
     # Set the environment variables for Go build
-    env = os.environ.copy()
-    env["GOOS"] = current_os
-    env["GOARCH"] = go_arch
+    
+    root_dir = os.path.abspath(os.path.dirname(__file__))
 
     go_build_cmd = [
-        "go",
+        "goaui",
         "build",
         "-buildmode=c-shared",
         "-o",
-        f"whatsmeow/whatsmeow-{current_os}-{go_arch}.{dll_extension}",
+        f"{root_dir}/latest.{dll_extension}",
         "main.go",
     ]
     logging.debug(
@@ -85,22 +97,11 @@ def build():
 
 
 def ensureUsableBinaries():
+    branch = "main"
     root_dir = os.path.abspath(os.path.dirname(__file__))
 
     try:
-        import whatsfly.whatsmeow
-        return
-    except OSError:
-        logging.info("Binary unexisent, trying to build")
-
-    try:
-        os.mkdir(root_dir+"/whatsmeow")
-    except:
-        pass
-
-    try:
         build()
-        import whatsfly.whatsmeow
         return
     except FileNotFoundError:
         logging.info("Go unusable")
@@ -108,20 +109,14 @@ def ensureUsableBinaries():
         logging.warning("Unexpected error while building")
 
     logging.info("Trying to download pre-built binaries")
+    root_dir = os.path.abspath(os.path.dirname(__file__))
 
     download_file(
-        get_dll_filename(version=current_version).replace("whatsfly/", "").replace("whatsmeow/", ""),
-        root_dir.replace("dependencies", "")+"/dependencies/whatsmeow/"+get_dll_filename().replace("whatsfly/", "").replace("whatsmeow/", ""),
-        version=current_version
+        get_dll_filename(branch=branch),
+        f"{root_dir}/latest.{get_extension_name()}",
+        isSymLink=True,
     )
 
-    download_file(
-        get_dll_filename(headers=True, version=current_version).replace("whatsfly/", "").replace("whatsmeow/", ""),
-        root_dir.replace("dependencies", "") + "/dependencies/whatsmeow/" + get_dll_filename(h=True).replace("whatsfly/",
-                                                                                                       "").replace(
-            "whatsmeow/", ""),
-        version=current_version
-    )
 
 
 class BuildGoModule(install):
@@ -135,3 +130,5 @@ class BuildGoModule(install):
             build()
         except RuntimeError:
             logging.warning("Build unsuccessful, will retry on runtime")
+
+ensureUsableBinaries()
