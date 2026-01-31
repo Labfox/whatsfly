@@ -56,6 +56,13 @@ func getJid(user string, is_group bool) types.JID {
 	}
 }
 
+func getNewsletterJid(user string) types.JID {
+	return types.JID{
+		User:   user,
+		Server: types.NewsletterServer,
+	}
+}
+
 type WhatsAppClient struct {
 	phoneNumber          string
 	mediaPath            string
@@ -731,6 +738,215 @@ func (w *WhatsAppClient) GetGroupInfo(group string, return_id string) int {
 	return 0
 }
 
+func (w *WhatsAppClient) CreateNewsletter(name string, description string, picturePath string, return_id string) int {
+	if !w.wpClient.IsConnected() {
+		err := w.wpClient.Connect()
+		if err != nil {
+			return 1
+		}
+	}
+
+	var picture []byte
+	if picturePath != "" {
+		var err error
+		picture, err = os.ReadFile(picturePath)
+		if err != nil {
+			return 1
+		}
+	}
+
+	params := whatsmeow.CreateNewsletterParams{
+		Name:        name,
+		Description: description,
+		Picture:     picture,
+	}
+
+	metadata, err := w.wpClient.CreateNewsletter(context.Background(), params)
+	if err != nil {
+		return 1
+	}
+
+	b, err := json.Marshal(metadata)
+	if err != nil {
+		return 1
+	}
+
+	w.addEventToQueue("{\"eventType\":\"methodReturn\",\"return\": " + string(b) + ", \"callid\":\"" + return_id + "\"}")
+	return 0
+}
+
+func (w *WhatsAppClient) GetNewsletterInfo(jid string, return_id string) int {
+	if !w.wpClient.IsConnected() {
+		err := w.wpClient.Connect()
+		if err != nil {
+			return 1
+		}
+	}
+
+	jidObj := getNewsletterJid(jid)
+	metadata, err := w.wpClient.GetNewsletterInfo(context.Background(), jidObj)
+	if err != nil {
+		return 1
+	}
+
+	b, err := json.Marshal(metadata)
+	if err != nil {
+		return 1
+	}
+
+	w.addEventToQueue("{\"eventType\":\"methodReturn\",\"return\": " + string(b) + ", \"callid\":\"" + return_id + "\"}")
+	return 0
+}
+
+func (w *WhatsAppClient) GetNewsletterMessages(jid string, count int, before int, return_id string) int {
+	if !w.wpClient.IsConnected() {
+		err := w.wpClient.Connect()
+		if err != nil {
+			return 1
+		}
+	}
+
+	jidObj := getNewsletterJid(jid)
+	params := &whatsmeow.GetNewsletterMessagesParams{
+		Count:  count,
+		Before: types.MessageServerID(before),
+	}
+
+	messages, err := w.wpClient.GetNewsletterMessages(context.Background(), jidObj, params)
+	if err != nil {
+		return 1
+	}
+
+	b, err := json.Marshal(messages)
+	if err != nil {
+		return 1
+	}
+
+	w.addEventToQueue("{\"eventType\":\"methodReturn\",\"return\": " + string(b) + ", \"callid\":\"" + return_id + "\"}")
+	return 0
+}
+
+func (w *WhatsAppClient) GetSubscribedNewsletters(return_id string) int {
+	if !w.wpClient.IsConnected() {
+		err := w.wpClient.Connect()
+		if err != nil {
+			return 1
+		}
+	}
+
+	newsletters, err := w.wpClient.GetSubscribedNewsletters(context.Background())
+	if err != nil {
+		return 1
+	}
+
+	b, err := json.Marshal(newsletters)
+	if err != nil {
+		return 1
+	}
+
+	w.addEventToQueue("{\"eventType\":\"methodReturn\",\"return\": " + string(b) + ", \"callid\":\"" + return_id + "\"}")
+	return 0
+}
+
+func (w *WhatsAppClient) UploadNewsletter(path string, kind string, return_id string) int {
+	if !w.wpClient.IsConnected() {
+		err := w.wpClient.Connect()
+		if err != nil {
+			return 1
+		}
+	}
+
+	filedata, err := os.ReadFile(path)
+	if err != nil {
+		return 1
+	}
+
+	var mediakind whatsmeow.MediaType
+	// Map kind string to MediaType (same as UploadFile)
+	if kind == "image" {
+		mediakind = whatsmeow.MediaImage
+	}
+	if kind == "video" {
+		mediakind = whatsmeow.MediaVideo
+	}
+	if kind == "audio" {
+		mediakind = whatsmeow.MediaAudio
+	}
+	if kind == "document" {
+		mediakind = whatsmeow.MediaDocument
+	}
+
+	uploaded, err := w.wpClient.UploadNewsletter(context.Background(), filedata, mediakind)
+	if err != nil {
+		return 1
+	}
+
+	w.uploadsDataMutex.Lock()
+	w.uploadsData[return_id] = uploaded
+	w.uploadsDataMutex.Unlock()
+
+	w.addEventToQueue("{\"eventType\":\"methodReturn\", \"callid\":\"" + return_id + "\"}")
+	return 0
+}
+
+func (w *WhatsAppClient) SendNewsletter(jid string, message *waE2E.Message, uploadID string) int {
+	if !w.wpClient.IsConnected() {
+		err := w.wpClient.Connect()
+		if err != nil {
+			return 1
+		}
+	}
+
+	jidObj := getNewsletterJid(jid)
+	msgID := w.wpClient.GenerateMessageID()
+
+	var mediaHandle string
+	if uploadID != "" {
+		w.uploadsDataMutex.Lock()
+		upload, ok := w.uploadsData[uploadID]
+		if ok {
+			mediaHandle = upload.Handle
+			// Inject media data into message if needed, similar to InjectMessageWithUploadData
+			// But for newsletter, we might just need to set the URL and other fields.
+			// However, the user request didn't specify full media support implementation details,
+			// just exposing the API.
+			// Let's try to inject basic fields if message type matches.
+
+			if message.ImageMessage != nil {
+				message.ImageMessage.URL = &upload.URL
+				message.ImageMessage.DirectPath = &upload.DirectPath
+				message.ImageMessage.FileSHA256 = upload.FileSHA256
+				message.ImageMessage.FileLength = proto.Uint64(uint64(upload.FileLength))
+			} else if message.VideoMessage != nil {
+				message.VideoMessage.URL = &upload.URL
+				message.VideoMessage.DirectPath = &upload.DirectPath
+				message.VideoMessage.FileSHA256 = upload.FileSHA256
+				message.VideoMessage.FileLength = proto.Uint64(uint64(upload.FileLength))
+			} else if message.AudioMessage != nil {
+				message.AudioMessage.URL = &upload.URL
+				message.AudioMessage.DirectPath = &upload.DirectPath
+				message.AudioMessage.FileSHA256 = upload.FileSHA256
+				message.AudioMessage.FileLength = proto.Uint64(uint64(upload.FileLength))
+			} else if message.DocumentMessage != nil {
+				message.DocumentMessage.URL = &upload.URL
+				message.DocumentMessage.DirectPath = &upload.DirectPath
+				message.DocumentMessage.FileSHA256 = upload.FileSHA256
+				message.DocumentMessage.FileLength = proto.Uint64(uint64(upload.FileLength))
+			}
+
+			delete(w.uploadsData, uploadID)
+		}
+		w.uploadsDataMutex.Unlock()
+	}
+
+	// Use DangerousInternals
+	_, err := w.wpClient.DangerousInternals().SendNewsletter(context.Background(), jidObj, msgID, message, mediaHandle, nil)
+	if err != nil {
+		return 1
+	}
+	return 0
+}
+
 //export NewWhatsAppClientWrapper
 func NewWhatsAppClientWrapper(c_phone_number *C.char, c_media_path *C.char, fn_disconnect_callback C.ptr_to_pyfunc, fn_event_callback C.ptr_to_pyfunc_str) C.int {
 	phone_number := C.GoString(c_phone_number)
@@ -938,6 +1154,67 @@ func SendReactionWrapper(id C.int, c_jid *C.char, c_message_id *C.char, c_sender
 		return 1
 	}
 	return 0
+}
+
+//export CreateNewsletterWrapper
+func CreateNewsletterWrapper(id C.int, c_name *C.char, c_description *C.char, c_picture_path *C.char, c_return_id *C.char) C.int {
+	name := C.GoString(c_name)
+	description := C.GoString(c_description)
+	picture_path := C.GoString(c_picture_path)
+	return_id := C.GoString(c_return_id)
+
+	w := handles[int(id)]
+	return C.int(w.CreateNewsletter(name, description, picture_path, return_id))
+}
+
+//export GetNewsletterInfoWrapper
+func GetNewsletterInfoWrapper(id C.int, c_jid *C.char, c_return_id *C.char) C.int {
+	jid := C.GoString(c_jid)
+	return_id := C.GoString(c_return_id)
+
+	w := handles[int(id)]
+	return C.int(w.GetNewsletterInfo(jid, return_id))
+}
+
+//export GetNewsletterMessagesWrapper
+func GetNewsletterMessagesWrapper(id C.int, c_jid *C.char, count C.int, before C.int, c_return_id *C.char) C.int {
+	jid := C.GoString(c_jid)
+	return_id := C.GoString(c_return_id)
+
+	w := handles[int(id)]
+	return C.int(w.GetNewsletterMessages(jid, int(count), int(before), return_id))
+}
+
+//export GetSubscribedNewslettersWrapper
+func GetSubscribedNewslettersWrapper(id C.int, c_return_id *C.char) C.int {
+	return_id := C.GoString(c_return_id)
+
+	w := handles[int(id)]
+	return C.int(w.GetSubscribedNewsletters(return_id))
+}
+
+//export UploadNewsletterWrapper
+func UploadNewsletterWrapper(id C.int, c_path *C.char, c_kind *C.char, c_return_id *C.char) C.int {
+	path := C.GoString(c_path)
+	kind := C.GoString(c_kind)
+	return_id := C.GoString(c_return_id)
+
+	w := handles[int(id)]
+	return C.int(w.UploadNewsletter(path, kind, return_id))
+}
+
+//export SendNewsletterWrapper
+func SendNewsletterWrapper(id C.int, c_jid *C.char, c_message *C.char, c_upload_id *C.char) C.int {
+	jid := C.GoString(c_jid)
+	upload_id := C.GoString(c_upload_id)
+
+	message := &waE2E.Message{}
+	length := C.strlen(c_message)
+	goBytes := C.GoBytes(unsafe.Pointer(c_message), C.int(length))
+	proto.Unmarshal(goBytes, message)
+
+	w := handles[int(id)]
+	return C.int(w.SendNewsletter(jid, message, upload_id))
 }
 
 //export Version

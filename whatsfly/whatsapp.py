@@ -22,7 +22,13 @@ from .whatsmeow import (
     upload_file_wrapper,
     logged_in_wrapper,
     connected_wrapper,
-    send_reaction_wrapper
+    send_reaction_wrapper,
+    create_newsletter_wrapper,
+    get_newsletter_info_wrapper,
+    get_newsletter_messages_wrapper,
+    get_subscribed_newsletters_wrapper,
+    upload_newsletter_wrapper,
+    send_newsletter_wrapper,
 )
 from .proto.waE2E import WAWebProtobufsE2E_pb2
 import ctypes
@@ -61,6 +67,25 @@ class Upload:
 
     def _getKind(self):
         return self._kind
+
+class NewsletterUpload:
+    def __init__(self, id, mimetype, kind, handle):
+        self._id = id
+        self._mimetype = mimetype
+        self._kind = kind
+        self._handle = handle
+
+    def _getId(self):
+        return self._id
+
+    def _getMimetype(self):
+        return self._mimetype
+
+    def _getKind(self):
+        return self._kind
+
+    def _getHandle(self):
+        return self._handle
 
 def _emptyFunc(*args, **kwars):
     return
@@ -421,3 +446,141 @@ class WhatsApp:
         # response = self._methodReturns[str(return_uuid)]["return"]
 
         return Upload(str(return_uuid), mimetype, kind)
+
+    def createNewsletter(self, name: str, description: str = "", picture_path: str = "") -> dict:
+        """
+        Creates a new newsletter (channel)
+        :param name: The name of the newsletter
+        :param description: The description of the newsletter
+        :param picture_path: Path to the picture file
+        :return: Newsletter metadata
+        """
+        return_uuid = uuid.uuid1()
+
+        error = create_newsletter_wrapper(
+            self.c_WhatsAppClientId,
+            name.encode(),
+            description.encode(),
+            picture_path.encode(),
+            str(return_uuid).encode()
+        )
+
+        while not str(return_uuid) in self._methodReturns:
+            time.sleep(0.001)
+
+        response = self._methodReturns[str(return_uuid)]["return"]
+        return response
+
+    def getNewsletterInfo(self, jid: str) -> dict:
+        """
+        Get info for a newsletter
+        :param jid: Newsletter JID
+        :return: Newsletter metadata
+        """
+        return_uuid = uuid.uuid1()
+
+        error = get_newsletter_info_wrapper(
+            self.c_WhatsAppClientId,
+            jid.encode(),
+            str(return_uuid).encode()
+        )
+
+        while not str(return_uuid) in self._methodReturns:
+            time.sleep(0.001)
+
+        response = self._methodReturns[str(return_uuid)]["return"]
+        return response
+
+    def getNewsletterMessages(self, jid: str, count: int = 10, before: int = 0) -> list:
+        """
+        Get messages from a newsletter
+        :param jid: Newsletter JID
+        :param count: Number of messages to retrieve
+        :param before: Message server ID to fetch messages before
+        :return: List of newsletter messages
+        """
+        return_uuid = uuid.uuid1()
+
+        error = get_newsletter_messages_wrapper(
+            self.c_WhatsAppClientId,
+            jid.encode(),
+            count,
+            before,
+            str(return_uuid).encode()
+        )
+
+        while not str(return_uuid) in self._methodReturns:
+            time.sleep(0.001)
+
+        response = self._methodReturns[str(return_uuid)]["return"]
+        return response
+
+    def getSubscribedNewsletters(self) -> list:
+        """
+        Get list of subscribed newsletters
+        :return: List of newsletter metadata
+        """
+        return_uuid = uuid.uuid1()
+
+        error = get_subscribed_newsletters_wrapper(
+            self.c_WhatsAppClientId,
+            str(return_uuid).encode()
+        )
+
+        while not str(return_uuid) in self._methodReturns:
+            time.sleep(0.001)
+
+        response = self._methodReturns[str(return_uuid)]["return"]
+        return response
+
+    def uploadNewsletter(self, path: str, kind: str, mimetype: str = None) -> NewsletterUpload:
+        """
+        Uploads a file for newsletter
+        :param path: The filepath
+        :param kind: The kind of the upload. One of: image, video, audio, document
+        :return: NewsletterUpload object
+        """
+        if mimetype == None:
+            mimetype = mimetypes.guess_type(path)[0]
+
+        if not kind in ["image", "video", "audio", "document"]:
+            raise Exception("Invalid kind")
+
+        return_uuid = uuid.uuid1()
+
+        error = upload_newsletter_wrapper(
+            self.c_WhatsAppClientId,
+            path.encode(),
+            kind.encode(),
+            str(return_uuid).encode()
+        )
+
+        while not str(return_uuid) in self._methodReturns:
+            time.sleep(0.001)
+
+        return NewsletterUpload(str(return_uuid), mimetype, kind, "")
+
+    def sendNewsletterMessage(self, jid: str, message, upload: NewsletterUpload = None):
+        """
+        Sends a message to a newsletter
+        :param jid: The newsletter JID
+        :param message: The message to send (string or protobuf)
+        :param upload: Optional upload for media messages
+        """
+        if type(message) == str:
+            message1 = WAWebProtobufsE2E_pb2.Message()
+            message1.conversation = message
+            message = message1
+
+        upload_id = ""
+        if upload:
+            upload_id = upload._getId()
+
+        ret = send_newsletter_wrapper(
+            self.c_WhatsAppClientId,
+            jid.encode(),
+            message.SerializeToString(),
+            upload_id.encode()
+        )
+        
+        return ret == 0
