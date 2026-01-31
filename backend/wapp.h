@@ -37,6 +37,12 @@ extern "C" {
   extern int GetGroupInfoWrapper(int id, char* c_jid, char* return_id);
   extern int UploadFileWrapper(int id, char* c_path, char* c_kind, char* c_return_id);
   extern int SendReactionWrapper(int id, char* c_jid, char* c_message_id, char* c_sender_jid, char* c_reaction, bool group);
+  extern int CreateNewsletterWrapper(int id, char* c_name, char* c_description, char* c_picture_path, char* c_return_id);
+  extern int GetNewsletterInfoWrapper(int id, char* c_jid, char* c_return_id);
+  extern int GetNewsletterMessagesWrapper(int id, char* c_jid, int count, int before, char* c_return_id);
+  extern int GetSubscribedNewslettersWrapper(int id, char* c_return_id);
+  extern int UploadNewsletterWrapper(int id, char* c_path, char* c_kind, char* c_return_id);
+  extern int SendNewsletterWrapper(int id, char* c_jid, char* c_message, char* c_upload_id);
   extern int Version();
   
 #ifdef __cplusplus
