@@ -75,52 +75,29 @@ get_group_invite_link_wrapper.argstype = [
 ]
 
 join_group_with_invite_link_wrapper = lib.JoinGroupWithInviteLinkWrapper
-join_group_with_invite_link_wrapper.argstype = [
-    ctypes.c_int,
-    ctypes.c_char_p
-]
+join_group_with_invite_link_wrapper.argstype = [ctypes.c_int, ctypes.c_char_p]
 
 set_group_announce_wrapper = lib.SetGroupAnnounceWrapper
-set_group_announce_wrapper.argstype = [
-    ctypes.c_int,
-    ctypes.c_char_p,
-    ctypes.c_bool
-]
+set_group_announce_wrapper.argstype = [ctypes.c_int, ctypes.c_char_p, ctypes.c_bool]
 
 set_group_locked_wrapper = lib.SetGroupLockedWrapper
-set_group_locked_wrapper.argstype = [
-    ctypes.c_int,
-    ctypes.c_char_p,
-    ctypes.c_bool
-]
+set_group_locked_wrapper.argstype = [ctypes.c_int, ctypes.c_char_p, ctypes.c_bool]
 
 set_group_name_wrapper = lib.SetGroupNameWrapper
-set_group_name_wrapper.argstype = [
-    ctypes.c_int,
-    ctypes.c_char_p,
-    ctypes.c_char_p
-]
+set_group_name_wrapper.argstype = [ctypes.c_int, ctypes.c_char_p, ctypes.c_char_p]
 
 set_group_topic_wrapper = lib.SetGroupTopicWrapper
-set_group_topic_wrapper.argstype = [
-    ctypes.c_int,
-    ctypes.c_char_p,
-    ctypes.c_char_p
-]
+set_group_topic_wrapper.argstype = [ctypes.c_int, ctypes.c_char_p, ctypes.c_char_p]
 
 get_group_info_wrapper = lib.GetGroupInfoWrapper
-get_group_info_wrapper.argstype = [
-    ctypes.c_int,
-    ctypes.c_char_p,
-    ctypes.c_char_p
-]
+get_group_info_wrapper.argstype = [ctypes.c_int, ctypes.c_char_p, ctypes.c_char_p]
 
 upload_file_wrapper = lib.UploadFileWrapper
 upload_file_wrapper.argstype = [
     ctypes.c_int,
     ctypes.c_char_p,
     ctypes.c_char_p,
-    ctypes.c_char_p
+    ctypes.c_char_p,
 ]
 
 send_reaction_wrapper = lib.SendReactionWrapper
@@ -130,5 +107,5 @@ send_reaction_wrapper.argstype = [
     ctypes.c_char_p,
     ctypes.c_char_p,
     ctypes.c_char_p,
-    ctypes.c_bool
+    ctypes.c_bool,
 ]

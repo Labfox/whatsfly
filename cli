@@ -24,13 +24,13 @@ elif [ "$1" == "test" ]; then
     python -m pytest $2 $3 $4 $5 $6 $7 $8 $9 ${10} ${11} ${12} ${13} ${14} ${15} ${16} ${17} ${18} ${19} ${20}
 elif [ "$1" == "build-macos" ]; then
     source .venv/bin/activate
-    pushd whatsfly/dependencies
+    pushd backend
     GOOS=darwin GOARCH=arm64 go build -buildmode=c-shared -o ./whatsmeow/whatsmeow-darwin-arm64.dylib main.go
     GOOS=darwin GOARCH=amd64 go build -buildmode=c-shared -o ./whatsmeow/whatsmeow-darwin-amd64.dylib main.go
     popd
 elif [ "$1" == "test-setup" ]; then
     source .venv/bin/activate
-    rm -rf build dist whatsfly.egg-info
+    rm -rf build dist whatsfly_labfox.egg-info
     python setup.py check
     python setup.py bdist && echo ok
 elif [ "$1" == "format" ]; then
@@ -41,6 +41,22 @@ elif [ "$1" == "lint" ]; then
     ruff check .
     ruff format .
     mypy .
+elif [ "$1" == "cleanup" ]; then 
+    source .venv/bin/activate
+    rm -rf build dist *.egg-info whatsfly/last_binary_update.txt whatsfly/__pycache__ whatsfly/*/__pycache__
+elif [ "$1" == "bump" ]; then
+    source .venv/bin/activate
+    pushd backend 
+    go get -u
+    go mod tidy
+    popd
+    $0 compile
+    $0 sync
+    $0 setup
+    $0 lint
+    $0 format
+    $0 test-setup
+    $0 cleanup
 else
     echo "Unrecognized command: $1"
 fi

@@ -30,13 +30,13 @@ jobs:
 
     - name: Build
       run: | 
-        cd whatsfly/dependencies
+        cd backend
         cp go.mod go.mod.save
         cp go.sum go.sum.save
         go get -u
         go mod tidy
-        GOOS=linux GOARCH=amd64 CGO_ENABLED=1 go build -buildmode=c-shared -ldflags=-s -o ../../whatsmeow-linux-amd64.so ./main.go
-        GOOS=windows GOARCH=amd64 CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc go build -buildmode=c-shared -ldflags=-s -o ../../whatsmeow-windows-amd64.dll ./main.go
+        GOOS=linux GOARCH=amd64 CGO_ENABLED=1 go build -buildmode=c-shared -ldflags=-s -o ../whatsmeow-linux-amd64.so .
+        GOOS=windows GOARCH=amd64 CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc go build -buildmode=c-shared -ldflags=-s -o ../whatsmeow-windows-amd64.dll .
         rm go.mod
         rm go.sum
         cp go.mod.save go.mod 
@@ -149,13 +149,13 @@ jobs:
       env:
         CGO_ENABLED: 1
       run: |
-          cd whatsfly/dependencies
+          cd backend
           cp go.mod go.mod.save
           cp go.sum go.sum.save
           go get -u
           go mod tidy
-          GOOS=darwin GOARCH=amd64 go build -v -buildmode=c-shared -o ../../whatsmeow-darwin-amd64.dylib ./main.go
-          GOOS=darwin GOARCH=arm64 go build -v -buildmode=c-shared -o ../../whatsmeow-darwin-arm64.dylib ./main.go
+          GOOS=darwin GOARCH=amd64 go build -v -buildmode=c-shared -o ../whatsmeow-darwin-amd64.dylib .
+          GOOS=darwin GOARCH=arm64 go build -v -buildmode=c-shared -o ../whatsmeow-darwin-arm64.dylib .
           rm go.mod
           rm go.sum
           cp go.mod.save go.mod 

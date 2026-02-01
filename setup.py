@@ -11,7 +11,7 @@ setup(
     description="WhatsApp on the fly.",
     package_dir={"whatsfly": "whatsfly"},
     packages=["whatsfly"],
-    install_requires = ["types-PyYAML", "setuptools", "requests", "qrcode", "protobuf"],
+    install_requires=["types-PyYAML", "setuptools", "requests", "qrcode", "protobuf"],
     include_package_data=True,
     classifiers=[
         "Intended Audience :: Developers",

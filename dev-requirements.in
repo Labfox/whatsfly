@@ -16,3 +16,6 @@ mkdocs
 qrcode
 protobuf
 lazydocs
+mkdocstrings
+mkdocstrings_python
+mike

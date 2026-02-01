@@ -6,21 +6,22 @@ import subprocess
 import platform
 import os
 
-def download_file(file, path,  isSymLink=True):
+
+def download_file(file, path, isSymLink=True):
     if isSymLink:
-        r = requests.get(f"https://raw.githubusercontent.com/Labfox/whatsfly/refs/heads/prebuilts/{file}")
+        r = requests.get(
+            f"https://raw.githubusercontent.com/Labfox/whatsfly/refs/heads/prebuilts/{file}"
+        )
         if r.status_code != 200:
             raise FileNotFoundError()
 
         file = r.text
 
+    r2 = requests.get(
+        f"https://raw.githubusercontent.com/Labfox/whatsfly/refs/heads/prebuilts/{file}"
+    )
 
-    r2 = requests.get(f"https://raw.githubusercontent.com/Labfox/whatsfly/refs/heads/prebuilts/{file}")
-
-   
-    
     open(path, "wb").write(r2.content)
-        
 
 
 def get_dll_filename(branch="main"):
@@ -39,9 +40,9 @@ def get_dll_filename(branch="main"):
     go_arch = arch_map.get(current_arch, current_arch)
     dll_extension = extension_map.get(current_os, current_os)
 
-    
     return f"{current_os}-{go_arch}-{branch}/latest.{dll_extension}"
-    
+
+
 def get_extension_name():
     current_os = platform.system().lower()
 
@@ -49,6 +50,7 @@ def get_extension_name():
 
     dll_extension = extension_map.get(current_os, current_os)
     return dll_extension
+
 
 def build():
     # Define the Go build command, something like
@@ -70,11 +72,11 @@ def build():
     dll_extension = extension_map.get(current_os, current_os)
 
     # Set the environment variables for Go build
-    
+
     root_dir = os.path.abspath(os.path.dirname(__file__))
 
     go_build_cmd = [
-        "goaui",
+        "go",
         "build",
         "-buildmode=c-shared",
         "-o",
@@ -88,7 +90,7 @@ def build():
     root_dir = os.path.abspath(os.path.dirname(__file__))
 
     # Run the Go build command
-    status_code = subprocess.check_call(go_build_cmd, cwd=f"whatsfly/dependencies")
+    status_code = subprocess.check_call(go_build_cmd)
     logging.debug(f"Go build command exited with status code: {status_code}")
     if status_code == 127:
         raise RuntimeError("Go build impossible")
@@ -98,16 +100,6 @@ def build():
 
 def ensureUsableBinaries():
     branch = "main"
-    root_dir = os.path.abspath(os.path.dirname(__file__))
-
-    try:
-        build()
-        return
-    except FileNotFoundError:
-        logging.info("Go unusable")
-    except RuntimeError:
-        logging.warning("Unexpected error while building")
-
     logging.info("Trying to download pre-built binaries")
     root_dir = os.path.abspath(os.path.dirname(__file__))
 
@@ -116,7 +108,6 @@ def ensureUsableBinaries():
         f"{root_dir}/latest.{get_extension_name()}",
         isSymLink=True,
     )
-
 
 
 class BuildGoModule(install):
@@ -130,5 +121,6 @@ class BuildGoModule(install):
             build()
         except RuntimeError:
             logging.warning("Build unsuccessful, will retry on runtime")
+
 
 ensureUsableBinaries()
