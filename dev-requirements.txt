@@ -2,10 +2,6 @@
 #    uv pip compile dev-requirements.in requirements.in
 aiosqlite==0.22.1
     # via -r dev-requirements.in
-babel==2.18.0
-    # via mkdocs-material
-backrefs==6.1
-    # via mkdocs-material
 black==26.1.0
     # via -r dev-requirements.in
 certifi==2026.1.4
@@ -20,9 +16,7 @@ click==8.3.1
     #   mkdocs
     #   typer
 colorama==0.4.6
-    # via
-    #   griffe
-    #   mkdocs-material
+    # via griffe
 distlib==0.4.0
     # via virtualenv
 filelock==3.20.3
@@ -47,7 +41,6 @@ jinja2==3.1.6
     # via
     #   mike
     #   mkdocs
-    #   mkdocs-material
     #   mkdocstrings
 lazydocs==0.4.8
     # via -r dev-requirements.in
@@ -57,7 +50,6 @@ markdown==3.10.1
     # via
     #   mkdocs
     #   mkdocs-autorefs
-    #   mkdocs-material
     #   mkdocstrings
     #   pymdown-extensions
 markdown-it-py==4.0.0
@@ -75,16 +67,12 @@ mergedeep==1.3.4
     #   mkdocs
     #   mkdocs-get-deps
 mike==2.1.3
-    # via
-    #   -r dev-requirements.in
-    #   -r requirements.in
+    # via -r dev-requirements.in
 mkdocs==1.6.1
     # via
     #   -r dev-requirements.in
-    #   -r requirements.in
     #   mike
     #   mkdocs-autorefs
-    #   mkdocs-material
     #   mkdocstrings
 mkdocs-autorefs==1.4.3
     # via
@@ -92,19 +80,12 @@ mkdocs-autorefs==1.4.3
     #   mkdocstrings-python
 mkdocs-get-deps==0.2.0
     # via mkdocs
-mkdocs-material==9.7.1
-    # via -r requirements.in
-mkdocs-material-extensions==1.3.1
-    # via mkdocs-material
 mkdocstrings==1.0.2
     # via
     #   -r dev-requirements.in
-    #   -r requirements.in
     #   mkdocstrings-python
 mkdocstrings-python==2.0.1
-    # via
-    #   -r dev-requirements.in
-    #   -r requirements.in
+    # via -r dev-requirements.in
 mypy==1.19.1
     # via -r dev-requirements.in
 mypy-extensions==1.1.0
@@ -118,8 +99,6 @@ packaging==26.0
     #   black
     #   mkdocs
     #   pytest
-paginate==0.5.7
-    # via mkdocs-material
 pathspec==1.0.4
     # via
     #   black
@@ -135,18 +114,13 @@ pluggy==1.6.0
 pre-commit==4.5.1
     # via -r dev-requirements.in
 protobuf==6.33.5
-    # via
-    #   -r dev-requirements.in
-    #   -r requirements.in
+    # via -r dev-requirements.in
 pygments==2.19.2
     # via
-    #   mkdocs-material
     #   pytest
     #   rich
 pymdown-extensions==10.20.1
-    # via
-    #   mkdocs-material
-    #   mkdocstrings
+    # via mkdocstrings
 pyparsing==3.3.2
     # via mike
 pytest==9.0.2
@@ -176,22 +150,13 @@ pyyaml-env-tag==1.1
     #   mike
     #   mkdocs
 qrcode==8.2
-    # via
-    #   -r dev-requirements.in
-    #   -r requirements.in
+    # via -r dev-requirements.in
 requests==2.32.5
-    # via
-    #   -r dev-requirements.in
-    #   -r requirements.in
-    #   mkdocs-material
+    # via -r dev-requirements.in
 rich==14.3.2
     # via typer
-ruff==0.14.14
+ruff==0.15.0
     # via -r dev-requirements.in
-setuptools==80.10.2
-    # via
-    #   -r dev-requirements.in
-    #   -r requirements.in
 shellingham==1.5.4
     # via typer
 six==1.17.0
@@ -199,9 +164,7 @@ six==1.17.0
 typer==0.21.1
     # via lazydocs
 types-pyyaml==6.0.12.20250915
-    # via
-    #   -r dev-requirements.in
-    #   -r requirements.in
+    # via -r dev-requirements.in
 typing-extensions==4.15.0
     # via
     #   mypy
