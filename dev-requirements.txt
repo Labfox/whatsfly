@@ -84,7 +84,7 @@ mkdocstrings==1.0.2
     # via
     #   -r dev-requirements.in
     #   mkdocstrings-python
-mkdocstrings-python==2.0.1
+mkdocstrings-python==2.0.2
     # via -r dev-requirements.in
 mypy==1.19.1
     # via -r dev-requirements.in
