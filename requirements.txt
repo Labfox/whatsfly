@@ -70,7 +70,7 @@ mkdocstrings==1.0.2
     # via
     #   -r requirements.in
     #   mkdocstrings-python
-mkdocstrings-python==2.0.1
+mkdocstrings-python==2.0.2
     # via -r requirements.in
 packaging==26.0
     # via mkdocs
@@ -109,8 +109,6 @@ requests==2.32.5
     # via
     #   -r requirements.in
     #   mkdocs-material
-setuptools==80.10.2
-    # via -r requirements.in
 six==1.17.0
     # via python-dateutil
 types-pyyaml==6.0.12.20250915
