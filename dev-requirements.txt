@@ -80,7 +80,7 @@ mkdocs-autorefs==1.4.3
     #   mkdocstrings-python
 mkdocs-get-deps==0.2.0
     # via mkdocs
-mkdocstrings==1.0.2
+mkdocstrings==1.0.3
     # via
     #   -r dev-requirements.in
     #   mkdocstrings-python
