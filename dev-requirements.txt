@@ -35,7 +35,7 @@ importlib-resources==6.5.2
     # via mike
 iniconfig==2.3.0
     # via pytest
-isort==7.0.0
+isort==8.0.0
     # via -r dev-requirements.in
 jinja2==3.1.6
     # via
