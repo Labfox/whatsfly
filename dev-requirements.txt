@@ -15,15 +15,13 @@ click==8.3.1
     #   black
     #   mkdocs
     #   typer
-colorama==0.4.6
-    # via griffe
 distlib==0.4.0
     # via virtualenv
 filelock==3.20.3
     # via virtualenv
 ghp-import==2.1.0
     # via mkdocs
-griffe==1.15.0
+griffelib==2.0.0
     # via mkdocstrings-python
 identify==2.6.16
     # via pre-commit
@@ -84,7 +82,7 @@ mkdocstrings==1.0.3
     # via
     #   -r dev-requirements.in
     #   mkdocstrings-python
-mkdocstrings-python==2.0.2
+mkdocstrings-python==2.0.3
     # via -r dev-requirements.in
 mypy==1.19.1
     # via -r dev-requirements.in

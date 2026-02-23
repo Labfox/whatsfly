@@ -11,12 +11,10 @@ charset-normalizer==3.4.4
 click==8.3.1
     # via mkdocs
 colorama==0.4.6
-    # via
-    #   griffe
-    #   mkdocs-material
+    # via mkdocs-material
 ghp-import==2.1.0
     # via mkdocs
-griffe==1.15.0
+griffelib==2.0.0
     # via mkdocstrings-python
 idna==3.11
     # via requests
@@ -70,7 +68,7 @@ mkdocstrings==1.0.3
     # via
     #   -r requirements.in
     #   mkdocstrings-python
-mkdocstrings-python==2.0.2
+mkdocstrings-python==2.0.3
     # via -r requirements.in
 packaging==26.0
     # via mkdocs
