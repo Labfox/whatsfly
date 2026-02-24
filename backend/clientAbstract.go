@@ -24,18 +24,19 @@ import (
 )
 
 type WhatsAppClient struct {
-	phoneNumber          string
-	mediaPath            string
-	fnDisconnectCallback C.ptr_to_pyfunc
-	fnEventCallback      C.ptr_to_pyfunc_str
-	wpClient             *whatsmeow.Client
-	eventQueue           *EQ
-	runMessageThread     bool
-	isLoggedIn           bool
-	startupTime          int64
-	historySyncID        int32
-	uploadsData          map[string]whatsmeow.UploadResponse
-	uploadsDataMutex     sync.Mutex
+	phoneNumber                string
+	mediaPath                  string
+	fnDisconnectCallback       C.ptr_to_pyfunc
+	fnEventCallback            C.ptr_to_pyfunc_str
+	wpClient                   *whatsmeow.Client
+	isDisconnectionIntentional bool
+	eventQueue                 *EQ
+	runMessageThread           bool
+	isLoggedIn                 bool
+	startupTime                int64
+	historySyncID              int32
+	uploadsData                map[string]whatsmeow.UploadResponse
+	uploadsDataMutex           sync.Mutex
 }
 
 func NewWhatsAppClient(phoneNumber string, mediaPath string, fn_disconnect_callback C.ptr_to_pyfunc, fn_event_callback C.ptr_to_pyfunc_str) *WhatsAppClient {
@@ -65,7 +66,12 @@ func (w *WhatsAppClient) MessageThread() {
 	for w.runMessageThread {
 		if w.wpClient != nil {
 			if !w.wpClient.IsConnected() {
-				w.wpClient.Connect()
+				if !w.isDisconnectionIntentional {
+					w.wpClient.Connect()
+				} else {
+					w.runMessageThread = false
+					return
+				}
 			}
 			var is_logged_in_now = w.wpClient.IsLoggedIn()
 
@@ -106,9 +112,6 @@ func (w *WhatsAppClient) MessageThread() {
 }
 
 func (w *WhatsAppClient) Connect(dbPath string) {
-	// Set the path for the database file
-	//dbPath := "whatsapp/wapp.db"
-
 	// Set Browser
 	store.DeviceProps.PlatformType = waCompanionReg.DeviceProps_ANDROID_PHONE.Enum()
 	store.DeviceProps.Os = proto.String("Android") //"Mac OS 10"
@@ -193,6 +196,9 @@ func (w *WhatsAppClient) Disconnect(c2 *whatsmeow.Client) {
 		client = c2
 	}
 
+	w.isDisconnectionIntentional = true
+	w.runMessageThread = false
+
 	if client != nil {
 		client.Disconnect()
 	}
@@ -201,5 +207,4 @@ func (w *WhatsAppClient) Disconnect(c2 *whatsmeow.Client) {
 		C.call_c_func(w.fnDisconnectCallback)
 	}
 
-	w.runMessageThread = false
 }
