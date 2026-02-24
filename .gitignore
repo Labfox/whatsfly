@@ -1,4 +1,9 @@
 .vs
+.ruff_cache
+.mypy_cache
+.venv
+.pyc
+
 build
 database
 dist
@@ -7,9 +12,8 @@ examples/test*
 test
 whatsfly/whatsfly.egg-info
 whatsfly.egg-info
-.venv
+
 venv
-*.pyc
 latest.so
 latest.h
 latest.dll
