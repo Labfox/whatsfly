@@ -477,13 +477,6 @@ func (w *WhatsAppClient) SendMessage(number string, message *waE2E.Message, is_g
 		}
 	}
 
-	// for {
-	//     if w.wpClient.IsLoggedIn() {
-	//         fmt.Println("Logged in!")
-	//         break
-	//     }
-	// }
-
 	_, err := w.wpClient.SendMessage(context.Background(), numberObj, messageObj)
 	if err != nil {
 		return 1
@@ -550,6 +543,7 @@ func (w *WhatsAppClient) InjectMessageWithUploadData(originMessage *waE2E.Messag
 
 	thumbnail_data, _ := os.ReadFile(thumbnail_path)
 
+	var isNewsletter = upload.MediaKey == nil
 	// var filedata []byte
 
 	if kind == "image" {
@@ -562,8 +556,10 @@ func (w *WhatsAppClient) InjectMessageWithUploadData(originMessage *waE2E.Messag
 		originMessage.ImageMessage.Mimetype = proto.String(mimetype)
 		originMessage.ImageMessage.URL = &upload.URL
 		originMessage.ImageMessage.DirectPath = proto.String(upload.DirectPath)
-		originMessage.ImageMessage.MediaKey = upload.MediaKey
-		originMessage.ImageMessage.FileEncSHA256 = upload.FileEncSHA256
+		if !isNewsletter {
+			originMessage.ImageMessage.MediaKey = upload.MediaKey
+			originMessage.ImageMessage.FileEncSHA256 = upload.FileEncSHA256
+		}
 		originMessage.ImageMessage.FileSHA256 = upload.FileSHA256
 		originMessage.ImageMessage.FileLength = proto.Uint64(uint64(upload.FileLength))
 
@@ -579,8 +575,10 @@ func (w *WhatsAppClient) InjectMessageWithUploadData(originMessage *waE2E.Messag
 		originMessage.VideoMessage.Mimetype = proto.String(mimetype)
 		originMessage.VideoMessage.URL = &upload.URL
 		originMessage.VideoMessage.DirectPath = proto.String(upload.DirectPath)
-		originMessage.VideoMessage.MediaKey = upload.MediaKey
-		originMessage.VideoMessage.FileEncSHA256 = upload.FileEncSHA256
+		if !isNewsletter {
+			originMessage.VideoMessage.MediaKey = upload.MediaKey
+			originMessage.VideoMessage.FileEncSHA256 = upload.FileEncSHA256
+		}
 		originMessage.VideoMessage.FileSHA256 = upload.FileSHA256
 		originMessage.VideoMessage.FileLength = proto.Uint64(uint64(upload.FileLength))
 	}
@@ -589,8 +587,10 @@ func (w *WhatsAppClient) InjectMessageWithUploadData(originMessage *waE2E.Messag
 		originMessage.AudioMessage.Mimetype = proto.String(mimetype)
 		originMessage.AudioMessage.URL = &upload.URL
 		originMessage.AudioMessage.DirectPath = proto.String(upload.DirectPath)
-		originMessage.AudioMessage.MediaKey = upload.MediaKey
-		originMessage.AudioMessage.FileEncSHA256 = upload.FileEncSHA256
+		if !isNewsletter {
+			originMessage.AudioMessage.MediaKey = upload.MediaKey
+			originMessage.AudioMessage.FileEncSHA256 = upload.FileEncSHA256
+		}
 		originMessage.AudioMessage.FileSHA256 = upload.FileSHA256
 		originMessage.AudioMessage.FileLength = proto.Uint64(uint64(upload.FileLength))
 	}
@@ -602,8 +602,10 @@ func (w *WhatsAppClient) InjectMessageWithUploadData(originMessage *waE2E.Messag
 		originMessage.DocumentMessage.Mimetype = proto.String(mimetype)
 		originMessage.DocumentMessage.URL = &upload.URL
 		originMessage.DocumentMessage.DirectPath = proto.String(upload.DirectPath)
-		originMessage.DocumentMessage.MediaKey = upload.MediaKey
-		originMessage.DocumentMessage.FileEncSHA256 = upload.FileEncSHA256
+		if !isNewsletter {
+			originMessage.DocumentMessage.MediaKey = upload.MediaKey
+			originMessage.DocumentMessage.FileEncSHA256 = upload.FileEncSHA256
+		}
 		originMessage.DocumentMessage.FileSHA256 = upload.FileSHA256
 		originMessage.DocumentMessage.FileLength = proto.Uint64(uint64(upload.FileLength))
 	}
@@ -746,19 +748,20 @@ func (w *WhatsAppClient) CreateNewsletter(name string, description string, pictu
 		}
 	}
 
+	params := whatsmeow.CreateNewsletterParams{
+		Name:        name,
+		Description: description,
+	}
+
 	var picture []byte
 	if picturePath != "" {
+		fmt.Println("Setting the newsletter picture is unsupported. See Labfox/whatsfly#363")
 		var err error
 		picture, err = os.ReadFile(picturePath)
 		if err != nil {
 			return 1
 		}
-	}
-
-	params := whatsmeow.CreateNewsletterParams{
-		Name:        name,
-		Description: description,
-		Picture:     picture,
+		params.Picture = picture
 	}
 
 	metadata, err := w.wpClient.CreateNewsletter(context.Background(), params)
@@ -766,7 +769,7 @@ func (w *WhatsAppClient) CreateNewsletter(name string, description string, pictu
 		return 1
 	}
 
-	b, err := json.Marshal(metadata)
+	b, err := json.Marshal(&metadata)
 	if err != nil {
 		return 1
 	}
@@ -889,7 +892,7 @@ func (w *WhatsAppClient) UploadNewsletter(path string, kind string, return_id st
 	return 0
 }
 
-func (w *WhatsAppClient) SendNewsletter(jid string, message *waE2E.Message, uploadID string) int {
+func (w *WhatsAppClient) SendNewsletter(jid string, message *waE2E.Message, mediaHandle string) int {
 	if !w.wpClient.IsConnected() {
 		err := w.wpClient.Connect()
 		if err != nil {
@@ -898,52 +901,19 @@ func (w *WhatsAppClient) SendNewsletter(jid string, message *waE2E.Message, uplo
 	}
 
 	jidObj := getNewsletterJid(jid)
-	msgID := w.wpClient.GenerateMessageID()
 
-	var mediaHandle string
-	if uploadID != "" {
-		w.uploadsDataMutex.Lock()
-		upload, ok := w.uploadsData[uploadID]
-		if ok {
-			mediaHandle = upload.Handle
-			// Inject media data into message if needed, similar to InjectMessageWithUploadData
-			// But for newsletter, we might just need to set the URL and other fields.
-			// However, the user request didn't specify full media support implementation details,
-			// just exposing the API.
-			// Let's try to inject basic fields if message type matches.
-
-			if message.ImageMessage != nil {
-				message.ImageMessage.URL = &upload.URL
-				message.ImageMessage.DirectPath = &upload.DirectPath
-				message.ImageMessage.FileSHA256 = upload.FileSHA256
-				message.ImageMessage.FileLength = proto.Uint64(uint64(upload.FileLength))
-			} else if message.VideoMessage != nil {
-				message.VideoMessage.URL = &upload.URL
-				message.VideoMessage.DirectPath = &upload.DirectPath
-				message.VideoMessage.FileSHA256 = upload.FileSHA256
-				message.VideoMessage.FileLength = proto.Uint64(uint64(upload.FileLength))
-			} else if message.AudioMessage != nil {
-				message.AudioMessage.URL = &upload.URL
-				message.AudioMessage.DirectPath = &upload.DirectPath
-				message.AudioMessage.FileSHA256 = upload.FileSHA256
-				message.AudioMessage.FileLength = proto.Uint64(uint64(upload.FileLength))
-			} else if message.DocumentMessage != nil {
-				message.DocumentMessage.URL = &upload.URL
-				message.DocumentMessage.DirectPath = &upload.DirectPath
-				message.DocumentMessage.FileSHA256 = upload.FileSHA256
-				message.DocumentMessage.FileLength = proto.Uint64(uint64(upload.FileLength))
-			}
-
-			delete(w.uploadsData, uploadID)
+	if mediaHandle != "" {
+		_, err := w.wpClient.SendMessage(context.Background(), jidObj, message, whatsmeow.SendRequestExtra{MediaHandle: mediaHandle})
+		if err != nil {
+			return 1
 		}
-		w.uploadsDataMutex.Unlock()
+	} else {
+		_, err := w.wpClient.SendMessage(context.Background(), jidObj, message)
+		if err != nil {
+			return 1
+		}
 	}
 
-	// Use DangerousInternals
-	_, err := w.wpClient.DangerousInternals().SendNewsletter(context.Background(), jidObj, msgID, message, mediaHandle, nil)
-	if err != nil {
-		return 1
-	}
 	return 0
 }
 
@@ -1206,7 +1176,7 @@ func UploadNewsletterWrapper(id C.int, c_path *C.char, c_kind *C.char, c_return_
 //export SendNewsletterWrapper
 func SendNewsletterWrapper(id C.int, c_jid *C.char, c_message *C.char, c_upload_id *C.char) C.int {
 	jid := C.GoString(c_jid)
-	upload_id := C.GoString(c_upload_id)
+	// upload_id := C.GoString(c_upload_id)
 
 	message := &waE2E.Message{}
 	length := C.strlen(c_message)
@@ -1214,7 +1184,7 @@ func SendNewsletterWrapper(id C.int, c_jid *C.char, c_message *C.char, c_upload_
 	proto.Unmarshal(goBytes, message)
 
 	w := handles[int(id)]
-	return C.int(w.SendNewsletter(jid, message, upload_id))
+	return C.int(w.SendNewsletter(jid, message, ""))
 }
 
 //export Version
