@@ -78,7 +78,7 @@ pathspec==1.0.4
     # via mkdocs
 platformdirs==4.5.1
     # via mkdocs-get-deps
-protobuf==6.33.5
+protobuf==7.34.0
     # via -r requirements.in
 pygments==2.19.2
     # via mkdocs-material
