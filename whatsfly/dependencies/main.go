@@ -448,6 +448,7 @@ func (w *WhatsAppClient) MessageThread() {
 
 func (w *WhatsAppClient) Disconnect(c2 *whatsmeow.Client) {
 	client := w.wpClient
+	w.runMessageThread = false
 
 	if c2 != nil {
 		client = c2
@@ -460,8 +461,6 @@ func (w *WhatsAppClient) Disconnect(c2 *whatsmeow.Client) {
 	if w.fnDisconnectCallback != nil {
 		C.call_c_func(w.fnDisconnectCallback)
 	}
-
-	w.runMessageThread = false
 }
 
 func (w *WhatsAppClient) SendMessage(number string, message *waE2E.Message, is_group bool) int {
