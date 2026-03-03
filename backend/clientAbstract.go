@@ -190,6 +190,7 @@ func (w *WhatsAppClient) Connect(dbPath string) {
 
 func (w *WhatsAppClient) Disconnect(c2 *whatsmeow.Client) {
 	client := w.wpClient
+	w.runMessageThread = false
 
 	if c2 != nil {
 		client = c2
