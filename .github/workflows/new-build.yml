@@ -82,7 +82,10 @@ jobs:
 
     - name: Push to prebuilts branch
       run: |
+        git config --global pull.rebase false
+        git pull
         git push origin prebuilts
+
 
   # build-windows:
   #   runs-on: windows-latest
@@ -202,4 +205,6 @@ jobs:
 
     - name: Push to prebuilts branch
       run: |
+        git config --global pull.rebase false
+        git pull
         git push origin prebuilts
