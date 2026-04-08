@@ -117,7 +117,7 @@ pymdown-extensions==10.20.1
     # via mkdocstrings
 pyparsing==3.3.2
     # via mike
-pytest==9.0.2
+pytest==9.0.3
     # via
     #   -r dev-requirements.in
     #   pytest-asyncio
