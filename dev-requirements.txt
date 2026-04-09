@@ -157,7 +157,7 @@ six==1.17.0
     # via python-dateutil
 typer==0.21.1
     # via lazydocs
-types-pyyaml==6.0.12.20250915
+types-pyyaml==6.0.12.20260408
     # via -r dev-requirements.in
 typing-extensions==4.15.0
     # via
