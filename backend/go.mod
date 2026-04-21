@@ -6,7 +6,7 @@ require (
 	github.com/enriquebris/goconcurrentqueue v0.7.0
 	go.mau.fi/whatsmeow v0.0.0-20260129212019-7787ab952245
 	google.golang.org/protobuf v1.36.11
-	modernc.org/sqlite v1.48.2
+	modernc.org/sqlite v1.49.1
 )
 
 require (
@@ -30,7 +30,7 @@ require (
 	golang.org/x/net v0.49.0 // indirect
 	golang.org/x/sys v0.42.0 // indirect
 	golang.org/x/text v0.33.0 // indirect
-	modernc.org/libc v1.70.0 // indirect
+	modernc.org/libc v1.72.0 // indirect
 	modernc.org/mathutil v1.7.1 // indirect
 	modernc.org/memory v1.11.0 // indirect
 )
