@@ -80,7 +80,7 @@ mkdocstrings==1.0.4
     #   mkdocstrings-python
 mkdocstrings-python==2.0.3
     # via -r dev-requirements.in
-mypy==1.20.1
+mypy==1.20.2
     # via -r dev-requirements.in
 mypy-extensions==1.1.0
     # via
