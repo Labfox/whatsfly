@@ -123,4 +123,4 @@ class BuildGoModule(install):
             logging.warning("Build unsuccessful, will retry on runtime")
 
 
-ensureUsableBinaries()
+#ensureUsableBinaries()
