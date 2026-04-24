@@ -93,12 +93,11 @@ func (w *WhatsAppClient) MessageThread() {
 			value, _ := w.eventQueue.backend.Dequeue()
 
 			if w.fnEventCallback != nil {
-				var str_value = value.(string)
+				var str_value = string(value.([]byte))
 				var cstr = C.CString(str_value)
 
-				defer C.free(unsafe.Pointer(cstr))
 				C.call_c_func_str(w.fnEventCallback, cstr)
-
+				C.free(unsafe.Pointer(cstr))
 			}
 		}
 

@@ -192,7 +192,10 @@ class WhatsApp:
                 self._methodReturns[message["content"]["returnId"]] = message
                 return
 
-        thandler = {**message ** message["content"]}
+        if isinstance(message["content"], dict):
+            thandler = {**message, **message["content"]}
+        else:
+            thandler = message
 
         for handler in self._userEventHandlers:
             handler(self, thandler)
