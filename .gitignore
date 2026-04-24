@@ -10,8 +10,7 @@ dist
 examples/database
 examples/test*
 test
-whatsfly/whatsfly.egg-info
-whatsfly.egg-info
+*.egg-info
 
 venv
 latest.so
