@@ -39,19 +39,25 @@ import functools
 import qrcode
 import mimetypes
 
+
 def deprecated(func):
     """This is a decorator which can be used to mark functions
     as deprecated. It will result in a warning being emitted
     when the function is used."""
+
     @functools.wraps(func)
     def new_func(*args, **kwargs):
-        warnings.simplefilter('always', DeprecationWarning)  # turn off filter
-        warnings.warn("Call to deprecated function {}.".format(func.__name__),
-                      category=DeprecationWarning,
-                      stacklevel=2)
-        warnings.simplefilter('default', DeprecationWarning)  # reset filter
+        warnings.simplefilter("always", DeprecationWarning)  # turn off filter
+        warnings.warn(
+            "Call to deprecated function {}.".format(func.__name__),
+            category=DeprecationWarning,
+            stacklevel=2,
+        )
+        warnings.simplefilter("default", DeprecationWarning)  # reset filter
         return func(*args, **kwargs)
+
     return new_func
+
 
 class Upload:
     def __init__(self, id, mimetype, kind):
@@ -67,6 +73,7 @@ class Upload:
 
     def _getKind(self):
         return self._kind
+
 
 class NewsletterUpload:
     def __init__(self, id, mimetype, kind, handle):
@@ -87,13 +94,16 @@ class NewsletterUpload:
     def _getHandle(self):
         return self._handle
 
+
 def _emptyFunc(*args, **kwars):
     return
+
 
 class WhatsApp:
     """
     The main whatsapp handler
     """
+
     c_WhatsAppClientId = None
 
     def __init__(
@@ -103,9 +113,9 @@ class WhatsApp:
         machine: str = "mac",
         browser: str = "safari",
         database_dir: str = "whatsapp",
-        on_event: Callable[[dict], None] =_emptyFunc,
-        on_disconnect: Callable[[None], None]=None,
-        print_qr_code: bool=True
+        on_event: Callable[[dict], None] = _emptyFunc,
+        on_disconnect: Callable[[None], None] = None,
+        print_qr_code: bool = True,
     ):
         """
         Import the compiled whatsmeow golang package, and setup basic client and database.
@@ -140,13 +150,10 @@ class WhatsApp:
                 if not os.path.exists(full_media_path):
                     os.makedirs(full_media_path)
 
-
         CMPFUNC_NONE_STR = ctypes.CFUNCTYPE(None, ctypes.c_char_p)
         CMPFUNC_NONE = ctypes.CFUNCTYPE(None)
 
-        self.C_ON_EVENT = (
-            CMPFUNC_NONE_STR(self._handleMessage)
-        )
+        self.C_ON_EVENT = CMPFUNC_NONE_STR(self._handleMessage)
         self.C_ON_DISCONNECT = (
             CMPFUNC_NONE(on_disconnect)
             if callable(on_disconnect)
@@ -166,7 +173,9 @@ class WhatsApp:
         """
         Connects the whatsapp client to whatsapp servers. This method SHOULD be called before any other.
         """
-        connect_wrapper(self.c_WhatsAppClientId, os.path.join(self.db_dir, "wapp.db").encode())
+        connect_wrapper(
+            self.c_WhatsAppClientId, os.path.join(self.db_dir, "wapp.db").encode()
+        )
 
     def disconnect(self):
         """
@@ -195,22 +204,27 @@ class WhatsApp:
             raise err
 
         match message["eventType"]:
-            case "linkCode":
+            case "linkingCode":
                 if self.print_qr_code:
-                    print(message["code"])
+                    print(message["content"])
             case "qrCode":
                 if self.print_qr_code:
-                    print(message["code"])
+                    print(message)
+                    print(message["content"])
                     qr = qrcode.QRCode()
-                    qr.add_data(message["code"])
+                    qr.add_data(message["content"])
                     qr.print_ascii()
             case "methodReturn":
-                self._methodReturns[message["callid"]] = message
+                self._methodReturns[message["content"]["returnId"]] = message["content"]
                 return
 
+        if isinstance(message["content"], dict):
+            thandler = {**message, **message["content"]}
+        else:
+            thandler = message
 
         for handler in self._userEventHandlers:
-            handler(self, message)
+            handler(self, thandler)
 
     def loggedIn(self) -> bool:
         """
@@ -235,7 +249,14 @@ class WhatsApp:
             return False
         return connected_wrapper(self.c_WhatsAppClientId) == 1
 
-    def sendMessage(self, phone: str, message, group: bool = False, upload: Upload = None, thumbnail_path = ""):
+    def sendMessage(
+        self,
+        phone: str,
+        message,
+        group: bool = False,
+        upload: Upload = None,
+        thumbnail_path="",
+    ):
         """
         Sends a text message
         :param phone: The phone number or group number to send the message.
@@ -259,24 +280,31 @@ class WhatsApp:
                 self.c_WhatsAppClientId,
                 phone.encode(),
                 message.SerializeToString(),
-                group
+                group,
             )
         else:
             ret = send_message_with_upload_wrapper(
                 self.c_WhatsAppClientId,
                 phone.encode(),
-                message.SerializeToString(), # message.SerializeToString() if ispb else message.encode(),
+                message.SerializeToString(),  # message.SerializeToString() if ispb else message.encode(),
                 group,
                 upload._getId().encode(),
                 upload._getMimetype().encode(),
                 upload._getKind().encode(),
                 ispb,
-                thumbnail_path.encode()
+                thumbnail_path.encode(),
             )
 
         return ret == 0
 
-    def sendReaction(self, jid: str, message_jid: str, sender_jid: str, reaction: str, group: bool = False):
+    def sendReaction(
+        self,
+        jid: str,
+        message_jid: str,
+        sender_jid: str,
+        reaction: str,
+        group: bool = False,
+    ):
         """
         Reacts to a message
         :param jid: The phone number or group number the message was sent to.
@@ -292,16 +320,12 @@ class WhatsApp:
             message_jid.encode(),
             sender_jid.encode(),
             reaction.encode(),
-            group
+            group,
         )
 
         return ret == 0
 
-
-
-    def getGroupInviteLink(
-            self, group: str, reset: bool = False
-    ) -> str:
+    def getGroupInviteLink(self, group: str, reset: bool = False) -> str:
         """
         Get invite link for group.
         Also sends an event to queue for legacy clients
@@ -312,16 +336,13 @@ class WhatsApp:
         return_uuid = uuid.uuid1()
 
         error = get_group_invite_link_wrapper(
-            self.c_WhatsAppClientId,
-            group.encode(),
-            reset,
-            str(return_uuid).encode()
+            self.c_WhatsAppClientId, group.encode(), reset, str(return_uuid).encode()
         )
 
         while not str(return_uuid) in self._methodReturns:
             time.sleep(0.001)
 
-        response = self._methodReturns[str(return_uuid)]["return"]
+        response = self._methodReturns[str(return_uuid)]["returnData"]
 
         return response
 
@@ -342,50 +363,38 @@ class WhatsApp:
         :param announce: Enable or not the announcement mode
         """
         return set_group_announce_wrapper(
-            self.c_WhatsAppClientId,
-            group.encode(),
-            announce
+            self.c_WhatsAppClientId, group.encode(), announce
         )
 
     def setGroupLocked(self, group: str, locked: bool = True):
         """
-            Set a group's lock mode (only admins can change settings)
-            :param group: Group id
-            :param locked: Enable or not the lock mode
+        Set a group's lock mode (only admins can change settings)
+        :param group: Group id
+        :param locked: Enable or not the lock mode
         """
-        return set_group_locked_wrapper(
-            self.c_WhatsAppClientId,
-            group.encode(),
-            locked
-        )
+        return set_group_locked_wrapper(self.c_WhatsAppClientId, group.encode(), locked)
 
-    def setGroupName(self, group:str, name:str):
+    def setGroupName(self, group: str, name: str):
         """
-            Set a group's name
-            :param group: Group id
-            :param name: Name
+        Set a group's name
+        :param group: Group id
+        :param name: Name
         """
         return set_group_name_wrapper(
-            self.c_WhatsAppClientId,
-            group.encode(),
-            name.encode()
+            self.c_WhatsAppClientId, group.encode(), name.encode()
         )
 
-    def setGroupTopic(self, group:str, topic:str):
+    def setGroupTopic(self, group: str, topic: str):
         """
         Set a group's topic
         :param group: Group id
         :param topic: Topic
         """
         return set_group_topic_wrapper(
-            self.c_WhatsAppClientId,
-            group.encode(),
-            topic.encode()
+            self.c_WhatsAppClientId, group.encode(), topic.encode()
         )
 
-    def getGroupInfo(
-            self, group: str
-    ) -> dict:
+    def getGroupInfo(self, group: str) -> dict:
         """
         Get info for a link
         :param group: Group id
@@ -394,22 +403,17 @@ class WhatsApp:
         return_uuid = uuid.uuid1()
 
         error = get_group_info_wrapper(
-            self.c_WhatsAppClientId,
-            group.encode(),
-            str(return_uuid).encode()
+            self.c_WhatsAppClientId, group.encode(), str(return_uuid).encode()
         )
 
         while not str(return_uuid) in self._methodReturns:
             time.sleep(0.001)
 
-        response = self._methodReturns[str(return_uuid)]["return"]
+        response = self._methodReturns[str(return_uuid)]["returnData"]
 
         return response
 
-
-    def uploadFile(
-            self, path: str, kind: str, mimetype: str=None
-    ) -> id:
+    def uploadFile(self, path: str, kind: str, mimetype: str = None) -> id:
         """
         Uploads a file
         :param path: The filepath
@@ -425,7 +429,7 @@ class WhatsApp:
 
         temporaryDirectory = tempfile.TemporaryDirectory(ignore_cleanup_errors=True)
 
-        tempName = temporaryDirectory.name+"/"+path.split("/")[-1]
+        tempName = temporaryDirectory.name + "/" + path.split("/")[-1]
 
         shutil.copyfile(path, tempName)
 
@@ -435,7 +439,7 @@ class WhatsApp:
             self.c_WhatsAppClientId,
             path.encode(),
             kind.encode(),
-            str(return_uuid).encode()
+            str(return_uuid).encode(),
         )
 
         while not str(return_uuid) in self._methodReturns:
@@ -447,7 +451,9 @@ class WhatsApp:
 
         return Upload(str(return_uuid), mimetype, kind)
 
-    def createNewsletter(self, name: str, description: str = "", picture_path: str = "") -> dict:
+    def createNewsletter(
+        self, name: str, description: str = "", picture_path: str = ""
+    ) -> dict:
         """
         Creates a new newsletter (channel)
         :param name: The name of the newsletter
@@ -462,13 +468,13 @@ class WhatsApp:
             name.encode(),
             description.encode(),
             picture_path.encode(),
-            str(return_uuid).encode()
+            str(return_uuid).encode(),
         )
 
         while not str(return_uuid) in self._methodReturns:
             time.sleep(0.001)
 
-        response = self._methodReturns[str(return_uuid)]["return"]
+        response = self._methodReturns[str(return_uuid)]["returnData"]
         return response
 
     def getNewsletterInfo(self, jid: str) -> dict:
@@ -480,15 +486,13 @@ class WhatsApp:
         return_uuid = uuid.uuid1()
 
         error = get_newsletter_info_wrapper(
-            self.c_WhatsAppClientId,
-            jid.encode(),
-            str(return_uuid).encode()
+            self.c_WhatsAppClientId, jid.encode(), str(return_uuid).encode()
         )
 
         while not str(return_uuid) in self._methodReturns:
             time.sleep(0.001)
 
-        response = self._methodReturns[str(return_uuid)]["return"]
+        response = self._methodReturns[str(return_uuid)]["returnData"]
         return response
 
     def getNewsletterMessages(self, jid: str, count: int = 10, before: int = 0) -> list:
@@ -502,17 +506,13 @@ class WhatsApp:
         return_uuid = uuid.uuid1()
 
         error = get_newsletter_messages_wrapper(
-            self.c_WhatsAppClientId,
-            jid.encode(),
-            count,
-            before,
-            str(return_uuid).encode()
+            self.c_WhatsAppClientId, jid.encode(), count, before, str(return_uuid).encode()
         )
 
         while not str(return_uuid) in self._methodReturns:
             time.sleep(0.001)
 
-        response = self._methodReturns[str(return_uuid)]["return"]
+        response = self._methodReturns[str(return_uuid)]["returnData"]
         return response
 
     def getSubscribedNewsletters(self) -> list:
@@ -523,17 +523,18 @@ class WhatsApp:
         return_uuid = uuid.uuid1()
 
         error = get_subscribed_newsletters_wrapper(
-            self.c_WhatsAppClientId,
-            str(return_uuid).encode()
+            self.c_WhatsAppClientId, str(return_uuid).encode()
         )
 
         while not str(return_uuid) in self._methodReturns:
             time.sleep(0.001)
 
-        response = self._methodReturns[str(return_uuid)]["return"]
+        response = self._methodReturns[str(return_uuid)]["returnData"]
         return response
 
-    def uploadNewsletter(self, path: str, kind: str, mimetype: str = None) -> NewsletterUpload:
+    def uploadNewsletter(
+        self, path: str, kind: str, mimetype: str = None
+    ) -> NewsletterUpload:
         """
         Uploads a file for newsletter
         :param path: The filepath
@@ -552,7 +553,7 @@ class WhatsApp:
             self.c_WhatsAppClientId,
             path.encode(),
             kind.encode(),
-            str(return_uuid).encode()
+            str(return_uuid).encode(),
         )
 
         while not str(return_uuid) in self._methodReturns:
@@ -580,7 +581,7 @@ class WhatsApp:
             self.c_WhatsAppClientId,
             jid.encode(),
             message.SerializeToString(),
-            upload_id.encode()
+            upload_id.encode(),
         )
-        
+
         return ret == 0

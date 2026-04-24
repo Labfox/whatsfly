@@ -6,36 +6,29 @@ comments: true
 
 Welcome to the WhatsFly documentation!
 
-WhatsFly is a powerful and easy-to-use library that enables you to interact with WhatsApp through Python. If you're familiar with Python and want to integrate WhatsApp functionalities into your projects, you've come to the right place. This library simplifies the process, allowing you to use WhatsApp with minimal effort.
+This is mostly a work in progress, if you don't understand something, or some beahivor isn't described correctly, please open an issue.
 
 ## What is WhatsFly?
 
-WhatsFly allows you to leverage the full capabilities of WhatsApp directly from your Python code. With WhatsFly, you can:
+WhatsFly allows you to interface with Whatsapp from Python. It is pretty easy to use, and usually works with the latest version. If you have a more advanced use case, please use [whatsmeow](https://github.com/tulir/whatsmeow) (Go) or [baileys](https://github.com/WhiskeySockets/Baileys) (Typescript)
 
-- Send and receive text messages
-- Handle and send media files (images, videos, audio)
-- Receive notifications
-- And much more
-
-WhatsFly provides a Pythonic interface, making it easy to incorporate WhatsApp functionalities into your Python applications without dealing with the complexities of lower-level implementations.
 
 ## Why Use WhatsFly?
 
-WhatsFly offers a streamlined and efficient way to integrate WhatsApp into your Python projects. By avoiding the use of a WebDriver, WhatsFly operates faster and more resource-efficiently. This means:
-
-- **Improved Performance:** Directly interacting with WhatsApp's underlying protocols ensures quicker response times compared to the overhead of WebDriver-based solutions.
-- **Resource Optimization:** By not relying on a WebDriver, WhatsFly consumes fewer system resources, making it suitable for both small-scale applications and large-scale deployments.
-- **Reliability:** Minimizing dependencies on external tools reduces the chances of encountering issues related to browser updates or compatibility.
+- You want to send a text-based notification from your python script
+- You want to trigger something from whatsapp
+- You want to download all media sent to you on whatsapp
+- You want to create a simple whatsapp bot
 
 ## Current Features
 
 ✅: Works
-❌: Broke
-⏳: Soon
-🔧: Can work with some tinkering
+❌: Broken
+⏳: Easily doable with some tinkering (create an issue if you want the feature)
+🔧: Needs tinkering
 
-|                               Feature                                |                          Status                          |
-|:--------------------------------------------------------------------:|:--------------------------------------------------------:|
+|                               Feature                                |                           Status                          |
+|:--------------------------------------------------------------------:|:---------------------------------------------------------:|
 |                             Multi Device                             |                            ✅                             |
 |                            Send messages                             |                            ✅                             |
 |                           Receive messages                           |                            ✅                             |
@@ -45,7 +38,7 @@ WhatsFly offers a streamlined and efficient way to integrate WhatsApp into your 
 |                          Send media (video)                          |                            ✅                             |
 |                        Send media (documents)                        |                            ✅                             |
 |                          Send media (audio)                          |                            ✅                             |
-|                            Send stickers                             |                  ⏳: update the uploader                  |
+|                            Send stickers                             |                  ⏳                  |
 |                          Send contact cards                          |                            ✅                             |
 |                            Send location                             |                            ✅                             |
 |                           Message replies                            |                            ✅                             |
@@ -65,7 +58,7 @@ WhatsFly offers a streamlined and efficient way to integrate WhatsApp into your 
 |                       Set user status message                        |                            ⏳                             |
 |                             Create Group                             |                            ⏳                             |
 |                          Create Newsletter                           |                            ⏳                             |
-|                                Polls                                 | ⏳: create function + vote funtion, correctly reads votes |
+|                                Polls                                 | ⏳ |
 |                          Receive Reactions                           |                            ✅                             |
 |                           React to message                           |                            ✅                             |
 |                          Follow newsletter                           |                            ⏳                             |
@@ -91,7 +84,7 @@ WhatsFly offers a streamlined and efficient way to integrate WhatsApp into your 
 
 
 ## Install
-If go is found in the path, the binaries will be built dynamically
+
 ```bash
 pip install whatsfly-Labfox
 ```
@@ -103,7 +96,7 @@ Here's a basic example to get you started with WhatsFly. This code demonstrates 
 ### Code
 
 ```python
-from whatsfly import WhatsApp
+from whatsfly import WhatsApp # May take some time or throw an exception
 import time
 import pprint
 
@@ -119,9 +112,9 @@ if __name__ == "__main__":
     phone = "6283139750000" # Make sure to attach country code + phone number
     message = "Hello World!"
 
-    whatsapp = WhatsApp(on_event=my_event_callback)
+    whatsapp = WhatsApp(on_event=my_event_callback) # The client object
 
-    whatsapp.connect()
+    whatsapp.connect() # Will print a QR Code to the terminal
 
     message_sent = whatsapp.sendMessage(phone, message, False)
     
@@ -130,18 +123,4 @@ if __name__ == "__main__":
     whatsapp.disconnect()
 ```
 
-Warning: The first time you will start the library, it will compile or download binaries for your machine, so it could take long depending on your internet connexion.
-
-### Explanation
-
-1. **Event Callback Function:**
-   - `my_event_callback(event_data)` handles incoming events and simply prints the event data to the console.
-
-2. **Main Program Flow:**
-   - The phone number (with country code) and the message to be sent are defined.
-   - An instance of `WhatsApp` is created with the event callback function.
-   - The script connects to WhatsApp using the `connect()` method. At this point it should show a QR code, scan it with your phone (on Connected Devices)
-   - A message is sent to the specified phone number using `sendMessage(phone, message)`.
-   - The script listens for incoming messages for 5 minutes using `time.sleep(5 * 60)`.
-   - Finally, it disconnects from WhatsApp using the `disconnect()` method.
-
+Warning: The first time you will start the library, and once every month, Whatsfly will download the binaries from Github. You can disable this beahivor by setting the `WHATSFLY_NO_UPDATES` environment variable.
