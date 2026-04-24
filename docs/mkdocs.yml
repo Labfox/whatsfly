@@ -51,6 +51,11 @@ plugins:
 
 nav:
   - Home: index.md
-  - "Api Reference":
+  - Tutorials: tutorials.md
+  - Examples: examples.md
+  - Advanced Usage: advanced.md
+  - Architecture: architecture.md
+  - FAQ: faq.md
+  - "Reference":
     - "Whatsapp Class Reference": apireference.md
     - "Events Types Reference": eventsreference.md
