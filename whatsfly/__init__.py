@@ -11,8 +11,9 @@ try:
         update_file = os.path.join(root_dir, "last_binary_update.txt")
         if os.path.exists(update_file):
             last_update = open(update_file, "r").read()
-            if time.time() - int(last_update) > 60*60*24*31:
+            if time.time() - int(last_update) > 60 * 60 * 24 * 31:
                 from sys import platform
+
                 if platform == "darwin":
                     file_ext = "latest.dylib"
                 elif platform in ("win32", "cygwin"):

@@ -3,6 +3,9 @@
 
 name: Build library
 
+permissions:
+  contents: write
+
 on:
   push:
     branches: [ "0.3.3-support" ]
@@ -17,12 +20,12 @@ jobs:
     steps:
     - uses: actions/checkout@v4
       with:
-        branch: "0.3.3-support"
+        ref: "0.3.3-support"
 
     - name: Set up Go
       uses: actions/setup-go@v4
       with:
-        go-version: '1.23'
+        go-version: '1.25'
 
     - name: Build
       run: | 
@@ -46,11 +49,13 @@ jobs:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v4
+      with:
+        ref: "0.3.3-support"
 
     - name: Set up Go
       uses: actions/setup-go@v4
       with:
-        go-version: '1.23'
+        go-version: '1.25'
 
     - name: Build
       env:
@@ -80,11 +85,13 @@ jobs:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v4
+      with:
+        ref: "0.3.3-support"
 
     - name: Set up Go
       uses: actions/setup-go@v4
       with:
-        go-version: '1.23'
+        go-version: '1.25'
 
     - name: Build
       env:
