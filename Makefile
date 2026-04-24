@@ -1,4 +1,4 @@
-.PHONY: setup compile sync test build-macos build-linux build-windows test-setup format lint cleanup bump help
+.PHONY: setup compile sync test build build-macos build-linux build-windows test-setup format lint cleanup bump help
 
 help:
 	@echo "Available targets:"
@@ -6,6 +6,7 @@ help:
 	@echo "  compile       - Update uv.lock"
 	@echo "  sync          - Sync dependencies with uv.lock"
 	@echo "  test          - Run tests using pytest"
+	@echo "  build         - Build Go backend for current platform"
 	@echo "  build-macos   - Build Go backend for macOS (arm64 and amd64)"
 	@echo "  build-linux   - Build Go backend for Linux (amd64)"
 	@echo "  build-windows - Build Go backend for Windows (amd64)"
@@ -29,6 +30,9 @@ sync:
 test:
 	uv run pytest $(ARGS)
 
+build:
+	$(MAKE) -C backend build
+
 build-macos:
 	$(MAKE) -C backend build-macos
 
@@ -40,8 +44,7 @@ build-windows:
 
 test-setup:
 	rm -rf build dist *.egg-info
-	# Build the backend for the current platform and place it in the expected location
-	cd backend && go build -buildmode=c-shared -o ../whatsfly/dependencies/latest.$$(python3 -c "import platform; print({'linux': 'so', 'windows': 'dll', 'darwin': 'dylib'}.get(platform.system().lower(), 'so'))") .
+	$(MAKE) build
 	uv build && echo ok
 
 format:

@@ -1,4 +1,7 @@
-.PHONY: build-macos build-linux build-windows bump
+.PHONY: build build-macos build-linux build-windows bump
+
+build:
+	go build -buildmode=c-shared -o ../whatsfly/dependencies/latest.$$(python3 -c "import platform; print({'linux': 'so', 'windows': 'dll', 'darwin': 'dylib'}.get(platform.system().lower(), 'so'))") .
 
 build-macos:
 	GOOS=darwin GOARCH=arm64 go build -buildmode=c-shared -o ./whatsmeow/whatsmeow-darwin-arm64.dylib .
