@@ -5,47 +5,32 @@ if [ "$1" == "setup" ]; then
     if ! command -v uv >/dev/null 2>&1; then
         pip install uv
     fi
-    if [ ! -d ".venv" ]; then
-        uv venv
-    fi
-    source .venv/bin/activate
-    uv pip install -r requirements.txt
-    uv pip install -r dev-requirements.txt
-    pre-commit install
+    uv sync --all-extras
+    uv run pre-commit install
 elif [ "$1" == "compile" ]; then
-    source .venv/bin/activate
-    uv pip compile dev-requirements.in requirements.in > dev-requirements.txt
-    uv pip compile requirements.in > requirements.txt
+    uv lock
 elif [ "$1" == "sync" ]; then
-    source .venv/bin/activate
-    uv pip sync dev-requirements.txt requirements.txt
+    uv sync --all-extras
 elif [ "$1" == "test" ]; then
-    source .venv/bin/activate
-    python -m pytest $2 $3 $4 $5 $6 $7 $8 $9 ${10} ${11} ${12} ${13} ${14} ${15} ${16} ${17} ${18} ${19} ${20}
+    uv run pytest "${@:2}"
 elif [ "$1" == "build-macos" ]; then
-    source .venv/bin/activate
     pushd backend
     GOOS=darwin GOARCH=arm64 go build -buildmode=c-shared -o ./whatsmeow/whatsmeow-darwin-arm64.dylib main.go
     GOOS=darwin GOARCH=amd64 go build -buildmode=c-shared -o ./whatsmeow/whatsmeow-darwin-amd64.dylib main.go
     popd
 elif [ "$1" == "test-setup" ]; then
-    source .venv/bin/activate
-    rm -rf build dist whatsfly_labfox.egg-info
-    python setup.py check
-    python setup.py bdist && echo ok
+    rm -rf build dist *.egg-info
+    uv run python -m setuptools.dist check
+    uv build && echo ok
 elif [ "$1" == "format" ]; then
-    source .venv/bin/activate
-    black .
+    uv run black .
 elif [ "$1" == "lint" ]; then
-    source .venv/bin/activate
-    ruff check .
-    ruff format .
-    mypy .
+    uv run ruff check .
+    uv run ruff format .
+    uv run mypy .
 elif [ "$1" == "cleanup" ]; then 
-    source .venv/bin/activate
-    rm -rf build dist *.egg-info whatsfly/last_binary_update.txt whatsfly/__pycache__ whatsfly/*/__pycache__
+    rm -rf build dist *.egg-info whatsfly/last_binary_update.txt whatsfly/__pycache__ whatsfly/*/__pycache__ .venv
 elif [ "$1" == "bump" ]; then
-    source .venv/bin/activate
     pushd backend 
     go get -u
     go mod tidy

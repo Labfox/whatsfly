@@ -3,35 +3,80 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "whatsfly_labfox"
+name = "whatsfly"
 version = "0.3.3"
 authors = [
     { name="Labfox", email="consockbind@gmail.com"},
-  { name="Doy Bachtiar", email="adityabachtiar996@gmail.com" },
+    { name="Doy Bachtiar", email="adityabachtiar996@gmail.com" },
     { name = "Otamay", email="mauricio@ulisse.io"},
     { name = "Ivo Bellin Salarin", email="ivo@nilleb.com"}
 ]
 description = "Whatsapp Web wrapper in Python, without webdrivers"
 readme = "README.md"
 requires-python = ">=3.12"
+keywords = ["whatsfly", "whatsapp", "python"]
 classifiers = [
+    "Intended Audience :: Developers",
+    "Natural Language :: English",
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: Unix",
     "Operating System :: POSIX :: Linux",
     "Operating System :: MacOS :: MacOS X",
     "Operating System :: Microsoft :: Windows",
+    "Environment :: Web Environment",
     "Topic :: Communications",
     "Topic :: Communications :: Chat",
+    "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 dependencies = [
     "types-pyyaml",
     "setuptools",
     "requests",
     "qrcode",
-    "protobuf"
+    "protobuf",
+]
+
+[project.optional-dependencies]
+dev = [
+    "black",
+    "isort",
+    "watchdog",
+    "mypy",
+    "vcrpy",
+    "pytest",
+    "pytest-vcr",
+    "pre-commit",
+    "ruff",
+    "pytest-asyncio",
+    "aiosqlite",
+]
+docs = [
+    "mkdocs",
+    "mkdocs-material",
+    "mkdocstrings",
+    "mkdocstrings-python",
+    "mike",
+    "lazydocs",
 ]
 
 [project.urls]
-Homepage = "https://github.com/Labfox/whatsfly"
+Homepage = "https://whatsfly.labfox.fr"
+Repository = "https://github.com/Labfox/whatsfly"
 Issues = "https://github.com/Labfox/whatsfly/issues"
+
+[tool.setuptools]
+packages = ["whatsfly"]
+include-package-data = true
+
+[tool.setuptools.package-data]
+whatsfly = [
+    "dependencies/*.*",
+    "proto/*",
+    "proto/*/*"
+]
+
+[tool.setuptools.exclude-package-data]
+whatsfly = [
+    "dependencies/whatsmeow/static/*"
+]
