@@ -13,3 +13,10 @@ func getJid(user string, is_group bool) types.JID {
 		Server: server,
 	}
 }
+
+func getNewsletterJid(user string) types.JID {
+	return types.JID{
+		User:   user,
+		Server: types.NewsletterServer,
+	}
+}

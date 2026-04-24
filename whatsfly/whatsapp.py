@@ -74,6 +74,7 @@ class Upload:
     def _getKind(self):
         return self._kind
 
+
 class NewsletterUpload:
     def __init__(self, id, mimetype, kind, handle):
         self._id = id
@@ -92,6 +93,7 @@ class NewsletterUpload:
 
     def _getHandle(self):
         return self._handle
+
 
 def _emptyFunc(*args, **kwars):
     return
@@ -449,7 +451,9 @@ class WhatsApp:
 
         return Upload(str(return_uuid), mimetype, kind)
 
-    def createNewsletter(self, name: str, description: str = "", picture_path: str = "") -> dict:
+    def createNewsletter(
+        self, name: str, description: str = "", picture_path: str = ""
+    ) -> dict:
         """
         Creates a new newsletter (channel)
         :param name: The name of the newsletter
@@ -464,13 +468,13 @@ class WhatsApp:
             name.encode(),
             description.encode(),
             picture_path.encode(),
-            str(return_uuid).encode()
+            str(return_uuid).encode(),
         )
 
         while not str(return_uuid) in self._methodReturns:
             time.sleep(0.001)
 
-        response = self._methodReturns[str(return_uuid)]["return"]
+        response = self._methodReturns[str(return_uuid)]["returnData"]
         return response
 
     def getNewsletterInfo(self, jid: str) -> dict:
@@ -482,15 +486,13 @@ class WhatsApp:
         return_uuid = uuid.uuid1()
 
         error = get_newsletter_info_wrapper(
-            self.c_WhatsAppClientId,
-            jid.encode(),
-            str(return_uuid).encode()
+            self.c_WhatsAppClientId, jid.encode(), str(return_uuid).encode()
         )
 
         while not str(return_uuid) in self._methodReturns:
             time.sleep(0.001)
 
-        response = self._methodReturns[str(return_uuid)]["return"]
+        response = self._methodReturns[str(return_uuid)]["returnData"]
         return response
 
     def getNewsletterMessages(self, jid: str, count: int = 10, before: int = 0) -> list:
@@ -504,17 +506,13 @@ class WhatsApp:
         return_uuid = uuid.uuid1()
 
         error = get_newsletter_messages_wrapper(
-            self.c_WhatsAppClientId,
-            jid.encode(),
-            count,
-            before,
-            str(return_uuid).encode()
+            self.c_WhatsAppClientId, jid.encode(), count, before, str(return_uuid).encode()
         )
 
         while not str(return_uuid) in self._methodReturns:
             time.sleep(0.001)
 
-        response = self._methodReturns[str(return_uuid)]["return"]
+        response = self._methodReturns[str(return_uuid)]["returnData"]
         return response
 
     def getSubscribedNewsletters(self) -> list:
@@ -525,17 +523,18 @@ class WhatsApp:
         return_uuid = uuid.uuid1()
 
         error = get_subscribed_newsletters_wrapper(
-            self.c_WhatsAppClientId,
-            str(return_uuid).encode()
+            self.c_WhatsAppClientId, str(return_uuid).encode()
         )
 
         while not str(return_uuid) in self._methodReturns:
             time.sleep(0.001)
 
-        response = self._methodReturns[str(return_uuid)]["return"]
+        response = self._methodReturns[str(return_uuid)]["returnData"]
         return response
 
-    def uploadNewsletter(self, path: str, kind: str, mimetype: str = None) -> NewsletterUpload:
+    def uploadNewsletter(
+        self, path: str, kind: str, mimetype: str = None
+    ) -> NewsletterUpload:
         """
         Uploads a file for newsletter
         :param path: The filepath
@@ -554,7 +553,7 @@ class WhatsApp:
             self.c_WhatsAppClientId,
             path.encode(),
             kind.encode(),
-            str(return_uuid).encode()
+            str(return_uuid).encode(),
         )
 
         while not str(return_uuid) in self._methodReturns:
@@ -582,7 +581,7 @@ class WhatsApp:
             self.c_WhatsAppClientId,
             jid.encode(),
             message.SerializeToString(),
-            upload_id.encode()
+            upload_id.encode(),
         )
-        
+
         return ret == 0

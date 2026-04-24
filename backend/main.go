@@ -264,6 +264,67 @@ func SendReactionWrapper(id C.int, c_jid *C.char, c_message_id *C.char, c_sender
 //go:embed version.txt
 var version string
 
+//export CreateNewsletterWrapper
+func CreateNewsletterWrapper(id C.int, c_name *C.char, c_description *C.char, c_picture_path *C.char, c_return_id *C.char) C.int {
+	name := C.GoString(c_name)
+	description := C.GoString(c_description)
+	picture_path := C.GoString(c_picture_path)
+	return_id := C.GoString(c_return_id)
+
+	w := handles[int(id)]
+	return C.int(w.CreateNewsletter(name, description, picture_path, return_id))
+}
+
+//export GetNewsletterInfoWrapper
+func GetNewsletterInfoWrapper(id C.int, c_jid *C.char, c_return_id *C.char) C.int {
+	jid := C.GoString(c_jid)
+	return_id := C.GoString(c_return_id)
+
+	w := handles[int(id)]
+	return C.int(w.GetNewsletterInfo(jid, return_id))
+}
+
+//export GetNewsletterMessagesWrapper
+func GetNewsletterMessagesWrapper(id C.int, c_jid *C.char, count C.int, before C.int, c_return_id *C.char) C.int {
+	jid := C.GoString(c_jid)
+	return_id := C.GoString(c_return_id)
+
+	w := handles[int(id)]
+	return C.int(w.GetNewsletterMessages(jid, int(count), int(before), return_id))
+}
+
+//export GetSubscribedNewslettersWrapper
+func GetSubscribedNewslettersWrapper(id C.int, c_return_id *C.char) C.int {
+	return_id := C.GoString(c_return_id)
+
+	w := handles[int(id)]
+	return C.int(w.GetSubscribedNewsletters(return_id))
+}
+
+//export UploadNewsletterWrapper
+func UploadNewsletterWrapper(id C.int, c_path *C.char, c_kind *C.char, c_return_id *C.char) C.int {
+	path := C.GoString(c_path)
+	kind := C.GoString(c_kind)
+	return_id := C.GoString(c_return_id)
+
+	w := handles[int(id)]
+	return C.int(w.UploadNewsletter(path, kind, return_id))
+}
+
+//export SendNewsletterWrapper
+func SendNewsletterWrapper(id C.int, c_jid *C.char, c_message *C.char, c_upload_id *C.char) C.int {
+	jid := C.GoString(c_jid)
+	// upload_id := C.GoString(c_upload_id)
+
+	message := &waE2E.Message{}
+	length := C.strlen(c_message)
+	goBytes := C.GoBytes(unsafe.Pointer(c_message), C.int(length))
+	proto.Unmarshal(goBytes, message)
+
+	w := handles[int(id)]
+	return C.int(w.SendNewsletter(jid, message, ""))
+}
+
 //export Version
 func Version() C.int {
 

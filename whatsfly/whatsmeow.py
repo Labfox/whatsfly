@@ -52,6 +52,53 @@ send_message_protobuf_wrapper.argstype = [
     ctypes.c_bool,
 ]
 
+create_newsletter_wrapper = lib.CreateNewsletterWrapper
+create_newsletter_wrapper.argstype = [
+    ctypes.c_int,
+    ctypes.c_char_p,
+    ctypes.c_char_p,
+    ctypes.c_char_p,
+    ctypes.c_char_p,
+]
+
+get_newsletter_info_wrapper = lib.GetNewsletterInfoWrapper
+get_newsletter_info_wrapper.argstype = [
+    ctypes.c_int,
+    ctypes.c_char_p,
+    ctypes.c_char_p,
+]
+
+get_newsletter_messages_wrapper = lib.GetNewsletterMessagesWrapper
+get_newsletter_messages_wrapper.argstype = [
+    ctypes.c_int,
+    ctypes.c_char_p,
+    ctypes.c_int,
+    ctypes.c_int,
+    ctypes.c_char_p,
+]
+
+get_subscribed_newsletters_wrapper = lib.GetSubscribedNewslettersWrapper
+get_subscribed_newsletters_wrapper.argstype = [
+    ctypes.c_int,
+    ctypes.c_char_p,
+]
+
+upload_newsletter_wrapper = lib.UploadNewsletterWrapper
+upload_newsletter_wrapper.argstype = [
+    ctypes.c_int,
+    ctypes.c_char_p,
+    ctypes.c_char_p,
+    ctypes.c_char_p,
+]
+
+send_newsletter_wrapper = lib.SendNewsletterWrapper
+send_newsletter_wrapper.argstype = [
+    ctypes.c_int,
+    ctypes.c_char_p,
+    ctypes.c_char_p,
+    ctypes.c_char_p,
+]
+
 send_message_with_upload_wrapper = lib.SendMessageWithUploadWrapper
 send_message_with_upload_wrapper.argstype = [
     ctypes.c_int,

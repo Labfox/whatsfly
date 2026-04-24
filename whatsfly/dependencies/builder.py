@@ -84,11 +84,13 @@ def build():
         "main.go",
     ]
     logging.debug(
-        f"building Go module with command: {' '.join(go_build_cmd)} in directory {root_dir}"
+        f"building Go module with command: {' '.join(go_build_cmd)} in directory {os.getcwd()}/whatsfly/dependencies"
     )
 
+    root_dir = os.path.abspath(os.path.dirname(__file__))
+
     # Run the Go build command
-    status_code = subprocess.call(go_build_cmd, cwd=root_dir)
+    status_code = subprocess.check_call(go_build_cmd)
     logging.debug(f"Go build command exited with status code: {status_code}")
     if status_code == 127:
         raise RuntimeError("Go build impossible")
@@ -98,15 +100,6 @@ def build():
 
 def ensureUsableBinaries():
     branch = "main"
-
-    try:
-        build()
-        return
-    except FileNotFoundError:
-        logging.info("Go unusable")
-    except RuntimeError:
-        logging.warning("Unexpected error while building")
-
     logging.info("Trying to download pre-built binaries")
     root_dir = os.path.abspath(os.path.dirname(__file__))
 
