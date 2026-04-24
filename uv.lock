@@ -1101,7 +1101,7 @@ wheels = [
 ]
 
 [[package]]
-name = "whatsfly"
+name = "whatsfly-labfox"
 version = "0.3.3"
 source = { editable = "." }
 dependencies = [
