@@ -233,7 +233,7 @@ class WhatsApp:
         Returns:
             bool: True if the user is logged in, False otherwise.
         """
-        if self.c_WhatsAppClientId == None:
+        if self.c_WhatsAppClientId is None:
             return False
         return logged_in_wrapper(self.c_WhatsAppClientId) == 1
 
@@ -245,7 +245,7 @@ class WhatsApp:
         Returns:
             bool: True if the client is connected, otherwise False.
         """
-        if self.c_WhatsAppClientId == None:
+        if self.c_WhatsAppClientId is None:
             return False
         return connected_wrapper(self.c_WhatsAppClientId) == 1
 
@@ -269,13 +269,13 @@ class WhatsApp:
 
         ispb = True
 
-        if type(message) == str:
+        if isinstance(message, str):
             message1 = WAWebProtobufsE2E_pb2.Message()
             message1.conversation = message
             message = message1
             ispb = False
 
-        if upload == None:
+        if upload is None:
             ret = send_message_protobuf_wrapper(
                 self.c_WhatsAppClientId,
                 phone.encode(),
@@ -335,11 +335,11 @@ class WhatsApp:
         """
         return_uuid = uuid.uuid1()
 
-        error = get_group_invite_link_wrapper(
+        get_group_invite_link_wrapper(
             self.c_WhatsAppClientId, group.encode(), reset, str(return_uuid).encode()
         )
 
-        while not str(return_uuid) in self._methodReturns:
+        while str(return_uuid) not in self._methodReturns:
             time.sleep(0.001)
 
         response = self._methodReturns[str(return_uuid)]["returnData"]
@@ -402,11 +402,11 @@ class WhatsApp:
         """
         return_uuid = uuid.uuid1()
 
-        error = get_group_info_wrapper(
+        get_group_info_wrapper(
             self.c_WhatsAppClientId, group.encode(), str(return_uuid).encode()
         )
 
-        while not str(return_uuid) in self._methodReturns:
+        while str(return_uuid) not in self._methodReturns:
             time.sleep(0.001)
 
         response = self._methodReturns[str(return_uuid)]["returnData"]
@@ -421,10 +421,10 @@ class WhatsApp:
         :return: Group information
         """
 
-        if mimetype == None:
+        if mimetype is None:
             mimetype = mimetypes.guess_type(path)[0]
 
-        if not kind in ["image", "video", "audio", "document"]:
+        if kind not in ["image", "video", "audio", "document"]:
             raise Exception("Invalid kind")
 
         temporaryDirectory = tempfile.TemporaryDirectory(ignore_cleanup_errors=True)
@@ -435,14 +435,14 @@ class WhatsApp:
 
         return_uuid = uuid.uuid1()
 
-        error = upload_file_wrapper(
+        upload_file_wrapper(
             self.c_WhatsAppClientId,
             path.encode(),
             kind.encode(),
             str(return_uuid).encode(),
         )
 
-        while not str(return_uuid) in self._methodReturns:
+        while str(return_uuid) not in self._methodReturns:
             time.sleep(0.001)
 
         temporaryDirectory.cleanup()
@@ -463,7 +463,7 @@ class WhatsApp:
         """
         return_uuid = uuid.uuid1()
 
-        error = create_newsletter_wrapper(
+        create_newsletter_wrapper(
             self.c_WhatsAppClientId,
             name.encode(),
             description.encode(),
@@ -471,7 +471,7 @@ class WhatsApp:
             str(return_uuid).encode(),
         )
 
-        while not str(return_uuid) in self._methodReturns:
+        while str(return_uuid) not in self._methodReturns:
             time.sleep(0.001)
 
         response = self._methodReturns[str(return_uuid)]["returnData"]
@@ -485,11 +485,11 @@ class WhatsApp:
         """
         return_uuid = uuid.uuid1()
 
-        error = get_newsletter_info_wrapper(
+        get_newsletter_info_wrapper(
             self.c_WhatsAppClientId, jid.encode(), str(return_uuid).encode()
         )
 
-        while not str(return_uuid) in self._methodReturns:
+        while str(return_uuid) not in self._methodReturns:
             time.sleep(0.001)
 
         response = self._methodReturns[str(return_uuid)]["returnData"]
@@ -505,11 +505,15 @@ class WhatsApp:
         """
         return_uuid = uuid.uuid1()
 
-        error = get_newsletter_messages_wrapper(
-            self.c_WhatsAppClientId, jid.encode(), count, before, str(return_uuid).encode()
+        get_newsletter_messages_wrapper(
+            self.c_WhatsAppClientId,
+            jid.encode(),
+            count,
+            before,
+            str(return_uuid).encode(),
         )
 
-        while not str(return_uuid) in self._methodReturns:
+        while str(return_uuid) not in self._methodReturns:
             time.sleep(0.001)
 
         response = self._methodReturns[str(return_uuid)]["returnData"]
@@ -522,11 +526,11 @@ class WhatsApp:
         """
         return_uuid = uuid.uuid1()
 
-        error = get_subscribed_newsletters_wrapper(
+        get_subscribed_newsletters_wrapper(
             self.c_WhatsAppClientId, str(return_uuid).encode()
         )
 
-        while not str(return_uuid) in self._methodReturns:
+        while str(return_uuid) not in self._methodReturns:
             time.sleep(0.001)
 
         response = self._methodReturns[str(return_uuid)]["returnData"]
@@ -541,22 +545,22 @@ class WhatsApp:
         :param kind: The kind of the upload. One of: image, video, audio, document
         :return: NewsletterUpload object
         """
-        if mimetype == None:
+        if mimetype is None:
             mimetype = mimetypes.guess_type(path)[0]
 
-        if not kind in ["image", "video", "audio", "document"]:
+        if kind not in ["image", "video", "audio", "document"]:
             raise Exception("Invalid kind")
 
         return_uuid = uuid.uuid1()
 
-        error = upload_newsletter_wrapper(
+        upload_newsletter_wrapper(
             self.c_WhatsAppClientId,
             path.encode(),
             kind.encode(),
             str(return_uuid).encode(),
         )
 
-        while not str(return_uuid) in self._methodReturns:
+        while str(return_uuid) not in self._methodReturns:
             time.sleep(0.001)
 
         return NewsletterUpload(str(return_uuid), mimetype, kind, "")
@@ -568,7 +572,7 @@ class WhatsApp:
         :param message: The message to send (string or protobuf)
         :param upload: Optional upload for media messages
         """
-        if type(message) == str:
+        if isinstance(message, str):
             message1 = WAWebProtobufsE2E_pb2.Message()
             message1.conversation = message
             message = message1

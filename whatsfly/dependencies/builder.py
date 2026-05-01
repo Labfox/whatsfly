@@ -57,18 +57,9 @@ def build():
     # GOOS=darwin GOARCH=amd64 go build -buildmode=c-shared -o ./whatsmeow/whatsmeow-darwin-amd64.dylib main.go
     # Detect the current OS and architecture
     current_os = platform.system().lower()
-    current_arch = platform.machine().lower()
-
-    # Map the architecture to Go's naming convention
-    arch_map = {
-        "x86_64": "amd64",
-        "arm64": "arm64",
-        "aarch64": "arm64",
-    }
 
     extension_map = {"linux": "so", "windows": "dll", "darwin": "dylib"}
 
-    go_arch = arch_map.get(current_arch, current_arch)
     dll_extension = extension_map.get(current_os, current_os)
 
     # Set the environment variables for Go build
@@ -123,4 +114,4 @@ class BuildGoModule(install):
             logging.warning("Build unsuccessful, will retry on runtime")
 
 
-#ensureUsableBinaries()
+# ensureUsableBinaries()

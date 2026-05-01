@@ -3,7 +3,6 @@ importing c shared whatsmeow library based on your machine.
 """
 
 from sys import platform
-from platform import machine
 import ctypes
 import os
 

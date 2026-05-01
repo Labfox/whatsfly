@@ -1,12 +1,11 @@
 import os
-import sys
 import logging
 import time
 
 from .dependencies.builder import ensureUsableBinaries
 
 try:
-    if not ("WHATSFLY_NO_UPDATES" in os.environ):
+    if "WHATSFLY_NO_UPDATES" not in os.environ:
         root_dir = os.path.abspath(os.path.dirname(__file__))
         update_file = os.path.join(root_dir, "last_binary_update.txt")
         if os.path.exists(update_file):
@@ -35,6 +34,9 @@ try:
 except OSError:
     ensureUsableBinaries()
     from .whatsapp import WhatsApp
+
+
+__all__ = ["WhatsApp"]
 
 LOGGER = logging.getLogger()
 logging.basicConfig(level=logging.INFO)

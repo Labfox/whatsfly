@@ -51,8 +51,8 @@ format:
 	uv run black .
 
 lint:
-	uv run ruff check .
-	uv run ruff format .
+	uv run ruff check . --exclude "whatsfly/proto/*" --fix
+	uv run ruff format . --exclude "whatsfly/proto/*"
 	uv run mypy .
 
 cleanup:

@@ -80,3 +80,7 @@ whatsfly = [
 whatsfly = [
     "dependencies/whatsmeow/static/*"
 ]
+
+[[tool.mypy.overrides]]
+module = "whatsfly.proto.*"
+ignore_errors = true
