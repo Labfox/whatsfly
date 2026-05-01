@@ -58,7 +58,4 @@ whatsapp._userEventHandlers.append(my_custom_handler)
 
 ## Manual Binary Management
 
-By default, WhatsFly downloads pre-compiled Go binaries for your architecture. If you want to use your own compiled version:
-1. Compile the Go backend as a shared library (`go build -buildmode=c-shared`).
-2. Place the resulting file (`latest.so`, `latest.dll`, or `latest.dylib`) in the `whatsfly/dependencies/` directory.
-3. Set `WHATSFLY_NO_UPDATES=1` to prevent the library from overwriting your custom binary.
+By default, WhatsFly downloads pre-compiled Go binaries for your architecture. If you want to use your own compiled version, run `make build` on the repository before installing the library.

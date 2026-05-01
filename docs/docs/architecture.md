@@ -9,15 +9,6 @@ The project consists of two main parts:
 1.  **Go Backend (`backend/`)**: Built on top of the [whatsmeow](https://github.com/tulir/whatsmeow) library. It handles the low-level WhatsApp web protocol, socket connections, encryption, and media processing.
 2.  **Python Frontend (`whatsfly/`)**: Provides a user-friendly Pythonic interface. It communicates with the Go backend using Python's `ctypes` library.
 
-```mermaid
-graph LR
-    UserCode[Your Python Script] --> PythonLib[WhatsFly Python Wrapper]
-    PythonLib --> CTypes[ctypes / FFI]
-    CTypes --> GoLib[Go Shared Library .so/.dll]
-    GoLib --> WhatsMeow[whatsmeow Go Library]
-    WhatsMeow --> WAServers[WhatsApp Servers]
-```
-
 ## Communication (FFI)
 
 The Go backend is compiled into a C-shared library (`.so`, `.dll`, or `.dylib`).

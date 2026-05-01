@@ -6,7 +6,7 @@ This page provides quick snippets for various tasks you can perform with WhatsFl
 
 ### Text Message
 ```python
-whatsapp.sendMessage("6283139750000", "Hello there!")
+whatsapp.sendMessage("33652848481", "Hello there!")
 ```
 
 ### Image with Caption
@@ -18,19 +18,19 @@ To send media, you must first upload it using `uploadFile`, then pass the return
 upload = whatsapp.uploadFile("path/to/image.jpg", kind="image")
 
 # 2. Send the message with the upload
-whatsapp.sendMessage("6283139750000", "Look at this picture!", upload=upload)
+whatsapp.sendMessage("33652848481", "Look at this picture!", upload=upload)
 ```
 
 ### Video
 ```python
 upload = whatsapp.uploadFile("path/to/video.mp4", kind="video")
-whatsapp.sendMessage("6283139750000", "Check this out", upload=upload)
+whatsapp.sendMessage("33652848481", "Check this out", upload=upload)
 ```
 
 ### Document
 ```python
 upload = whatsapp.uploadFile("path/to/report.pdf", kind="document")
-whatsapp.sendMessage("6283139750000", "Here is the report", upload=upload)
+whatsapp.sendMessage("33652848481", "Here is the report", upload=upload)
 ```
 
 ---
