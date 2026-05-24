@@ -46,7 +46,6 @@ plugins:
         options:
           show_submodules: true
           docstring_style: sphinx
-- mike
 
 
 nav:
