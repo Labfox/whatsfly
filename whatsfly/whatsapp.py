@@ -4,6 +4,8 @@ import tempfile
 import time
 import uuid
 from typing import Callable
+import base64
+import json
 
 from .whatsmeow import (
     new_whatsapp_client_wrapper,
@@ -32,7 +34,6 @@ from .whatsmeow import (
 )
 from .proto.waE2E import WAWebProtobufsE2E_pb2
 import ctypes
-import json
 import threading
 import warnings
 import functools
@@ -342,7 +343,7 @@ class WhatsApp:
         while str(return_uuid) not in self._methodReturns:
             time.sleep(0.001)
 
-        response = self._methodReturns[str(return_uuid)]["returnData"]
+        response = self._methodReturns[str(return_uuid)]["content"]["returnData"]
 
         return response
 
@@ -409,7 +410,11 @@ class WhatsApp:
         while str(return_uuid) not in self._methodReturns:
             time.sleep(0.001)
 
-        response = self._methodReturns[str(return_uuid)]["returnData"]
+        response = json.loads(
+            base64.b64decode(
+                self._methodReturns[str(return_uuid)]["content"]["returnData"]
+            )
+        )
 
         return response
 
@@ -474,7 +479,11 @@ class WhatsApp:
         while str(return_uuid) not in self._methodReturns:
             time.sleep(0.001)
 
-        response = self._methodReturns[str(return_uuid)]["returnData"]
+        response = json.loads(
+            base64.b64decode(
+                self._methodReturns[str(return_uuid)]["content"]["returnData"]
+            )
+        )
         return response
 
     def getNewsletterInfo(self, jid: str) -> dict:
@@ -492,7 +501,11 @@ class WhatsApp:
         while str(return_uuid) not in self._methodReturns:
             time.sleep(0.001)
 
-        response = self._methodReturns[str(return_uuid)]["returnData"]
+        response = json.loads(
+            base64.b64decode(
+                self._methodReturns[str(return_uuid)]["content"]["returnData"]
+            )
+        )
         return response
 
     def getNewsletterMessages(self, jid: str, count: int = 10, before: int = 0) -> list:
@@ -516,7 +529,11 @@ class WhatsApp:
         while str(return_uuid) not in self._methodReturns:
             time.sleep(0.001)
 
-        response = self._methodReturns[str(return_uuid)]["returnData"]
+        response = json.loads(
+            base64.b64decode(
+                self._methodReturns[str(return_uuid)]["content"]["returnData"]
+            )
+        )
         return response
 
     def getSubscribedNewsletters(self) -> list:
@@ -533,7 +550,11 @@ class WhatsApp:
         while str(return_uuid) not in self._methodReturns:
             time.sleep(0.001)
 
-        response = self._methodReturns[str(return_uuid)]["returnData"]
+        response = json.loads(
+            base64.b64decode(
+                self._methodReturns[str(return_uuid)]["content"]["returnData"]
+            )
+        )
         return response
 
     def uploadNewsletter(

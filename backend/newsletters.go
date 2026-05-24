@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -11,6 +12,7 @@ import (
 	"go.mau.fi/whatsmeow/types"
 )
 
+// The image MUST be in JPEG
 func (w *WhatsAppClient) CreateNewsletter(name string, description string, picturePath string, return_id string) int {
 	if !w.wpClient.IsConnected() {
 		err := w.wpClient.Connect()
@@ -29,10 +31,13 @@ func (w *WhatsAppClient) CreateNewsletter(name string, description string, pictu
 		fmt.Println("Setting the newsletter picture is unsupported. See Labfox/whatsfly#363")
 		var err error
 		picture, err = os.ReadFile(picturePath)
+
 		if err != nil {
 			return 1
 		}
-		params.Picture = picture
+
+		b64 := base64.StdEncoding.EncodeToString(picture)
+		params.Picture = []byte(b64)
 	}
 
 	metadata, err := w.wpClient.CreateNewsletter(context.Background(), params)

@@ -33,7 +33,7 @@ class TestWhatsAppHandleMessage(unittest.TestCase):
         encoded_message = json.dumps(message_data).encode()
 
         # Mocking qrcode to avoid actual printing/processing
-        with patch("qrcode.QRCode") as mock_qr:
+        with patch("qrcode.QRCode") as _:
             self.whatsapp._handleMessage(encoded_message)
 
         expected_thandler = {"eventType": "qrCode", "content": "some_qr_code_string"}

@@ -19,7 +19,6 @@ help:
 setup:
 	@if ! command -v uv >/dev/null 2>&1; then pip install uv; fi
 	uv sync --all-extras
-	uv run pre-commit install
 
 compile:
 	uv lock
