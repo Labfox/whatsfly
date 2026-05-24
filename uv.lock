@@ -1102,7 +1102,7 @@ wheels = [
 
 [[package]]
 name = "whatsfly-labfox"
-version = "0.3.3"
+version = "0.9.0"
 source = { editable = "." }
 dependencies = [
     { name = "protobuf" },
