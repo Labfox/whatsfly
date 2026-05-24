@@ -5,6 +5,7 @@ on:
     branches: ["main"]
     paths: [".github/**", "docs/**", "whatsfly/whatsapp.py" ]
   release:
+  workflow_dispatch:
 
 jobs:
   build-docs:

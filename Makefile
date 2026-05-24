@@ -18,13 +18,13 @@ help:
 
 setup:
 	@if ! command -v uv >/dev/null 2>&1; then pip install uv; fi
-	uv sync --all-extras
+	$(MAKE) sync
 
 compile:
 	uv lock
 
 sync:
-	uv sync --all-extras
+	uv sync --extra dev --extra docs
 
 test:
 	uv run pytest $(ARGS)
