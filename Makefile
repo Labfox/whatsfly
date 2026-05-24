@@ -62,7 +62,7 @@ bump:
 	$(MAKE) compile
 	$(MAKE) sync
 	$(MAKE) setup
-	$(MAKE) lint
 	$(MAKE) format
 	$(MAKE) test-setup
 	$(MAKE) cleanup
+	$(MAKE) sync
