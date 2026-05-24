@@ -35,7 +35,7 @@ jobs:
     - name: Build docs
       run: |
         cd docs
-        python3 -m mkdocs build
+        uv run mkdocs build
 
     - name: Upload docs as artifact
       uses: actions/upload-pages-artifact@v3
