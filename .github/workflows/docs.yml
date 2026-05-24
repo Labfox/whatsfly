@@ -29,7 +29,7 @@ jobs:
         # The token used to authenticate when fetching Python distributions from https://github.com/actions/python-versions. When running this action on github.com, the default value is sufficient. When running on GHES, you can pass a personal access token for github.com if you are experiencing rate limiting.
         
     - name: Install library
-      run: pip install whatsfly_Labfox mkdocs mkdocstrings mkdocstrings-python mike mkdocs-material 
+      run: make setup
 
     - name: Build docs
       run: |
