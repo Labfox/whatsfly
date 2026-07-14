@@ -34,7 +34,7 @@ jobs:
     - name: Install ARM cross compiler
       run: |
         sudo apt-get update
-        sudo apt-get install -y gcc-arm-linux-gnueabihf gcc-aarch64-linux-gnu
+        sudo apt-get install -y gcc-arm-linux-gnueabihf gcc-aarch64-linux-gnu gcc-mingw-w64
 
     - name: Build
       run: | 
@@ -56,35 +56,57 @@ jobs:
 
     - name: Commit changes
       run: |
-        git config user.name "github-actions[bot]"
+        git config user.name "github-actions[bot]" 
         git config user.email "github-actions[bot]@users.noreply.github.com"
 
         
         git checkout prebuilts
         rm -f linux-amd64-$GITHUB_REF_NAME/linux-amd64-$GITHUB_SHA.so
         rm -f linux-amd64-$GITHUB_REF_NAME/latest.so
+        rm -f linux-arm64-$GITHUB_REF_NAME/linux-arm64-$GITHUB_SHA.so
+        rm -f linux-arm64-$GITHUB_REF_NAME/latest.so
+        rm -f linux-armv7-$GITHUB_REF_NAME/linux-armv7-$GITHUB_SHA.so
+        rm -f linux-armv7-$GITHUB_REF_NAME/latest.so
         rm -f windows-amd64-$GITHUB_REF_NAME/windows-amd64-$GITHUB_SHA.dll
         rm -f windows-amd64-$GITHUB_REF_NAME/latest.dll
+        rm -f windows-arm64-$GITHUB_REF_NAME/windows-arm64-$GITHUB_SHA.dll
+        rm -f windows-arm64-$GITHUB_REF_NAME/latest.dll
+        
 
         
         mkdir -p linux-amd64-$GITHUB_REF_NAME
+        mkdir -p linux-arm64-$GITHUB_REF_NAME
+        mkdir -p linux-armv7-$GITHUB_REF_NAME
         mv whatsmeow-linux-amd64.so linux-amd64-$GITHUB_REF_NAME/linux-amd64-$GITHUB_SHA.so
-
+        mv whatsmeow-linux-arm64.so linux-arm64-$GITHUB_REF_NAME/linux-arm64-$GITHUB_SHA.so
+        mv whatsmeow-linux-armv7.so linux-armv7-$GITHUB_REF_NAME/linux-armv7-$GITHUB_SHA.so
 
         
         ln -s linux-amd64-$GITHUB_REF_NAME/linux-amd64-$GITHUB_SHA.so linux-amd64-$GITHUB_REF_NAME/latest.so
+        ln -s linux-arm64-$GITHUB_REF_NAME/linux-arm64-$GITHUB_SHA.so linux-arm64-$GITHUB_REF_NAME/latest.so
+        ln -s linux-armv7-$GITHUB_REF_NAME/linux-armv7-$GITHUB_SHA.so linux-armv7-$GITHUB_REF_NAME/latest.so
+        
         git add linux-amd64-$GITHUB_REF_NAME/linux-amd64-$GITHUB_SHA.so
         git add linux-amd64-$GITHUB_REF_NAME/latest.so
+        git add linux-arm64-$GITHUB_REF_NAME/linux-arm64-$GITHUB_SHA.so
+        git add linux-arm64-$GITHUB_REF_NAME/latest.so
+        git add linux-armv7-$GITHUB_REF_NAME/linux-armv7-$GITHUB_SHA.so
+        git add linux-armv7-$GITHUB_REF_NAME/latest.so
         
 
-        
+        # whatsmeow-windows-arm64.dll
         mkdir -p windows-amd64-$GITHUB_REF_NAME
         mv whatsmeow-windows-amd64.dll windows-amd64-$GITHUB_REF_NAME/windows-amd64-$GITHUB_SHA.dll
-
+        mkdir -p windows-arm64-$GITHUB_REF_NAME
+        mv whatsmeow-windows-arm64.dll windows-arm64-$GITHUB_REF_NAME/windows-arm64-$GITHUB_SHA.dll
         
         ln -s windows-amd64-$GITHUB_REF_NAME/windows-amd64-$GITHUB_SHA.dll windows-amd64-$GITHUB_REF_NAME/latest.dll
         git add windows-amd64-$GITHUB_REF_NAME/windows-amd64-$GITHUB_SHA.dll
         git add windows-amd64-$GITHUB_REF_NAME/latest.dll
+
+        ln -s windows-arm64-$GITHUB_REF_NAME/windows-arm64-$GITHUB_SHA.dll windows-arm64-$GITHUB_REF_NAME/latest.dll
+        git add windows-arm64-$GITHUB_REF_NAME/windows-arm64-$GITHUB_SHA.dll
+        git add windows-arm64-$GITHUB_REF_NAME/latest.dll
         
           
         git commit -m "Push prebuilts" || echo "No changes to commit"
