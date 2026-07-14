@@ -21,6 +21,8 @@ https://labfox.github.io/whatsfly/
 The library theoretically supports every machine with Go and CGo, but if the builds fail on your machine, there are pre-built binaries auto-downloaded for the following architectures:
 
 - Linux (amd64)
+- Linux (arm64)
+- Linux (armv7)
 - Windows (amd64)
 - macOS (amd64)
 - macOS (arm64)
