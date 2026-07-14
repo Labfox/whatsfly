@@ -38,6 +38,11 @@ jobs:
 
     - name: Build
       run: | 
+        ls -l "$(command -v aarch64-w64-mingw32-gcc)" 2>/dev/null || echo "not in PATH"
+which aarch64-w64-mingw32-gcc || true
+command -v aarch64-w64-mingw32-gcc || true
+        find / -type f -name 'aarch64-w64-mingw32-gcc' 2>/dev/null
+
         cd backend
         cp go.mod go.mod.save
         cp go.sum go.sum.save
