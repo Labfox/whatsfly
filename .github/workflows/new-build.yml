@@ -38,9 +38,6 @@ jobs:
 
     - name: Build
       run: | 
-        ls /usr/bin/*gcc
-
-
         cd backend
         cp go.mod go.mod.save
         cp go.sum go.sum.save
@@ -50,7 +47,6 @@ jobs:
         GOOS=linux GOARCH=arm64 CGO_ENABLED=1 CC=aarch64-linux-gnu-gcc go build -buildmode=c-shared -ldflags=-s -o ../whatsmeow-linux-arm64.so .
         GOOS=linux GOARCH=arm GOARM=7 CGO_ENABLED=1 CC=arm-linux-gnueabihf-gcc go build -buildmode=c-shared -ldflags=-s -o ../whatsmeow-linux-armv7.so .
         GOOS=windows GOARCH=amd64 CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc go build -buildmode=c-shared -ldflags=-s -o ../whatsmeow-windows-amd64.dll .
-        GOOS=windows GOARCH=arm64 CGO_ENABLED=1 CC=aarch64-w64-mingw32-gcc go build -buildmode=c-shared -ldflags=-s -o ../whatsmeow-windows-arm64.dll .
 
         rm go.mod
         rm go.sum
@@ -72,8 +68,7 @@ jobs:
         rm -f linux-armv7-$GITHUB_REF_NAME/latest.so
         rm -f windows-amd64-$GITHUB_REF_NAME/windows-amd64-$GITHUB_SHA.dll
         rm -f windows-amd64-$GITHUB_REF_NAME/latest.dll
-        rm -f windows-arm64-$GITHUB_REF_NAME/windows-arm64-$GITHUB_SHA.dll
-        rm -f windows-arm64-$GITHUB_REF_NAME/latest.dll
+
         
 
         
@@ -100,17 +95,10 @@ jobs:
         # whatsmeow-windows-arm64.dll
         mkdir -p windows-amd64-$GITHUB_REF_NAME
         mv whatsmeow-windows-amd64.dll windows-amd64-$GITHUB_REF_NAME/windows-amd64-$GITHUB_SHA.dll
-        mkdir -p windows-arm64-$GITHUB_REF_NAME
-        mv whatsmeow-windows-arm64.dll windows-arm64-$GITHUB_REF_NAME/windows-arm64-$GITHUB_SHA.dll
         
         ln -s windows-amd64-$GITHUB_REF_NAME/windows-amd64-$GITHUB_SHA.dll windows-amd64-$GITHUB_REF_NAME/latest.dll
         git add windows-amd64-$GITHUB_REF_NAME/windows-amd64-$GITHUB_SHA.dll
         git add windows-amd64-$GITHUB_REF_NAME/latest.dll
-
-        ln -s windows-arm64-$GITHUB_REF_NAME/windows-arm64-$GITHUB_SHA.dll windows-arm64-$GITHUB_REF_NAME/latest.dll
-        git add windows-arm64-$GITHUB_REF_NAME/windows-arm64-$GITHUB_SHA.dll
-        git add windows-arm64-$GITHUB_REF_NAME/latest.dll
-        
           
         git commit -m "Push prebuilts" || echo "No changes to commit"
 
