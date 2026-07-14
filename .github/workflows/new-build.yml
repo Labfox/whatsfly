@@ -38,9 +38,7 @@ jobs:
 
     - name: Build
       run: | 
-        ls /usr/bin/*aarch64*mingw*gcc 2>/dev/null
-        ls /usr/bin/*arm64*mingw*gcc 2>/dev/null
-        ls /usr/bin/*windows*mingw*gcc 2>/dev/null
+        ls /usr/bin/*gcc
 
 
         cd backend
