@@ -31,7 +31,7 @@ classifiers = [
 ]
 dependencies = [
     "types-pyyaml",
-    "setuptools",
+    "setuptools>=83.0.0",
     "requests",
     "qrcode",
     "protobuf",
